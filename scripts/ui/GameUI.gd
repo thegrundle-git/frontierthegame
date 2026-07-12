@@ -8,6 +8,19 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 @onready var inventory_label: Label = $InventoryLabel
 @onready var gathering_label: Label = $GatheringLabel
 
+@onready var time_label: Label = $TimeLabel
+@onready var current_action_label: Label = (
+	$CurrentActionLabel
+)
+
+@onready var action_progress: ProgressBar = (
+	$ActionProgress
+)
+
+@onready var search_button: Button = (
+	$ActionPanel/ActionList/SearchButton
+)
+
 @onready var recipe_label: Label = (
 	$CraftPanel/CraftList/RecipeLabel
 )
@@ -22,8 +35,33 @@ func _ready() -> void:
 
 	GameManager.game_ui = self
 
+	ActionManager.action_started.connect(
+		_on_action_started
+	)
+
+	ActionManager.action_progress_changed.connect(
+		_on_action_progress_changed
+	)
+
+	ActionManager.action_completed.connect(
+		_on_action_completed
+	)
+
+	ActionManager.busy_changed.connect(
+		_on_busy_changed
+	)
+
+	TimeManager.time_changed.connect(
+		_update_time
+	)
+
 	refresh_all()
 
+	_update_time()
+	_on_busy_changed(ActionManager.is_busy)
+
+	current_action_label.text = "Idle"
+	action_progress.value = 0.0
 
 func refresh_all() -> void:
 	update_survivor()
@@ -34,6 +72,7 @@ func refresh_all() -> void:
 		update_inventory(survivor.inventory)
 
 	update_crafting()
+	_update_time()
 
 
 func add_event(event_text: String) -> void:
@@ -162,10 +201,50 @@ func update_crafting() -> void:
 	recipe_label.text = recipe_text
 
 	craft_button.disabled = (
-		not survivor.inventory.can_afford_recipe(
+		ActionManager.is_busy
+		or not survivor.inventory.can_afford_recipe(
 			recipe
 		)
 	)
+
+
+func _update_time() -> void:
+	time_label.text = TimeManager.get_time_text()
+
+
+func _on_action_started(
+	action_name: String
+) -> void:
+	current_action_label.text = action_name
+	action_progress.value = 0.0
+
+	add_event(action_name + " begun.")
+
+
+func _on_action_progress_changed(
+	progress: float
+) -> void:
+	action_progress.value = progress * 100.0
+
+
+func _on_action_completed(
+	action_name: String
+) -> void:
+	current_action_label.text = "Idle"
+	action_progress.value = 0.0
+
+	add_event(action_name + " completed.")
+
+	refresh_all()
+
+
+func _on_busy_changed(is_busy: bool) -> void:
+	search_button.disabled = is_busy
+
+	if is_busy:
+		craft_button.disabled = true
+	else:
+		update_crafting()
 
 
 func _on_search_button_pressed() -> void:

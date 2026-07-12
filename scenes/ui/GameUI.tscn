@@ -95,5 +95,27 @@ layout_mode = 2
 layout_mode = 2
 text = "Craft Stone Axe"
 
+[node name="TimeLabel" type="Label" parent="." unique_id=403008620]
+layout_mode = 0
+offset_left = 400.0
+offset_right = 509.0
+offset_bottom = 49.0
+text = "TimeLabel:
+Day 1 — 08:00"
+
+[node name="CurrentActionLabel" type="Label" parent="." unique_id=1488720176]
+layout_mode = 0
+offset_left = 550.0
+offset_right = 706.0
+offset_bottom = 49.0
+text = "Idle"
+
+[node name="ActionProgress" type="ProgressBar" parent="." unique_id=1576193156]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 60.0
+offset_right = 750.0
+offset_bottom = 87.0
+
 [connection signal="pressed" from="ActionPanel/ActionList/SearchButton" to="." method="_on_search_button_pressed"]
 [connection signal="pressed" from="CraftPanel/CraftList/CraftButton" to="." method="_on_craft_button_pressed"]
