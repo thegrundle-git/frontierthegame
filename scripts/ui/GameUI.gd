@@ -1,17 +1,26 @@
 extends Control
 
-@onready var event_log = $EventLog
-@onready var inventory_label = $InventoryLabel
 
-func _ready():
+@onready var event_log: RichTextLabel = $EventLog
+@onready var inventory_label: Label = $InventoryLabel
+@onready var gathering_label: Label = $GatheringLabel
 
+
+func _ready() -> void:
 	print("GameUI Loaded")
 
 	GameManager.game_ui = self
-func add_event(text):
 
-	event_log.append_text("\n" + text)
-	
+	update_survivor()
+
+	if GameManager.current_survivor != null:
+		update_inventory(GameManager.current_survivor.inventory)
+
+
+func add_event(event_text: String) -> void:
+	event_log.append_text("\n" + event_text)
+
+
 func update_inventory(inventory: FrontierInventory) -> void:
 	var inventory_text := "Inventory\n\n"
 
@@ -26,12 +35,36 @@ func update_inventory(inventory: FrontierInventory) -> void:
 				inventory_text += item_id + ": " + str(amount) + "\n"
 				continue
 
-			inventory_text += item_data.display_name
-			inventory_text += ": "
-			inventory_text += str(amount)
-			inventory_text += "\n"
+			inventory_text += (
+				item_data.display_name
+				+ ": "
+				+ str(amount)
+				+ "\n"
+			)
 
 	inventory_label.text = inventory_text
-func _on_search_button_pressed():
 
+
+func update_survivor() -> void:
+	var survivor := GameManager.current_survivor
+
+	if survivor == null:
+		return
+
+	var level: int = survivor.data.gathering_level
+	var xp: int = survivor.data.gathering_xp
+	var xp_needed: int = level * 10
+
+	gathering_label.text = (
+		"Gathering\n"
+		+ "Level "
+		+ str(level)
+		+ "\nXP "
+		+ str(xp)
+		+ " / "
+		+ str(xp_needed)
+	)
+
+
+func _on_search_button_pressed() -> void:
 	GameManager.search_area()

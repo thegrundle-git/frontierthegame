@@ -69,4 +69,13 @@ Wood: 0
 Stone: 0
 Food: 0"
 
+[node name="GatheringLabel" type="Label" parent="." unique_id=1504059948]
+layout_mode = 0
+offset_top = 120.0
+offset_right = 78.0
+offset_bottom = 195.0
+text = "Gathering
+Level 1
+XP 0 / 10"
+
 [connection signal="pressed" from="ActionPanel/ActionList/SearchButton" to="." method="_on_search_button_pressed"]
