@@ -10,5 +10,6 @@ id = "primitive_toolmaking"
 display_name = "Primitive Toolmaking"
 description = "A loose stone and a straight branch were of little use on their own. Combined, they become something far more valuable—a tool capable of shaping the world instead of merely enduring it."
 knowledge_required = 10
+required_item_ids = Array[String](["stick", "stone"])
 unlocked_recipes = Array[ExtResource("2_1bowy")]([ExtResource("3_1bowy")])
 metadata/_custom_type_script = "uid://be18tux0tleml"

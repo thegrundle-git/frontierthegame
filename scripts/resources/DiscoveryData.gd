@@ -10,6 +10,8 @@ var description: String = ""
 
 @export var knowledge_required: int = 0
 
+@export var required_item_ids: Array[String] = []
+
 @export var unlocked_recipes: Array[RecipeData] = []
 
 @export var hidden_until_discovered: bool = true

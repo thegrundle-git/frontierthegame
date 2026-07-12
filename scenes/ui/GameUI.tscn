@@ -78,4 +78,22 @@ text = "Gathering
 Level 1
 XP 0 / 10"
 
+[node name="CraftPanel" type="PanelContainer" parent="." unique_id=572451678]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 250.0
+offset_right = 920.0
+offset_bottom = 470.0
+
+[node name="CraftList" type="VBoxContainer" parent="CraftPanel" unique_id=514407186]
+layout_mode = 2
+
+[node name="RecipeLabel" type="Label" parent="CraftPanel/CraftList" unique_id=63634396]
+layout_mode = 2
+
+[node name="CraftButton" type="Button" parent="CraftPanel/CraftList" unique_id=2068366425]
+layout_mode = 2
+text = "Craft Stone Axe"
+
 [connection signal="pressed" from="ActionPanel/ActionList/SearchButton" to="." method="_on_search_button_pressed"]
+[connection signal="pressed" from="CraftPanel/CraftList/CraftButton" to="." method="_on_craft_button_pressed"]

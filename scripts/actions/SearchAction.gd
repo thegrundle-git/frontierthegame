@@ -43,13 +43,24 @@ func perform(survivor: Survivor) -> void:
 	survivor.gain_knowledge(1)
 
 	if not item_id.is_empty():
-		survivor.inventory.add_item(item_id, amount)
+		survivor.inventory.add_item(
+			item_id,
+			amount
+		)
+
+		DiscoveryManager.record_item_observation(
+			item_id
+		)
+
+	DiscoveryManager.check_discoveries()
 
 	if GameManager.game_ui:
 		GameManager.game_ui.add_event(event_text)
 
 		if not item_id.is_empty():
-			var item_data := ItemDatabase.get_item(item_id)
+			var item_data := ItemDatabase.get_item(
+				item_id
+			)
 
 			if item_data != null:
 				GameManager.game_ui.add_event(
@@ -59,8 +70,4 @@ func perform(survivor: Survivor) -> void:
 					+ str(amount)
 				)
 
-		GameManager.game_ui.update_inventory(
-			survivor.inventory
-		)
-
-		GameManager.game_ui.update_survivor()
+		GameManager.game_ui.refresh_all()

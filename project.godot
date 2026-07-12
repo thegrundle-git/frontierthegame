@@ -20,6 +20,8 @@ config/icon="res://icon.svg"
 ItemDatabase="*uid://c0rtavf4ihnru"
 GameManager="*uid://cg05lflp2p58j"
 DiscoveryDatabase="*uid://jfc5vxsamlu7"
+DiscoveryManager="*uid://dqpsuwqeclegs"
+RecipeDatabase="*uid://cejfhmr1ugfi1"
 
 [display]
 
