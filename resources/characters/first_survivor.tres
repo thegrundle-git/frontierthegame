@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SurvivorData" format=3 uid="uid://dbrsmnntgbl37"]
+
+[ext_resource type="Script" uid="uid://dknqjaar0bkfx" path="res://scripts/resources/SurvivorData.gd" id="1_ifua8"]
+
+[resource]
+script = ExtResource("1_ifua8")
+display_name = "Finnley"
+strength = 5
+dexterity = 5
+toughness = 5
+metadata/_custom_type_script = "uid://dknqjaar0bkfx"

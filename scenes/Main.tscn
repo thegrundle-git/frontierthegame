@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bwvgxsutsb61x"]
+
+[ext_resource type="Script" uid="uid://dxarx4jx6iue4" path="res://scripts/test/Main.gd" id="1_glv2v"]
+[ext_resource type="PackedScene" uid="uid://xsnudsokrcgg" path="res://scenes/world/World.tscn" id="2_rvslj"]
+
+[node name="Frontier" type="Control" unique_id=307152789]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Main" type="Control" parent="." unique_id=1439790798]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_glv2v")
+
+[node name="World" parent="Main" unique_id=2045449209 instance=ExtResource("2_rvslj")]

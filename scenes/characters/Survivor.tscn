@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ckkc8pbwuhowb"]
+
+[ext_resource type="Script" uid="uid://befenoxp8u26n" path="res://scripts/characters/Survivor.gd" id="1_egae6"]
+
+[node name="Survivor" type="Node" unique_id=835928991]
+script = ExtResource("1_egae6")
