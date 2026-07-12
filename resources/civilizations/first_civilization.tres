@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CivilizationData" format=3 uid="uid://cg850qdyocy7r"]
+
+[ext_resource type="Script" uid="uid://clqpp6nc6l8jo" path="res://scripts/resources/CivilizationData.gd" id="1_ijxgv"]
+
+[resource]
+script = ExtResource("1_ijxgv")
+display_name = "Finnley's Camp"
+metadata/_custom_type_script = "uid://clqpp6nc6l8jo"

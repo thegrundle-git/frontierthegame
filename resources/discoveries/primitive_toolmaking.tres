@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DiscoveryData" format=3 uid="uid://co37bb534nrm0"]
+
+[ext_resource type="Script" uid="uid://be18tux0tleml" path="res://scripts/resources/DiscoveryData.gd" id="1_p4ro4"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_1bowy"]
+[ext_resource type="Resource" uid="uid://s7vndo6ynh6v" path="res://resources/recipes/stone_axe_recipe.tres" id="3_1bowy"]
+
+[resource]
+script = ExtResource("1_p4ro4")
+id = "primitive_toolmaking"
+display_name = "Primitive Toolmaking"
+description = "A loose stone and a straight branch were of little use on their own. Combined, they become something far more valuable—a tool capable of shaping the world instead of merely enduring it."
+knowledge_required = 10
+unlocked_recipes = Array[ExtResource("2_1bowy")]([ExtResource("3_1bowy")])
+metadata/_custom_type_script = "uid://be18tux0tleml"

@@ -40,4 +40,7 @@ func gain_gathering_xp(amount: int) -> void:
 
 
 func gain_knowledge(amount: int) -> void:
-	data.knowledge += amount
+	if GameManager.current_civilization == null:
+		return
+
+	GameManager.current_civilization.knowledge += amount

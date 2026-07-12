@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cmkt2vm4y7xsa"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_bwcxt"]
+
+[resource]
+script = ExtResource("1_bwcxt")
+id = "stone_axe"
+display_name = "Stone Axe"
+description = "A crude axe fashioned from sharpened stone lashed to a sturdy wooden haft. Primitive by any standard, but dependable enough to bite into wood, flesh, or bone. It's a reminder that survival begins long before craftsmanship."
+category = "tool"
+weight = 2.5
+stack_size = 1
+tags = Array[String](["tool", "axe", "crafting"])
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"
