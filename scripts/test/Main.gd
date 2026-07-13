@@ -1,5 +1,5 @@
 extends Control
 
 
-func _ready():	
-	print("Main loaded")
+func _ready() -> void:
+	GameManager.initialize_prepared_game()

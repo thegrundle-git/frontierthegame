@@ -17,30 +17,14 @@ var game_ui: Control
 
 var _game_started := false
 
+var should_load_save_on_start := false
+var game_session_prepared := false
 
 func _ready() -> void:
-	call_deferred("_initialize_game")
-
-
-func _initialize_game() -> void:
-	ActionDatabase.load_actions()
-	LocationDatabase.load_locations()
-	ItemDatabase.load_items()
-	RecipeDatabase.load_recipes()
-	DiscoveryDatabase.load_discoveries()
-	WorldEventDatabase.load_events()
-
-	start_new_game()
-
-	call_deferred("_refresh_game_ui_after_start")
-
-func _refresh_game_ui_after_start() -> void:
-	if game_ui == null:
-		return
-
-	game_ui.rebuild_location_controls()
-	game_ui.refresh_all()
+	pass
 	
+
+
 func start_new_game() -> void:
 	if _game_started:
 		push_warning(
@@ -461,3 +445,77 @@ func _add_event(message: String) -> void:
 func _refresh_ui() -> void:
 	if game_ui != null:
 		game_ui.refresh_all()
+func prepare_new_game() -> void:
+	_reset_runtime_state()
+
+	should_load_save_on_start = false
+	game_session_prepared = true
+
+
+func prepare_saved_game() -> void:
+	_reset_runtime_state()
+
+	should_load_save_on_start = true
+	game_session_prepared = true
+
+
+func initialize_prepared_game() -> void:
+	if not game_session_prepared:
+		prepare_new_game()
+
+	if _game_started:
+		return
+
+	_initialize_game()
+
+
+func _initialize_game() -> void:
+	ActionDatabase.load_actions()
+	LocationDatabase.load_locations()
+	ItemDatabase.load_items()
+	RecipeDatabase.load_recipes()
+	DiscoveryDatabase.load_discoveries()
+	WorldEventDatabase.load_events()
+
+	start_new_game()
+
+	if should_load_save_on_start:
+		call_deferred("_load_prepared_save")
+
+	call_deferred("_refresh_game_ui_after_start")
+
+
+func _load_prepared_save() -> void:
+	if not SaveManager.load_game():
+		_add_event(
+			"The saved game could not be loaded."
+		)
+
+
+func _refresh_game_ui_after_start() -> void:
+	if game_ui == null:
+		return
+
+	game_ui.rebuild_location_controls()
+	game_ui.refresh_all()
+
+
+func _reset_runtime_state() -> void:
+	_game_started = false
+
+	current_survivor = null
+	survivor_data = null
+	current_civilization = null
+	current_location = null
+	game_ui = null
+
+	ActionManager.is_busy = false
+	ActionManager.current_action_name = ""
+	ActionManager.current_progress = 0.0
+
+	WorldEventManager.pending_event = null
+	WorldEventManager.completed_event_ids.clear()
+
+	TimeManager.day = 1
+	TimeManager.hour = 8
+	TimeManager.minute = 0
