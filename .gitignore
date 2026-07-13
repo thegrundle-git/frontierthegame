@@ -1,7 +1,4 @@
-# Godot 4+ specific ignores
-.godot/
-/android/
-# Godot cache
+# Godot editor data
 .godot/
 
 # Exported builds
@@ -9,15 +6,13 @@ builds/
 
 # Temporary files
 *.tmp
-# Godot editor cache
-.godot/
-
-# Exported builds
-builds/
-
-# Temporary files
-*.tmp
+*.log
 
 # Operating system files
 Thumbs.db
+Desktop.ini
 .DS_Store
+
+# IDE settings
+.vscode/
+.idea/
