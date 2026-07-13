@@ -9,3 +9,4 @@ class_name LocationData
 var description: String = ""
 
 @export var available_actions: Array[ActionData] = []
+@export var travel_connections: Array[TravelConnectionData] = []

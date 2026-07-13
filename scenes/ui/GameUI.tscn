@@ -163,8 +163,22 @@ text = "Journal"
 
 [node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/JournalPanel/JournalLayout" unique_id=782362239]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_vertical = 3
 scroll_following = true
+
+[node name="TravelPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=1056504366]
+layout_mode = 2
+
+[node name="TravelLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/TravelPanel" unique_id=1701085096]
+layout_mode = 2
+
+[node name="TravelTitle" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/TravelPanel/TravelLayout" unique_id=1896659793]
+layout_mode = 2
+text = "Travel"
+
+[node name="TravelList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/TravelPanel/TravelLayout" unique_id=1482779917]
+unique_name_in_owner = true
+layout_mode = 2
 
 [connection signal="pressed" from="ScreenMargin/MainLayout/MiddleRow/RightColumn/CraftPanel/CraftList/CraftButton" to="." method="_on_craft_button_pressed"]

@@ -4,6 +4,14 @@
 [ext_resource type="Resource" uid="uid://b83evycxax6um" path="res://resources/actions/search_area.tres" id="2_36u8b"]
 [ext_resource type="Script" uid="uid://dxiqo5ie3ebvb" path="res://scripts/resources/LocationData.gd" id="2_mqbdk"]
 [ext_resource type="Resource" uid="uid://d3im85fkwvyg2" path="res://resources/actions/chop_tree.tres" id="3_7q3hv"]
+[ext_resource type="Script" uid="uid://clqlxjcsk56f3" path="res://scripts/resources/TravelConnectionData.gd" id="5_e2bfc"]
+
+[sub_resource type="Resource" id="Resource_jq5ug"]
+script = ExtResource("5_e2bfc")
+destination_id = "river"
+duration_seconds = 4.0
+description = "Follow a narrow animal trail downhill until the sound of running water breaks through the trees."
+metadata/_custom_type_script = "uid://clqlxjcsk56f3"
 
 [resource]
 script = ExtResource("2_mqbdk")
@@ -11,4 +19,5 @@ id = "forest"
 display_name = "Forest"
 description = "A region dominated by dense tree cover. Rich in renewable resources, though finding them still requires time and effort."
 available_actions = Array[ExtResource("1_a4yr2")]([ExtResource("2_36u8b"), ExtResource("3_7q3hv")])
+travel_connections = Array[ExtResource("5_e2bfc")]([SubResource("Resource_jq5ug")])
 metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

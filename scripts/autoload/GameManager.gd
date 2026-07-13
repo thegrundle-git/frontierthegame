@@ -42,10 +42,8 @@ func start_new_game() -> void:
 		+ "first_survivor.tres"
 	)
 
-	current_location = (
-		LocationDatabase.get_location(
-			STARTING_LOCATION_ID
-		)
+	current_location = LocationDatabase.get_location(
+		STARTING_LOCATION_ID
 	)
 
 	if current_civilization == null:
@@ -77,13 +75,8 @@ func start_new_game() -> void:
 		)
 		return
 
-	current_survivor = (
-		survivor_scene.instantiate()
-	)
-
-	current_survivor.initialize(
-		survivor_data
-	)
+	current_survivor = survivor_scene.instantiate()
+	current_survivor.initialize(survivor_data)
 
 
 func start_world_action(
@@ -142,9 +135,7 @@ func _complete_world_action(
 	if action.action_script == null:
 		return
 
-	var action_instance = (
-		action.action_script.new()
-	)
+	var action_instance = action.action_script.new()
 
 	if not action_instance.has_method("perform"):
 		push_error(
@@ -156,6 +147,82 @@ func _complete_world_action(
 	action_instance.call(
 		"perform",
 		current_survivor
+	)
+
+	_refresh_ui()
+
+
+func start_travel(
+	destination_id: String
+) -> bool:
+	if not _can_start_survivor_action():
+		return false
+
+	var connection := _get_travel_connection(
+		destination_id
+	)
+
+	if connection == null:
+		_add_event(
+			"That destination cannot be reached from here."
+		)
+		return false
+
+	var destination := LocationDatabase.get_location(
+		connection.destination_id
+	)
+
+	if destination == null:
+		push_error(
+			"Unknown travel destination: "
+			+ connection.destination_id
+		)
+		return false
+
+	return ActionManager.start_action(
+		"Traveling to "
+		+ destination.display_name,
+		connection.duration_seconds,
+		connection.game_minutes,
+		Callable(
+			self,
+			"_complete_travel"
+		).bind(destination_id)
+	)
+
+
+func _complete_travel(
+	destination_id: String
+) -> void:
+	var connection := _get_travel_connection(
+		destination_id
+	)
+
+	if connection == null:
+		push_error(
+			"Travel connection disappeared before completion: "
+			+ destination_id
+		)
+		return
+
+	var destination := LocationDatabase.get_location(
+		connection.destination_id
+	)
+
+	if destination == null:
+		push_error(
+			"Unknown travel destination: "
+			+ connection.destination_id
+		)
+		return
+
+	current_location = destination
+
+	_add_event(
+		current_survivor.data.display_name
+		+ " arrived at "
+		+ current_location.display_name
+		+ "."
 	)
 
 	_refresh_ui()
@@ -230,6 +297,26 @@ func get_available_actions() -> Array[ActionData]:
 		return []
 
 	return current_location.available_actions
+
+
+func get_travel_connections() -> Array[TravelConnectionData]:
+	if current_location == null:
+		return []
+
+	return current_location.travel_connections
+
+
+func _get_travel_connection(
+	destination_id: String
+) -> TravelConnectionData:
+	for connection in get_travel_connections():
+		if connection == null:
+			continue
+
+		if connection.destination_id == destination_id:
+			return connection
+
+	return null
 
 
 func _location_allows_action(

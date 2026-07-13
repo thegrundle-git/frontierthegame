@@ -15,12 +15,14 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 @onready var action_progress: ProgressBar = %ActionProgress
 
 @onready var action_list: VBoxContainer = %ActionList
+@onready var travel_list: VBoxContainer = %TravelList
 
 @onready var recipe_label: Label = %RecipeLabel
 @onready var craft_button: Button = %CraftButton
 
 
 var world_action_buttons: Dictionary = {}
+var travel_buttons: Dictionary = {}
 
 
 func _ready() -> void:
@@ -47,6 +49,7 @@ func _ready() -> void:
 	)
 
 	build_world_action_buttons()
+	build_travel_buttons()
 	refresh_all()
 
 	current_action_label.text = "Idle"
@@ -59,6 +62,7 @@ func refresh_all() -> void:
 	update_tool_display()
 	update_crafting()
 	update_world_action_buttons()
+	update_travel_buttons()
 	_update_time()
 
 	var survivor := GameManager.current_survivor
@@ -75,9 +79,13 @@ func add_event(event_text: String) -> void:
 	)
 
 	event_log.scroll_to_line(
-		max(event_log.get_line_count() - 1, 0)
+		max(
+			event_log.get_line_count() - 1,
+			0
+		)
 	)
-	
+
+
 func build_world_action_buttons() -> void:
 	for child in action_list.get_children():
 		child.queue_free()
@@ -97,7 +105,6 @@ func build_world_action_buttons() -> void:
 
 		button.text = action.display_name
 		button.tooltip_text = action.description
-
 		button.custom_minimum_size.y = 38
 
 		button.pressed.connect(
@@ -107,8 +114,62 @@ func build_world_action_buttons() -> void:
 		)
 
 		action_list.add_child(button)
-
 		world_action_buttons[action.id] = button
+
+
+func build_travel_buttons() -> void:
+	for child in travel_list.get_children():
+		child.queue_free()
+
+	travel_buttons.clear()
+
+	for connection in GameManager.get_travel_connections():
+		if connection == null:
+			continue
+
+		if connection.destination_id.is_empty():
+			continue
+
+		var destination := LocationDatabase.get_location(
+			connection.destination_id
+		)
+
+		if destination == null:
+			continue
+
+		var button := Button.new()
+
+		button.name = (
+			"TravelTo"
+			+ destination.id.to_pascal_case()
+			+ "Button"
+		)
+
+		button.text = (
+			"Travel to "
+			+ destination.display_name
+			+ " — "
+			+ _format_minutes(
+				connection.game_minutes
+			)
+		)
+
+		button.tooltip_text = connection.description
+		button.custom_minimum_size.y = 38
+
+		button.pressed.connect(
+			_on_travel_pressed.bind(
+				destination.id
+			)
+		)
+
+		travel_list.add_child(button)
+		travel_buttons[destination.id] = button
+
+
+func rebuild_location_controls() -> void:
+	build_world_action_buttons()
+	build_travel_buttons()
 
 
 func update_location() -> void:
@@ -168,6 +229,15 @@ func update_world_action_buttons() -> void:
 					"Requires equipped "
 					+ tool.display_name
 				)
+
+
+func update_travel_buttons() -> void:
+	for destination_id in travel_buttons:
+		var button: Button = (
+			travel_buttons[destination_id]
+		)
+
+		button.disabled = ActionManager.is_busy
 
 
 func update_inventory(
@@ -289,10 +359,8 @@ func update_crafting() -> void:
 		):
 			continue
 
-		var owned := (
-			survivor.inventory.get_item_amount(
-				ingredient.item.id
-			)
+		var owned := survivor.inventory.get_item_amount(
+			ingredient.item.id
 		)
 
 		recipe_text += (
@@ -318,11 +386,39 @@ func _update_time() -> void:
 	time_label.text = TimeManager.get_time_text()
 
 
+func _format_minutes(
+	total_minutes: int
+) -> String:
+	if total_minutes < 60:
+		return str(total_minutes) + " min"
+
+	var hours: int = total_minutes / 60
+	var minutes: int = total_minutes % 60
+
+	if minutes == 0:
+		return str(hours) + " hr"
+
+	return (
+		str(hours)
+		+ " hr "
+		+ str(minutes)
+		+ " min"
+	)
+
+
 func _on_world_action_pressed(
 	action_id: String
 ) -> void:
 	GameManager.start_world_action(
 		action_id
+	)
+
+
+func _on_travel_pressed(
+	destination_id: String
+) -> void:
+	GameManager.start_travel(
+		destination_id
 	)
 
 
@@ -340,9 +436,7 @@ func _on_action_started(
 func _on_action_progress_changed(
 	progress: float
 ) -> void:
-	action_progress.value = (
-		progress * 100.0
-	)
+	action_progress.value = progress * 100.0
 
 
 func _on_action_completed(
@@ -355,6 +449,7 @@ func _on_action_completed(
 		action_name + " completed."
 	)
 
+	rebuild_location_controls()
 	refresh_all()
 
 
