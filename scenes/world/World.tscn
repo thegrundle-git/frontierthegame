@@ -4,4 +4,6 @@
 
 [node name="World" type="Node2D" unique_id=2045449209]
 
-[node name="GameUI" parent="." unique_id=1054040398 instance=ExtResource("2_1oml7")]
+[node name="UIOverlay" type="CanvasLayer" parent="." unique_id=1674970215]
+
+[node name="GameUI" parent="UIOverlay" unique_id=1054040398 instance=ExtResource("2_1oml7")]
