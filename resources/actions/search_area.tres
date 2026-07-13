@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://b83evycxax6um"]
+
+[ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="1_dlrq3"]
+[ext_resource type="Script" uid="uid://c37uupjfpfd5l" path="res://scripts/actions/SearchAction.gd" id="1_h6u7c"]
+
+[resource]
+script = ExtResource("1_dlrq3")
+id = "search_area"
+display_name = "Search Area"
+description = "Search the surrounding wilderness for anything useful."
+duration_seconds = 3.0
+game_minutes = 30
+action_script = ExtResource("1_h6u7c")
+metadata/_custom_type_script = "uid://dxw7aqst831bm"

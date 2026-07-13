@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://d3im85fkwvyg2"]
+
+[ext_resource type="Script" uid="uid://l51mgrixlofw" path="res://scripts/actions/ChopTreeAction.gd" id="1_jidqd"]
+[ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="1_k613q"]
+
+[resource]
+script = ExtResource("1_k613q")
+id = "chop_tree"
+display_name = "Chop Tree"
+description = "Fell a small tree and cut away the usable timber."
+duration_seconds = 5.0
+game_minutes = 120
+required_tool_id = "stone_axe"
+action_script = ExtResource("1_jidqd")
+metadata/_custom_type_script = "uid://dxw7aqst831bm"

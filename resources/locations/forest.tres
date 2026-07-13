@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="LocationData" format=3 uid="uid://caafmsmm3gif6"]
+
+[ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="1_a4yr2"]
+[ext_resource type="Resource" uid="uid://b83evycxax6um" path="res://resources/actions/search_area.tres" id="2_36u8b"]
+[ext_resource type="Script" uid="uid://dxiqo5ie3ebvb" path="res://scripts/resources/LocationData.gd" id="2_mqbdk"]
+[ext_resource type="Resource" uid="uid://d3im85fkwvyg2" path="res://resources/actions/chop_tree.tres" id="3_7q3hv"]
+
+[resource]
+script = ExtResource("2_mqbdk")
+id = "forest"
+display_name = "Forest"
+description = "A region dominated by dense tree cover. Rich in renewable resources, though finding them still requires time and effort."
+available_actions = Array[ExtResource("1_a4yr2")]([ExtResource("2_36u8b"), ExtResource("3_7q3hv")])
+metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

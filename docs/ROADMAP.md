@@ -1,4 +1,27 @@
-# Frontier Roadmap
+## v0.1.9 — Data-Driven Actions and First Location
+
+### Added
+
+- ActionData resources
+- ActionDatabase
+- LocationData resources
+- LocationDatabase
+- Forest starting location
+- Current location display
+- Dynamically generated world-action buttons
+- Tool requirements defined through action data
+
+### Changed
+
+- Search Area converted from a hardcoded button to ActionData
+- Chop Tree converted from a hardcoded button to ActionData
+- GameManager now runs generic world actions
+- Locations now define which world actions are available
+- GameUI now generates world-action buttons automatically
+
+### Notes
+
+This version establishes the foundation for multiple locations, biome-specific activities, and future travel.# Frontier Roadmap
 
 > "One survivor. One camp. One civilization."
 
@@ -8,12 +31,10 @@ This roadmap represents the planned direction of Frontier. Features may move, ch
 
 # Current Version
 
-## v0.1.8
+## v0.1.9
+Data-Driven Actions and First Location
 
-Architecture Cleanup
-
-Status: ✅ Complete
-
+Status: Complete
 ---
 
 # Immediate Roadmap

@@ -1,19 +1,17 @@
 extends Node
 
 
-const SEARCH_DURATION_SECONDS := 3.0
-const SEARCH_GAME_MINUTES := 30
+const STARTING_LOCATION_ID := "forest"
 
 const CRAFT_DURATION_SECONDS := 4.0
 const CRAFT_GAME_MINUTES := 45
 
-const CHOP_DURATION_SECONDS := 5.0
-const CHOP_GAME_MINUTES := 120
-
 
 var current_survivor: Survivor
 var survivor_data: SurvivorData
+
 var current_civilization: CivilizationData
+var current_location: LocationData
 
 var game_ui: Control
 
@@ -27,18 +25,27 @@ func _ready() -> void:
 func start_new_game() -> void:
 	if _game_started:
 		push_warning(
-			"start_new_game() was called after the game had already started."
+			"start_new_game() was called after "
+			+ "the game had already started."
 		)
 		return
 
 	_game_started = true
 
 	current_civilization = load(
-		"res://resources/civilizations/first_civilization.tres"
+		"res://resources/civilizations/"
+		+ "first_civilization.tres"
 	)
 
 	survivor_data = load(
-		"res://resources/characters/first_survivor.tres"
+		"res://resources/characters/"
+		+ "first_survivor.tres"
+	)
+
+	current_location = (
+		LocationDatabase.get_location(
+			STARTING_LOCATION_ID
+		)
 	)
 
 	if current_civilization == null:
@@ -49,7 +56,14 @@ func start_new_game() -> void:
 
 	if survivor_data == null:
 		push_error(
-			"Failed to load the starting survivor data."
+			"Failed to load the starting survivor."
+		)
+		return
+
+	if current_location == null:
+		push_error(
+			"Failed to load starting location: "
+			+ STARTING_LOCATION_ID
 		)
 		return
 
@@ -63,35 +77,97 @@ func start_new_game() -> void:
 		)
 		return
 
-	current_survivor = survivor_scene.instantiate()
-	current_survivor.initialize(survivor_data)
+	current_survivor = (
+		survivor_scene.instantiate()
+	)
 
-
-func search_area() -> bool:
-	if not _can_start_survivor_action():
-		return false
-
-	return ActionManager.start_action(
-		"Searching the wilderness",
-		SEARCH_DURATION_SECONDS,
-		SEARCH_GAME_MINUTES,
-		Callable(self, "_complete_search")
+	current_survivor.initialize(
+		survivor_data
 	)
 
 
-func _complete_search() -> void:
+func start_world_action(
+	action_id: String
+) -> bool:
+	if not _can_start_survivor_action():
+		return false
+
+	var action := ActionDatabase.get_action(
+		action_id
+	)
+
+	if action == null:
+		return false
+
+	if not _location_allows_action(action_id):
+		_add_event(
+			"That action is not available here."
+		)
+		return false
+
+	if not _meets_action_requirements(action):
+		return false
+
+	if action.action_script == null:
+		push_error(
+			"Action has no completion script: "
+			+ action.id
+		)
+		return false
+
+	return ActionManager.start_action(
+		action.display_name,
+		action.duration_seconds,
+		action.game_minutes,
+		Callable(
+			self,
+			"_complete_world_action"
+		).bind(action.id)
+	)
+
+
+func _complete_world_action(
+	action_id: String
+) -> void:
 	if current_survivor == null:
 		return
 
-	var search := SearchAction.new()
-	search.perform(current_survivor)
+	var action := ActionDatabase.get_action(
+		action_id
+	)
+
+	if action == null:
+		return
+
+	if action.action_script == null:
+		return
+
+	var action_instance = (
+		action.action_script.new()
+	)
+
+	if not action_instance.has_method("perform"):
+		push_error(
+			"Action script has no perform() method: "
+			+ action.id
+		)
+		return
+
+	action_instance.call(
+		"perform",
+		current_survivor
+	)
+
+	_refresh_ui()
 
 
 func craft_recipe(recipe_id: String) -> bool:
 	if not _can_start_survivor_action():
 		return false
 
-	var recipe := RecipeDatabase.get_recipe(recipe_id)
+	var recipe := RecipeDatabase.get_recipe(
+		recipe_id
+	)
 
 	if recipe == null:
 		return false
@@ -99,7 +175,9 @@ func craft_recipe(recipe_id: String) -> bool:
 	if current_civilization == null:
 		return false
 
-	if not current_civilization.has_recipe(recipe.id):
+	if not current_civilization.has_recipe(
+		recipe.id
+	):
 		_add_event(
 			"That recipe has not been discovered."
 		)
@@ -130,7 +208,9 @@ func _complete_craft(recipe_id: String) -> void:
 	if current_survivor == null:
 		return
 
-	var recipe := RecipeDatabase.get_recipe(recipe_id)
+	var recipe := RecipeDatabase.get_recipe(
+		recipe_id
+	)
 
 	if recipe == null:
 		return
@@ -145,33 +225,57 @@ func _complete_craft(recipe_id: String) -> void:
 	_refresh_ui()
 
 
-func chop_tree() -> bool:
-	if not _can_start_survivor_action():
-		return false
+func get_available_actions() -> Array[ActionData]:
+	if current_location == null:
+		return []
 
-	if not current_survivor.has_equipped_tool(
-		"stone_axe"
+	return current_location.available_actions
+
+
+func _location_allows_action(
+	action_id: String
+) -> bool:
+	for action in get_available_actions():
+		if action == null:
+			continue
+
+		if action.id == action_id:
+			return true
+
+	return false
+
+
+func _meets_action_requirements(
+	action: ActionData
+) -> bool:
+	if action.required_tool_id.is_empty():
+		return true
+
+	if current_survivor.has_equipped_tool(
+		action.required_tool_id
 	):
+		return true
+
+	var tool_data := ItemDatabase.get_item(
+		action.required_tool_id
+	)
+
+	if tool_data == null:
 		_add_event(
-			current_survivor.data.display_name
-			+ " needs an equipped Stone Axe to chop trees."
+			"A required tool is missing."
 		)
 		return false
 
-	return ActionManager.start_action(
-		"Chopping a tree",
-		CHOP_DURATION_SECONDS,
-		CHOP_GAME_MINUTES,
-		Callable(self, "_complete_chop_tree")
+	_add_event(
+		current_survivor.data.display_name
+		+ " needs an equipped "
+		+ tool_data.display_name
+		+ " to "
+		+ action.display_name.to_lower()
+		+ "."
 	)
 
-
-func _complete_chop_tree() -> void:
-	if current_survivor == null:
-		return
-
-	var chop_action := ChopTreeAction.new()
-	chop_action.perform(current_survivor)
+	return false
 
 
 func _can_start_survivor_action() -> bool:

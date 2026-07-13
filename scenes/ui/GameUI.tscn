@@ -51,14 +51,6 @@ offset_bottom = 40.0
 [node name="ActionList" type="VBoxContainer" parent="ActionPanel" unique_id=1863040455]
 layout_mode = 2
 
-[node name="SearchButton" type="Button" parent="ActionPanel/ActionList" unique_id=829570689]
-layout_mode = 2
-text = "Search Area"
-
-[node name="ChopButton" type="Button" parent="ActionPanel/ActionList" unique_id=2147100535]
-layout_mode = 2
-text = "Chop Tree"
-
 [node name="EventLog" type="RichTextLabel" parent="." unique_id=96209853]
 layout_mode = 0
 offset_left = 50.0
@@ -71,10 +63,10 @@ Finnley begins their journey..."
 
 [node name="InventoryLabel" type="Label" parent="." unique_id=215523843]
 layout_mode = 0
-offset_left = 600.0
+offset_left = 900.0
 offset_top = 100.0
-offset_right = 700.0
-offset_bottom = 200.0
+offset_right = 1000.0
+offset_bottom = 201.0
 text = "Inventory
 Wood: 0
 Stone: 0
@@ -92,9 +84,9 @@ XP 0 / 10"
 [node name="CraftPanel" type="PanelContainer" parent="." unique_id=572451678]
 layout_mode = 0
 offset_left = 600.0
-offset_top = 250.0
+offset_top = 300.0
 offset_right = 920.0
-offset_bottom = 470.0
+offset_bottom = 520.0
 
 [node name="CraftList" type="VBoxContainer" parent="CraftPanel" unique_id=514407186]
 layout_mode = 2
@@ -123,11 +115,19 @@ text = "Idle"
 
 [node name="ActionProgress" type="ProgressBar" parent="." unique_id=1576193156]
 layout_mode = 0
-offset_left = 400.0
+offset_left = 600.0
 offset_top = 60.0
-offset_right = 750.0
+offset_right = 950.0
 offset_bottom = 87.0
 
-[connection signal="pressed" from="ActionPanel/ActionList/SearchButton" to="." method="_on_search_button_pressed"]
-[connection signal="pressed" from="ActionPanel/ActionList/ChopButton" to="." method="_on_chop_button_pressed"]
+[node name="LocationLabel" type="Label" parent="." unique_id=605261693]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 130.0
+offset_right = 650.0
+offset_bottom = 230.0
+text = "Forest
+
+A dense stretch of untamed woodland."
+
 [connection signal="pressed" from="CraftPanel/CraftList/CraftButton" to="." method="_on_craft_button_pressed"]

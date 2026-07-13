@@ -1,15 +1,35 @@
 extends Control
 
 
-const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
+const STONE_AXE_RECIPE_ID := (
+	"stone_axe_recipe"
+)
 
 
-@onready var event_log: RichTextLabel = $EventLog
-@onready var inventory_label: Label = $InventoryLabel
-@onready var gathering_label: Label = $GatheringLabel
-@onready var tool_label: Label = $ToolLabel
+@onready var event_log: RichTextLabel = (
+	$EventLog
+)
 
-@onready var time_label: Label = $TimeLabel
+@onready var inventory_label: Label = (
+	$InventoryLabel
+)
+
+@onready var gathering_label: Label = (
+	$GatheringLabel
+)
+
+@onready var tool_label: Label = (
+	$ToolLabel
+)
+
+@onready var location_label: Label = (
+	$LocationLabel
+)
+
+@onready var time_label: Label = (
+	$TimeLabel
+)
+
 @onready var current_action_label: Label = (
 	$CurrentActionLabel
 )
@@ -18,12 +38,8 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 	$ActionProgress
 )
 
-@onready var search_button: Button = (
-	$ActionPanel/ActionList/SearchButton
-)
-
-@onready var chop_button: Button = (
-	$ActionPanel/ActionList/ChopButton
+@onready var action_list: VBoxContainer = (
+	$ActionPanel/ActionList
 )
 
 @onready var recipe_label: Label = (
@@ -35,9 +51,10 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 )
 
 
-func _ready() -> void:
-	print("GameUI Loaded")
+var world_action_buttons: Dictionary = {}
 
+
+func _ready() -> void:
 	GameManager.game_ui = self
 
 	ActionManager.action_started.connect(
@@ -60,10 +77,8 @@ func _ready() -> void:
 		_update_time
 	)
 
+	build_world_action_buttons()
 	refresh_all()
-
-	_update_time()
-	_on_busy_changed(ActionManager.is_busy)
 
 	current_action_label.text = "Idle"
 	action_progress.value = 0.0
@@ -71,22 +86,120 @@ func _ready() -> void:
 
 func refresh_all() -> void:
 	update_survivor()
+	update_location()
+	update_tool_display()
+	update_crafting()
+	update_world_action_buttons()
+	_update_time()
 
 	var survivor := GameManager.current_survivor
 
 	if survivor != null:
-		update_inventory(survivor.inventory)
-
-	update_crafting()
-	update_tool_display()
-	update_action_buttons()
-	_update_time()
+		update_inventory(
+			survivor.inventory
+		)
 
 
 func add_event(event_text: String) -> void:
 	event_log.append_text(
 		"\n" + event_text
 	)
+
+
+func build_world_action_buttons() -> void:
+	for child in action_list.get_children():
+		child.queue_free()
+
+	world_action_buttons.clear()
+
+	for action in GameManager.get_available_actions():
+		if action == null:
+			continue
+
+		var button := Button.new()
+
+		button.name = (
+			action.id.to_pascal_case()
+			+ "Button"
+		)
+
+		button.text = action.display_name
+		button.tooltip_text = action.description
+
+		button.pressed.connect(
+			_on_world_action_pressed.bind(
+				action.id
+			)
+		)
+
+		action_list.add_child(button)
+
+		world_action_buttons[action.id] = button
+
+
+func update_location() -> void:
+	var location := GameManager.current_location
+
+	if location == null:
+		location_label.text = (
+			"Unknown Location"
+		)
+		return
+
+	location_label.text = (
+		location.display_name
+		+ "\n\n"
+		+ location.description
+	)
+
+
+func update_world_action_buttons() -> void:
+	var survivor := GameManager.current_survivor
+
+	for action_id in world_action_buttons:
+		var button: Button = (
+			world_action_buttons[action_id]
+		)
+
+		var action := ActionDatabase.get_action(
+			action_id
+		)
+
+		if action == null:
+			button.disabled = true
+			continue
+
+		var requirements_met := true
+
+		if (
+			not action.required_tool_id.is_empty()
+		):
+			requirements_met = (
+				survivor != null
+				and survivor.has_equipped_tool(
+					action.required_tool_id
+				)
+			)
+
+		button.disabled = (
+			ActionManager.is_busy
+			or not requirements_met
+		)
+
+		if requirements_met:
+			button.tooltip_text = (
+				action.description
+			)
+		else:
+			var tool := ItemDatabase.get_item(
+				action.required_tool_id
+			)
+
+			if tool != null:
+				button.tooltip_text = (
+					"Requires equipped "
+					+ tool.display_name
+				)
 
 
 func update_inventory(
@@ -102,8 +215,10 @@ func update_inventory(
 				item_id
 			)
 
-			var amount := inventory.get_item_amount(
-				item_id
+			var amount := (
+				inventory.get_item_amount(
+					item_id
+				)
 			)
 
 			if item_data == null:
@@ -156,39 +271,22 @@ func update_tool_display() -> void:
 	var survivor := GameManager.current_survivor
 
 	if survivor == null:
-		tool_label.text = "Equipped Tool: None"
+		tool_label.text = (
+			"Equipped Tool: None"
+		)
 		return
 
 	var tool := survivor.get_equipped_tool()
 
 	if tool == null:
-		tool_label.text = "Equipped Tool: None"
+		tool_label.text = (
+			"Equipped Tool: None"
+		)
 		return
 
 	tool_label.text = (
 		"Equipped Tool: "
 		+ tool.display_name
-	)
-
-
-func update_action_buttons() -> void:
-	var survivor := GameManager.current_survivor
-
-	search_button.disabled = ActionManager.is_busy
-
-	if survivor == null:
-		chop_button.visible = false
-		chop_button.disabled = true
-		return
-
-	var can_chop := survivor.has_equipped_tool(
-		"stone_axe"
-	)
-
-	chop_button.visible = can_chop
-	chop_button.disabled = (
-		ActionManager.is_busy
-		or not can_chop
 	)
 
 
@@ -198,14 +296,19 @@ func update_crafting() -> void:
 	)
 
 	var survivor := GameManager.current_survivor
-	var civilization := GameManager.current_civilization
+	var civilization := (
+		GameManager.current_civilization
+	)
 
 	if (
 		recipe == null
 		or survivor == null
 		or civilization == null
 	):
-		recipe_label.text = "Crafting unavailable."
+		recipe_label.text = (
+			"Crafting unavailable."
+		)
+
 		craft_button.disabled = true
 		return
 
@@ -228,11 +331,15 @@ func update_crafting() -> void:
 	)
 
 	for ingredient in recipe.ingredients:
-		if ingredient == null or ingredient.item == null:
+		if (
+			ingredient == null
+			or ingredient.item == null
+		):
 			continue
 
 		var owned := (
-			survivor.inventory.get_item_amount(
+			survivor.inventory
+			.get_item_amount(
 				ingredient.item.id
 			)
 		)
@@ -250,14 +357,23 @@ func update_crafting() -> void:
 
 	craft_button.disabled = (
 		ActionManager.is_busy
-		or not survivor.inventory.can_afford_recipe(
-			recipe
-		)
+		or not survivor.inventory
+		.can_afford_recipe(recipe)
 	)
 
 
 func _update_time() -> void:
-	time_label.text = TimeManager.get_time_text()
+	time_label.text = (
+		TimeManager.get_time_text()
+	)
+
+
+func _on_world_action_pressed(
+	action_id: String
+) -> void:
+	GameManager.start_world_action(
+		action_id
+	)
 
 
 func _on_action_started(
@@ -266,13 +382,17 @@ func _on_action_started(
 	current_action_label.text = action_name
 	action_progress.value = 0.0
 
-	add_event(action_name + " begun.")
+	add_event(
+		action_name + " begun."
+	)
 
 
 func _on_action_progress_changed(
 	progress: float
 ) -> void:
-	action_progress.value = progress * 100.0
+	action_progress.value = (
+		progress * 100.0
+	)
 
 
 func _on_action_completed(
@@ -281,27 +401,17 @@ func _on_action_completed(
 	current_action_label.text = "Idle"
 	action_progress.value = 0.0
 
-	add_event(action_name + " completed.")
+	add_event(
+		action_name + " completed."
+	)
 
 	refresh_all()
 
 
-func _on_busy_changed(is_busy: bool) -> void:
-	search_button.disabled = is_busy
-	chop_button.disabled = is_busy
-
-	if is_busy:
-		craft_button.disabled = true
-	else:
-		refresh_all()
-
-
-func _on_search_button_pressed() -> void:
-	GameManager.search_area()
-
-
-func _on_chop_button_pressed() -> void:
-	GameManager.chop_tree()
+func _on_busy_changed(
+	_is_busy: bool
+) -> void:
+	refresh_all()
 
 
 func _on_craft_button_pressed() -> void:
