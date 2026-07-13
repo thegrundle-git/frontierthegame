@@ -32,15 +32,29 @@ func start_new_game() -> void:
 
 	_game_started = true
 
-	current_civilization = load(
+	var starting_civilization: CivilizationData = load(
 		"res://resources/civilizations/"
 		+ "first_civilization.tres"
 	)
 
-	survivor_data = load(
+	if starting_civilization != null:
+		current_civilization = (
+			starting_civilization.duplicate(true)
+		)
+	else:
+		current_civilization = null
+
+	var starting_survivor_data: SurvivorData = load(
 		"res://resources/characters/"
 		+ "first_survivor.tres"
 	)
+
+	if starting_survivor_data != null:
+		survivor_data = (
+			starting_survivor_data.duplicate(true)
+		)
+	else:
+		survivor_data = null
 
 	current_location = LocationDatabase.get_location(
 		STARTING_LOCATION_ID
@@ -80,8 +94,6 @@ func start_new_game() -> void:
 	current_survivor.initialize(
 		survivor_data
 	)
-
-
 func start_world_action(
 	action_id: String
 ) -> bool:

@@ -28,6 +28,7 @@ DiscoveryManager="*uid://dqpsuwqeclegs"
 RecipeDatabase="*uid://cejfhmr1ugfi1"
 TimeManager="*uid://bekt6l36bngmd"
 ActionManager="*uid://co7t7p8hapcmt"
+SaveManager="*uid://b8j52iihxbed4"
 
 [display]
 

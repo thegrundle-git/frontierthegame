@@ -534,3 +534,17 @@ func _on_event_option_pressed(
 	WorldEventManager.resolve_option(
 		option_id
 	)
+
+
+func _on_save_button_pressed() -> void:
+	SaveManager.save_game()
+
+
+func _on_load_button_pressed() -> void:
+	if SaveManager.load_game():
+		if WorldEventManager.has_pending_event():
+			show_world_event(
+				WorldEventManager.pending_event
+			)
+		else:
+			hide_world_event()
