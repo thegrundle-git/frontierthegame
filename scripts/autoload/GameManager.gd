@@ -158,6 +158,10 @@ func _complete_world_action(
 			action.xp_reward
 		)
 
+		WorldEventManager.try_trigger_after_action(
+			action.id
+		)
+
 	_refresh_ui()
 
 
@@ -323,10 +327,7 @@ func _award_skill_xp(
 	if current_survivor == null:
 		return
 
-	if skill_id.is_empty():
-		return
-
-	if amount <= 0:
+	if skill_id.is_empty() or amount <= 0:
 		return
 
 	current_survivor.gain_skill_xp(
@@ -413,6 +414,9 @@ func _can_start_survivor_action() -> bool:
 		return false
 
 	if ActionManager.is_busy:
+		return false
+
+	if WorldEventManager.has_pending_event():
 		return false
 
 	return true

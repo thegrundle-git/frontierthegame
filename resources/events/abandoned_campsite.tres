@@ -1,0 +1,52 @@
+[gd_resource type="Resource" script_class="WorldEventData" format=3 uid="uid://decjb7gatndgv"]
+
+[ext_resource type="Script" uid="uid://cqst562t271uf" path="res://scripts/resources/EventOptionData.gd" id="1_dedps"]
+[ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="2_n165k"]
+[ext_resource type="Script" uid="uid://ctiahevtjb88x" path="res://scripts/resources/WorldEventData.gd" id="2_ycqud"]
+[ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="3_tb2nd"]
+[ext_resource type="Resource" uid="uid://ctwviw0tgrfik" path="res://resources/items/berry.tres" id="4_70lvn"]
+
+[sub_resource type="Resource" id="Resource_n165k"]
+script = ExtResource("2_n165k")
+item = ExtResource("3_tb2nd")
+amount = 2
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[sub_resource type="Resource" id="Resource_tb2nd"]
+script = ExtResource("2_n165k")
+item = ExtResource("4_70lvn")
+amount = 2
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[sub_resource type="Resource" id="Resource_pt8ql"]
+script = ExtResource("1_dedps")
+id = "investigate"
+display_text = "Investigate the campsite"
+result_text = "Finnley searches through the abandoned camp. Most of it has rotted away, but a few useful supplies remain."
+rewards = Array[ExtResource("2_n165k")]([SubResource("Resource_n165k"), SubResource("Resource_tb2nd")])
+skill_id = "exploration"
+xp_reward = 4
+knowledge_reward = 2
+game_minutes = 45
+metadata/_custom_type_script = "uid://cqst562t271uf"
+
+[sub_resource type="Resource" id="Resource_70lvn"]
+script = ExtResource("1_dedps")
+id = "leave"
+display_text = "Leave it undisturbed"
+result_text = "Finnley decides the abandoned camp is not worth the risk and quietly returns to the trail."
+skill_id = "exploration"
+xp_reward = 1
+metadata/_custom_type_script = "uid://cqst562t271uf"
+
+[resource]
+script = ExtResource("2_ycqud")
+id = "abandoned_campsite"
+display_name = "Abandoned Campsite"
+description = "Beyond a wall of tangled brush, Finnley finds the remains of a small campsite. The fire has long gone cold, but a torn pack still rests beside the ashes."
+trigger_chance_percent = 30.0
+trigger_action_ids = Array[String](["search_area"])
+location_ids = Array[String](["forest"])
+once_only = true
+options = Array[ExtResource("1_dedps")]([SubResource("Resource_pt8ql"), SubResource("Resource_70lvn")])
+metadata/_custom_type_script = "uid://ctiahevtjb88x"

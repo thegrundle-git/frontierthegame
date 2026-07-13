@@ -1,3 +1,27 @@
+## v0.4.0 — World Events and Choices
+
+### Added
+
+* Data-driven world event resources
+* Data-driven event choices
+* Event item rewards
+* Event skill XP rewards
+* Event Insight rewards
+* Event time costs
+* One-time event tracking
+* Event choice overlay
+* Abandoned Campsite event
+
+### Changed
+
+* World actions can now trigger location-specific events
+* Normal actions are locked while a decision is pending
+* The Journal now records major world events and outcomes
+
+### Notes
+
+This version introduces meaningful decisions and begins shifting Frontier from a repeated-action prototype toward an emergent survival narrative.
+
 ## v0.3.1 — Universal Progression
 
 ### Added

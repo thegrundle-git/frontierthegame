@@ -19,7 +19,10 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 
 @onready var recipe_label: Label = %RecipeLabel
 @onready var craft_button: Button = %CraftButton
-
+@onready var event_overlay: CenterContainer = %EventOverlay
+@onready var event_title: Label = %EventTitle
+@onready var event_body: Label = %EventBody
+@onready var event_options: VBoxContainer = %EventOptions
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
@@ -54,7 +57,15 @@ func _ready() -> void:
 
 	current_action_label.text = "Idle"
 	action_progress.value = 0.0
+	WorldEventManager.event_started.connect(
+		_on_world_event_started
+	)
 
+	WorldEventManager.event_resolved.connect(
+		_on_world_event_resolved
+	)
+
+	event_overlay.visible = false
 
 func refresh_all() -> void:
 	update_survivor()
@@ -188,6 +199,9 @@ func update_location() -> void:
 
 func update_world_action_buttons() -> void:
 	var survivor := GameManager.current_survivor
+	var event_pending := (
+		WorldEventManager.has_pending_event()
+	)
 
 	for action_id in world_action_buttons:
 		var button: Button = (
@@ -214,6 +228,7 @@ func update_world_action_buttons() -> void:
 
 		button.disabled = (
 			ActionManager.is_busy
+			or event_pending
 			or not requirements_met
 		)
 
@@ -229,17 +244,20 @@ func update_world_action_buttons() -> void:
 					"Requires equipped "
 					+ tool.display_name
 				)
-
-
 func update_travel_buttons() -> void:
+	var event_pending := (
+		WorldEventManager.has_pending_event()
+	)
+
 	for destination_id in travel_buttons:
 		var button: Button = (
 			travel_buttons[destination_id]
 		)
 
-		button.disabled = ActionManager.is_busy
-
-
+		button.disabled = (
+			ActionManager.is_busy
+			or event_pending
+		)
 func update_inventory(
 	inventory: FrontierInventory
 ) -> void:
@@ -376,12 +394,11 @@ func update_crafting() -> void:
 
 	craft_button.disabled = (
 		ActionManager.is_busy
+		or WorldEventManager.has_pending_event()
 		or not survivor.inventory.can_afford_recipe(
 			recipe
 		)
 	)
-
-
 func _update_time() -> void:
 	time_label.text = TimeManager.get_time_text()
 
@@ -462,4 +479,58 @@ func _on_busy_changed(
 func _on_craft_button_pressed() -> void:
 	GameManager.craft_recipe(
 		STONE_AXE_RECIPE_ID
+	)
+func show_world_event(
+	event: WorldEventData
+) -> void:
+	event_title.text = event.display_name
+	event_body.text = event.description
+
+	for child in event_options.get_children():
+		child.queue_free()
+
+	for option in event.options:
+		if option == null:
+			continue
+
+		var button := Button.new()
+
+		button.text = option.display_text
+		button.custom_minimum_size.y = 42
+
+		button.pressed.connect(
+			_on_event_option_pressed.bind(
+				option.id
+			)
+		)
+
+		event_options.add_child(button)
+
+	event_overlay.visible = true
+
+	refresh_all()
+
+
+func hide_world_event() -> void:
+	event_overlay.visible = false
+
+
+func _on_world_event_started(
+	event: WorldEventData
+) -> void:
+	show_world_event(event)
+
+
+func _on_world_event_resolved(
+	_event: WorldEventData,
+	_option: EventOptionData
+) -> void:
+	hide_world_event()
+
+
+func _on_event_option_pressed(
+	option_id: String
+) -> void:
+	WorldEventManager.resolve_option(
+		option_id
 	)
