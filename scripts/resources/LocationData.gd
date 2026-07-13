@@ -8,5 +8,5 @@ class_name LocationData
 @export_multiline
 var description: String = ""
 
-@export var available_actions: Array[ActionData] = []
-@export var travel_connections: Array[TravelConnectionData] = []
+@export var available_actions: Array = []
+@export var travel_connections: Array = []

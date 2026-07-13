@@ -1,9 +1,6 @@
 extends Node
 
 
-const ACTION_FOLDER := "res://resources/actions/"
-
-
 var actions: Dictionary = {}
 
 
@@ -14,35 +11,41 @@ func _ready() -> void:
 func load_actions() -> void:
 	actions.clear()
 
-	var file_names := DirAccess.get_files_at(
-		ACTION_FOLDER
-	)
+	var action_paths: Array[String] = [
+		"res://resources/actions/search_area.tres",
+		"res://resources/actions/chop_tree.tres"
+	]
 
-	for file_name in file_names:
-		if not file_name.ends_with(".tres"):
-			continue
+	for action_path in action_paths:
+		var action_resource := load(action_path)
 
-		var resource_path := (
-			ACTION_FOLDER + file_name
-		)
-
-		var loaded_resource := load(
-			resource_path
-		)
-
-		if loaded_resource is not ActionData:
-			push_warning(
-				"Skipped non-ActionData resource: "
-				+ resource_path
+		if action_resource == null:
+			push_error(
+				"Failed to load action: "
+				+ action_path
 			)
 			continue
 
-		register(loaded_resource)
+		if action_resource is not ActionData:
+			push_error(
+				"Resource is not ActionData: "
+				+ action_path
+			)
+			continue
 
-	print("Loaded ", actions.size(), " actions.")
+		register(action_resource)
+
+	print(
+		"Loaded ",
+		actions.size(),
+		" actions."
+	)
 
 
 func register(action: ActionData) -> void:
+	if action == null:
+		return
+
 	if action.id.is_empty():
 		push_error(
 			"Action has no ID: "
@@ -51,16 +54,14 @@ func register(action: ActionData) -> void:
 		return
 
 	if actions.has(action.id):
-		push_error(
-			"Duplicate action ID: "
-				+ action.id
-		)
 		return
 
 	actions[action.id] = action
 
 
-func get_action(action_id: String) -> ActionData:
+func get_action(
+	action_id: String
+) -> ActionData:
 	if not actions.has(action_id):
 		push_warning(
 			"Unknown action ID requested: "

@@ -19,9 +19,28 @@ var _game_started := false
 
 
 func _ready() -> void:
+	call_deferred("_initialize_game")
+
+
+func _initialize_game() -> void:
+	ActionDatabase.load_actions()
+	LocationDatabase.load_locations()
+	ItemDatabase.load_items()
+	RecipeDatabase.load_recipes()
+	DiscoveryDatabase.load_discoveries()
+	WorldEventDatabase.load_events()
+
 	start_new_game()
 
+	call_deferred("_refresh_game_ui_after_start")
 
+func _refresh_game_ui_after_start() -> void:
+	if game_ui == null:
+		return
+
+	game_ui.rebuild_location_controls()
+	game_ui.refresh_all()
+	
 func start_new_game() -> void:
 	if _game_started:
 		push_warning(

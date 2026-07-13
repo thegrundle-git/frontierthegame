@@ -1,3 +1,26 @@
+## v0.4.1 — Persistent Worlds
+
+### Added
+
+* JSON-based save and load system
+* Manual Save and Load buttons
+* Persistent survivor progression
+* Persistent inventory and equipped tools
+* Persistent world time and location
+* Persistent civilization Insight
+* Persistent discoveries and unlocked recipes
+* Persistent completed world events
+* Save version validation
+
+### Changed
+
+* Survivor and civilization templates are duplicated at runtime instead of edited directly
+* Runtime game state is now fully serializable
+
+### Developer Notes
+
+This version marks the transition from a session-based prototype to a persistent survival world. Future features such as a main menu, Continue option, character creation, and multiple save slots will build directly on this foundation.
+
 ## v0.4.0 — World Events and Choices
 
 ### Added

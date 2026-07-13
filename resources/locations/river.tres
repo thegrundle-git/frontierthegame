@@ -1,6 +1,5 @@
 [gd_resource type="Resource" script_class="LocationData" format=3 uid="uid://c34dox5ofuluv"]
 
-[ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="1_wfkip"]
 [ext_resource type="Resource" uid="uid://b83evycxax6um" path="res://resources/actions/search_area.tres" id="2_lq47s"]
 [ext_resource type="Script" uid="uid://dxiqo5ie3ebvb" path="res://scripts/resources/LocationData.gd" id="2_tisep"]
 [ext_resource type="Script" uid="uid://clqlxjcsk56f3" path="res://scripts/resources/TravelConnectionData.gd" id="3_lq47s"]
@@ -17,6 +16,6 @@ script = ExtResource("2_tisep")
 id = "river"
 display_name = "River"
 description = "A natural freshwater watercourse that supports the surrounding environment. A dependable source of water and a common place to find useful resources."
-available_actions = Array[ExtResource("1_wfkip")]([ExtResource("2_lq47s")])
-travel_connections = Array[ExtResource("3_lq47s")]([SubResource("Resource_b71gb")])
+available_actions = [ExtResource("2_lq47s")]
+travel_connections = [SubResource("Resource_b71gb")]
 metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

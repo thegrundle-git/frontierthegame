@@ -29,7 +29,6 @@ var travel_buttons: Dictionary = {}
 
 
 func _ready() -> void:
-	GameManager.game_ui = self
 
 	ActionManager.action_started.connect(
 		_on_action_started
@@ -66,7 +65,9 @@ func _ready() -> void:
 	)
 
 	event_overlay.visible = false
-
+	GameManager.game_ui = self
+	call_deferred("_request_initial_refresh")
+	
 func refresh_all() -> void:
 	update_survivor()
 	update_location()
@@ -548,3 +549,9 @@ func _on_load_button_pressed() -> void:
 			)
 		else:
 			hide_world_event()
+func _request_initial_refresh() -> void:
+	if GameManager.current_survivor == null:
+		return
+
+	rebuild_location_controls()
+	refresh_all()

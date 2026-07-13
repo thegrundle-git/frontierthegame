@@ -1,9 +1,6 @@
 extends Node
 
 
-const LOCATION_FOLDER := "res://resources/locations/"
-
-
 var locations: Dictionary = {}
 
 
@@ -14,30 +11,29 @@ func _ready() -> void:
 func load_locations() -> void:
 	locations.clear()
 
-	var file_names := DirAccess.get_files_at(
-		LOCATION_FOLDER
-	)
+	var location_paths: Array[String] = [
+		"res://resources/locations/forest.tres",
+		"res://resources/locations/river.tres"
+	]
 
-	for file_name in file_names:
-		if not file_name.ends_with(".tres"):
-			continue
+	for location_path in location_paths:
+		var location_resource := load(location_path)
 
-		var resource_path := (
-			LOCATION_FOLDER + file_name
-		)
-
-		var loaded_resource := load(
-			resource_path
-		)
-
-		if loaded_resource is not LocationData:
-			push_warning(
-				"Skipped non-LocationData resource: "
-				+ resource_path
+		if location_resource == null:
+			push_error(
+				"Failed to load location: "
+				+ location_path
 			)
 			continue
 
-		register(loaded_resource)
+		if location_resource is not LocationData:
+			push_error(
+				"Resource is not LocationData: "
+				+ location_path
+			)
+			continue
+
+		register(location_resource)
 
 	print(
 		"Loaded ",
@@ -47,6 +43,9 @@ func load_locations() -> void:
 
 
 func register(location: LocationData) -> void:
+	if location == null:
+		return
+
 	if location.id.is_empty():
 		push_error(
 			"Location has no ID: "
@@ -55,10 +54,6 @@ func register(location: LocationData) -> void:
 		return
 
 	if locations.has(location.id):
-		push_error(
-			"Duplicate location ID: "
-				+ location.id
-		)
 		return
 
 	locations[location.id] = location
