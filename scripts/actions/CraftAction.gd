@@ -45,7 +45,33 @@ func perform(
 		+ "."
 	)
 
+	_auto_equip_first_tool(
+		survivor,
+		recipe
+	)
+
 	return true
+
+
+func _auto_equip_first_tool(
+	survivor: Survivor,
+	recipe: RecipeData
+) -> void:
+	if not survivor.equipped_tool_id.is_empty():
+		return
+
+	for result in recipe.results:
+		if result == null or result.item == null:
+			continue
+
+		if "tool" not in result.item.tags:
+			continue
+
+		survivor.equip_tool(
+			result.item.id
+		)
+
+		return
 
 
 func _add_event(message: String) -> void:

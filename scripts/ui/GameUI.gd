@@ -7,6 +7,7 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 @onready var event_log: RichTextLabel = $EventLog
 @onready var inventory_label: Label = $InventoryLabel
 @onready var gathering_label: Label = $GatheringLabel
+@onready var tool_label: Label = $ToolLabel
 
 @onready var time_label: Label = $TimeLabel
 @onready var current_action_label: Label = (
@@ -19,6 +20,10 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 
 @onready var search_button: Button = (
 	$ActionPanel/ActionList/SearchButton
+)
+
+@onready var chop_button: Button = (
+	$ActionPanel/ActionList/ChopButton
 )
 
 @onready var recipe_label: Label = (
@@ -63,6 +68,7 @@ func _ready() -> void:
 	current_action_label.text = "Idle"
 	action_progress.value = 0.0
 
+
 func refresh_all() -> void:
 	update_survivor()
 
@@ -72,6 +78,8 @@ func refresh_all() -> void:
 		update_inventory(survivor.inventory)
 
 	update_crafting()
+	update_tool_display()
+	update_action_buttons()
 	_update_time()
 
 
@@ -141,6 +149,46 @@ func update_survivor() -> void:
 		+ str(xp)
 		+ " / "
 		+ str(xp_needed)
+	)
+
+
+func update_tool_display() -> void:
+	var survivor := GameManager.current_survivor
+
+	if survivor == null:
+		tool_label.text = "Equipped Tool: None"
+		return
+
+	var tool := survivor.get_equipped_tool()
+
+	if tool == null:
+		tool_label.text = "Equipped Tool: None"
+		return
+
+	tool_label.text = (
+		"Equipped Tool: "
+		+ tool.display_name
+	)
+
+
+func update_action_buttons() -> void:
+	var survivor := GameManager.current_survivor
+
+	search_button.disabled = ActionManager.is_busy
+
+	if survivor == null:
+		chop_button.visible = false
+		chop_button.disabled = true
+		return
+
+	var can_chop := survivor.has_equipped_tool(
+		"stone_axe"
+	)
+
+	chop_button.visible = can_chop
+	chop_button.disabled = (
+		ActionManager.is_busy
+		or not can_chop
 	)
 
 
@@ -240,15 +288,20 @@ func _on_action_completed(
 
 func _on_busy_changed(is_busy: bool) -> void:
 	search_button.disabled = is_busy
+	chop_button.disabled = is_busy
 
 	if is_busy:
 		craft_button.disabled = true
 	else:
-		update_crafting()
+		refresh_all()
 
 
 func _on_search_button_pressed() -> void:
 	GameManager.search_area()
+
+
+func _on_chop_button_pressed() -> void:
+	GameManager.chop_tree()
 
 
 func _on_craft_button_pressed() -> void:

@@ -7,6 +7,9 @@ const SEARCH_GAME_MINUTES := 30
 const CRAFT_DURATION_SECONDS := 4.0
 const CRAFT_GAME_MINUTES := 45
 
+const CHOP_DURATION_SECONDS := 5.0
+const CHOP_GAME_MINUTES := 120
+
 
 var current_survivor: Survivor
 var survivor_data: SurvivorData
@@ -124,6 +127,37 @@ func _complete_craft(recipe_id: String) -> void:
 
 	if game_ui:
 		game_ui.refresh_all()
+
+
+func chop_tree() -> bool:
+	if current_survivor == null:
+		return false
+
+	if ActionManager.is_busy:
+		return false
+
+	if not current_survivor.has_equipped_tool(
+		"stone_axe"
+	):
+		_add_event(
+			"Finnley needs an equipped Stone Axe to chop trees."
+		)
+		return false
+
+	return ActionManager.start_action(
+		"Chopping a tree",
+		CHOP_DURATION_SECONDS,
+		CHOP_GAME_MINUTES,
+		Callable(self, "_complete_chop_tree")
+	)
+
+
+func _complete_chop_tree() -> void:
+	if current_survivor == null:
+		return
+
+	var chop_action := ChopTreeAction.new()
+	chop_action.perform(current_survivor)
 
 
 func _add_event(message: String) -> void:

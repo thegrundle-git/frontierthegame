@@ -35,6 +35,13 @@ text = "Health: 100/100"
 layout_mode = 2
 text = "Hunger: 100/100"
 
+[node name="ToolLabel" type="Label" parent="." unique_id=1305648133]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 90.0
+offset_right = 440.0
+offset_bottom = 113.0
+
 [node name="ActionPanel" type="PanelContainer" parent="." unique_id=980779684]
 layout_mode = 0
 offset_left = 130.0
@@ -47,6 +54,10 @@ layout_mode = 2
 [node name="SearchButton" type="Button" parent="ActionPanel/ActionList" unique_id=829570689]
 layout_mode = 2
 text = "Search Area"
+
+[node name="ChopButton" type="Button" parent="ActionPanel/ActionList" unique_id=2147100535]
+layout_mode = 2
+text = "Chop Tree"
 
 [node name="EventLog" type="RichTextLabel" parent="." unique_id=96209853]
 layout_mode = 0
@@ -118,4 +129,5 @@ offset_right = 750.0
 offset_bottom = 87.0
 
 [connection signal="pressed" from="ActionPanel/ActionList/SearchButton" to="." method="_on_search_button_pressed"]
+[connection signal="pressed" from="ActionPanel/ActionList/ChopButton" to="." method="_on_chop_button_pressed"]
 [connection signal="pressed" from="CraftPanel/CraftList/CraftButton" to="." method="_on_craft_button_pressed"]
