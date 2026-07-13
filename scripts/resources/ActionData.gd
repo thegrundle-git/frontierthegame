@@ -13,4 +13,9 @@ var description: String = ""
 
 @export var required_tool_id: String = ""
 
+@export_group("Progression")
+@export var skill_id: String = ""
+@export var xp_reward: int = 0
+
+@export_group("Resolution")
 @export var action_script: Script

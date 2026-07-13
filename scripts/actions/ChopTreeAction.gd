@@ -18,14 +18,15 @@ func perform(survivor: Survivor) -> bool:
 		)
 		return false
 
-	var amount := _calculate_log_yield(survivor)
+	var amount := _calculate_log_yield(
+		survivor
+	)
 
 	survivor.inventory.add_item(
 		WOOD_LOG_ITEM_ID,
 		amount
 	)
 
-	survivor.gain_gathering_xp(4)
 	survivor.gain_knowledge(2)
 
 	DiscoveryManager.record_item_observation(
@@ -51,21 +52,25 @@ func perform(survivor: Survivor) -> bool:
 			+ str(amount)
 		)
 
-	if GameManager.game_ui:
-		GameManager.game_ui.refresh_all()
-
 	return true
 
 
 func _calculate_log_yield(
 	survivor: Survivor
 ) -> int:
-	if survivor.data.gathering_level >= 5:
+	var gathering := survivor.get_skill(
+		"gathering"
+	)
+
+	if (
+		gathering != null
+		and gathering.level >= 5
+	):
 		return 2
 
 	return 1
 
 
 func _add_event(message: String) -> void:
-	if GameManager.game_ui:
+	if GameManager.game_ui != null:
 		GameManager.game_ui.add_event(message)

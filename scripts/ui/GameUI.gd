@@ -6,7 +6,7 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 
 @onready var event_log: RichTextLabel = %EventLog
 @onready var inventory_label: Label = %InventoryLabel
-@onready var gathering_label: Label = %GatheringLabel
+@onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
 @onready var location_label: Label = %LocationLabel
 
@@ -280,24 +280,24 @@ func update_survivor() -> void:
 	var survivor := GameManager.current_survivor
 
 	if survivor == null:
-		gathering_label.text = "Gathering unavailable."
+		skills_label.text = "Skills unavailable."
 		return
 
-	var level: int = survivor.data.gathering_level
-	var xp: int = survivor.data.gathering_xp
-	var xp_needed: int = level * 10
+	var skill_text := "Skills\n\n"
 
-	gathering_label.text = (
-		"Gathering\n"
-		+ "Level "
-		+ str(level)
-		+ "\nXP "
-		+ str(xp)
-		+ " / "
-		+ str(xp_needed)
-	)
+	for skill in survivor.get_all_skills():
+		skill_text += (
+			skill.display_name
+			+ "\nLevel "
+			+ str(skill.level)
+			+ " — XP "
+			+ str(skill.xp)
+			+ " / "
+			+ str(skill.get_xp_needed())
+			+ "\n\n"
+		)
 
-
+	skills_label.text = skill_text
 func update_tool_display() -> void:
 	var survivor := GameManager.current_survivor
 

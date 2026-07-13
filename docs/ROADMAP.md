@@ -6,11 +6,10 @@ This roadmap represents the planned direction of Frontier. Features may move, ch
 
 # Current Version
 
-## v0.1.9
-Data-Driven Actions and First Location
+## v0.3.1
+Universal Progression
 
 Status: Complete
----
 
 # Immediate Roadmap
 

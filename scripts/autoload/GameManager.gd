@@ -76,7 +76,10 @@ func start_new_game() -> void:
 		return
 
 	current_survivor = survivor_scene.instantiate()
-	current_survivor.initialize(survivor_data)
+
+	current_survivor.initialize(
+		survivor_data
+	)
 
 
 func start_world_action(
@@ -144,10 +147,16 @@ func _complete_world_action(
 		)
 		return
 
-	action_instance.call(
+	var succeeded: bool = action_instance.call(
 		"perform",
 		current_survivor
 	)
+
+	if succeeded:
+		_award_skill_xp(
+			action.skill_id,
+			action.xp_reward
+		)
 
 	_refresh_ui()
 
@@ -225,10 +234,17 @@ func _complete_travel(
 		+ "."
 	)
 
+	_award_skill_xp(
+		connection.skill_id,
+		connection.xp_reward
+	)
+
 	_refresh_ui()
 
 
-func craft_recipe(recipe_id: String) -> bool:
+func craft_recipe(
+	recipe_id: String
+) -> bool:
 	if not _can_start_survivor_action():
 		return false
 
@@ -271,7 +287,9 @@ func craft_recipe(recipe_id: String) -> bool:
 	)
 
 
-func _complete_craft(recipe_id: String) -> void:
+func _complete_craft(
+	recipe_id: String
+) -> void:
 	if current_survivor == null:
 		return
 
@@ -284,12 +302,37 @@ func _complete_craft(recipe_id: String) -> void:
 
 	var craft_action := CraftAction.new()
 
-	craft_action.perform(
+	var succeeded := craft_action.perform(
 		current_survivor,
 		recipe
 	)
 
+	if succeeded:
+		_award_skill_xp(
+			recipe.skill_id,
+			recipe.xp_reward
+		)
+
 	_refresh_ui()
+
+
+func _award_skill_xp(
+	skill_id: String,
+	amount: int
+) -> void:
+	if current_survivor == null:
+		return
+
+	if skill_id.is_empty():
+		return
+
+	if amount <= 0:
+		return
+
+	current_survivor.gain_skill_xp(
+		skill_id,
+		amount
+	)
 
 
 func get_available_actions() -> Array[ActionData]:

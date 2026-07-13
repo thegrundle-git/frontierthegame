@@ -29,5 +29,6 @@ display_name = "Stone Axe"
 ingredients = Array[ExtResource("1_wfc1c")]([SubResource("Resource_v66kp"), SubResource("Resource_sj6sv")])
 results = Array[ExtResource("1_wfc1c")]([SubResource("Resource_qvuqr")])
 craft_time = 30
+xp_reward = 5
 description = "A simple hand tool constructed by securing a knapped stone head to a hardwood haft using natural cordage. While primitive in design, the broad cutting edge provides sufficient force for felling small trees, processing timber, and other basic survival tasks. Its effectiveness relies more on careful construction than refined materials."
 metadata/_custom_type_script = "uid://ck8q7c4l76io2"

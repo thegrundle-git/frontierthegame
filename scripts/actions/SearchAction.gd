@@ -2,7 +2,10 @@ extends Node
 class_name SearchAction
 
 
-func perform(survivor: Survivor) -> void:
+func perform(survivor: Survivor) -> bool:
+	if survivor == null:
+		return false
+
 	var roll := randi_range(1, 100)
 
 	var item_id := ""
@@ -12,6 +15,7 @@ func perform(survivor: Survivor) -> void:
 	if roll <= 45:
 		item_id = "stick"
 		amount = 1
+
 		event_text = (
 			survivor.data.display_name
 			+ " searched beneath the brush and found a usable stick."
@@ -20,6 +24,7 @@ func perform(survivor: Survivor) -> void:
 	elif roll <= 75:
 		item_id = "stone"
 		amount = 1
+
 		event_text = (
 			survivor.data.display_name
 			+ " uncovered a loose stone among the dirt and roots."
@@ -28,6 +33,7 @@ func perform(survivor: Survivor) -> void:
 	elif roll <= 90:
 		item_id = "berry"
 		amount = 1
+
 		event_text = (
 			survivor.data.display_name
 			+ " found a cluster of wild berries."
@@ -39,7 +45,6 @@ func perform(survivor: Survivor) -> void:
 			+ " searched the area but found nothing useful."
 		)
 
-	survivor.gain_gathering_xp(2)
 	survivor.gain_knowledge(1)
 
 	if not item_id.is_empty():
@@ -54,20 +59,24 @@ func perform(survivor: Survivor) -> void:
 
 	DiscoveryManager.check_discoveries()
 
-	if GameManager.game_ui:
-		GameManager.game_ui.add_event(event_text)
+	_add_event(event_text)
 
-		if not item_id.is_empty():
-			var item_data := ItemDatabase.get_item(
-				item_id
+	if not item_id.is_empty():
+		var item_data := ItemDatabase.get_item(
+			item_id
+		)
+
+		if item_data != null:
+			_add_event(
+				"Found: "
+				+ item_data.display_name
+				+ " x"
+				+ str(amount)
 			)
 
-			if item_data != null:
-				GameManager.game_ui.add_event(
-					"Found: "
-					+ item_data.display_name
-					+ " x"
-					+ str(amount)
-				)
+	return true
 
-		GameManager.game_ui.refresh_all()
+
+func _add_event(message: String) -> void:
+	if GameManager.game_ui != null:
+		GameManager.game_ui.add_event(message)

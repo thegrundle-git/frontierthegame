@@ -11,5 +11,7 @@ description = "Fell a small tree and cut away the usable timber."
 duration_seconds = 5.0
 game_minutes = 120
 required_tool_id = "stone_axe"
+skill_id = "gathering"
+xp_reward = 4
 action_script = ExtResource("1_jidqd")
 metadata/_custom_type_script = "uid://dxw7aqst831bm"

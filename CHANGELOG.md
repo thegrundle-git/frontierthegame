@@ -1,3 +1,31 @@
+## v0.3.1 — Universal Progression
+
+### Added
+
+* Reusable SkillProgress system
+* Gathering skill progression
+* Crafting skill progression
+* Exploration skill progression
+* Data-driven XP rewards for world actions
+* Data-driven XP rewards for travel
+* Data-driven XP rewards for recipes
+* Multi-skill interface
+* Visible XP reward messages
+* Generic skill level-up messages
+
+### Changed
+
+* Search XP is now defined by ActionData
+* Tree Chopping XP is now defined by ActionData
+* Travel now grants Exploration XP
+* Crafting now grants Crafting XP
+* Gathering yield bonuses now use the reusable skill system
+* Completed actions always provide meaningful progression
+
+### Notes
+
+This version strengthens the progression loop by ensuring every completed action advances at least one survivor skill.
+
 ## v0.1.9 — Data-Driven Actions and First Location
 
 ### Added

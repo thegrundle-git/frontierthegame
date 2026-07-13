@@ -10,5 +10,7 @@ display_name = "Search Area"
 description = "Search the surrounding wilderness for anything useful."
 duration_seconds = 3.0
 game_minutes = 30
+skill_id = "gathering"
+xp_reward = 2
 action_script = ExtResource("1_h6u7c")
 metadata/_custom_type_script = "uid://dxw7aqst831bm"
