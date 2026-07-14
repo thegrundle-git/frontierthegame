@@ -13,7 +13,8 @@ func load_locations() -> void:
 
 	var location_paths: Array[String] = [
 		"res://resources/locations/forest.tres",
-		"res://resources/locations/river.tres"
+		"res://resources/locations/river.tres",
+		"res://resources/locations/meadow.tres"
 	]
 
 	for location_path in location_paths:

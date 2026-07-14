@@ -3,13 +3,44 @@
 [ext_resource type="Resource" uid="uid://b83evycxax6um" path="res://resources/actions/search_area.tres" id="2_36u8b"]
 [ext_resource type="Script" uid="uid://dxiqo5ie3ebvb" path="res://scripts/resources/LocationData.gd" id="2_mqbdk"]
 [ext_resource type="Resource" uid="uid://d3im85fkwvyg2" path="res://resources/actions/chop_tree.tres" id="3_7q3hv"]
+[ext_resource type="Resource" uid="uid://ctwviw0tgrfik" path="res://resources/items/berry.tres" id="4_b71gb"]
 [ext_resource type="Script" uid="uid://clqlxjcsk56f3" path="res://scripts/resources/TravelConnectionData.gd" id="5_e2bfc"]
+[ext_resource type="Script" uid="uid://c3lxm4ibtebmo" path="res://scripts/resources/SearchLootEntryData.gd" id="5_ov7sf"]
+[ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="6_mnpna"]
+[ext_resource type="Resource" uid="uid://clcyx5iqp0lgl" path="res://resources/items/stone.tres" id="7_im3hc"]
 
-[sub_resource type="Resource" id="Resource_jq5ug"]
+[sub_resource type="Resource" id="Resource_r8hcy"]
+script = ExtResource("5_ov7sf")
+item = ExtResource("4_b71gb")
+weight = 15
+maximum_amount = 2
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_3pxe2"]
+script = ExtResource("5_ov7sf")
+item = ExtResource("6_mnpna")
+weight = 45
+maximum_amount = 2
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_jwej7"]
+script = ExtResource("5_ov7sf")
+item = ExtResource("7_im3hc")
+weight = 30
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_mqbdk"]
 script = ExtResource("5_e2bfc")
 destination_id = "river"
 duration_seconds = 4.0
-description = "Follow a narrow animal trail downhill until the sound of running water breaks through the trees."
+metadata/_custom_type_script = "uid://clqlxjcsk56f3"
+
+[sub_resource type="Resource" id="Resource_36u8b"]
+script = ExtResource("5_e2bfc")
+destination_id = "meadow"
+duration_seconds = 5.0
+game_minutes = 180
+xp_reward = 3
 metadata/_custom_type_script = "uid://clqlxjcsk56f3"
 
 [resource]
@@ -18,5 +49,6 @@ id = "forest"
 display_name = "Forest"
 description = "A region dominated by dense tree cover. Rich in renewable resources, though finding them still requires time and effort."
 available_actions = [ExtResource("2_36u8b"), ExtResource("3_7q3hv")]
-travel_connections = [SubResource("Resource_jq5ug")]
+travel_connections = [SubResource("Resource_mqbdk"), SubResource("Resource_36u8b"), null]
+search_loot = Array[Resource]([SubResource("Resource_r8hcy"), SubResource("Resource_3pxe2"), SubResource("Resource_jwej7")])
 metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

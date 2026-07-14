@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="LocationData" format=3 uid="uid://dfj6hpa5okysq"]
+
+[ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="1_1vv03"]
+[ext_resource type="Resource" uid="uid://b83evycxax6um" path="res://resources/actions/search_area.tres" id="1_np2v2"]
+[ext_resource type="Script" uid="uid://dxiqo5ie3ebvb" path="res://scripts/resources/LocationData.gd" id="3_fefgo"]
+[ext_resource type="Resource" uid="uid://cmecjlbpkscjm" path="res://resources/items/herb.tres" id="4_1hl72"]
+[ext_resource type="Script" uid="uid://clqlxjcsk56f3" path="res://scripts/resources/TravelConnectionData.gd" id="4_fefgo"]
+[ext_resource type="Script" uid="uid://c3lxm4ibtebmo" path="res://scripts/resources/SearchLootEntryData.gd" id="5_mj1na"]
+[ext_resource type="Resource" uid="uid://ctwviw0tgrfik" path="res://resources/items/berry.tres" id="6_sko63"]
+[ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="7_lcd2k"]
+[ext_resource type="Resource" uid="uid://cjeguvv2epm3y" path="res://resources/items/flower.tres" id="8_h4vq3"]
+
+[sub_resource type="Resource" id="Resource_wuuc8"]
+script = ExtResource("5_mj1na")
+item = ExtResource("4_1hl72")
+weight = 35
+maximum_amount = 2
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_hpfw3"]
+script = ExtResource("5_mj1na")
+item = ExtResource("6_sko63")
+weight = 25
+maximum_amount = 2
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_xlnlg"]
+script = ExtResource("5_mj1na")
+item = ExtResource("7_lcd2k")
+weight = 20
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_k18l8"]
+script = ExtResource("5_mj1na")
+item = ExtResource("8_h4vq3")
+weight = 12
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_36u8b"]
+script = ExtResource("4_fefgo")
+destination_id = "forest"
+duration_seconds = 5.0
+game_minutes = 180
+xp_reward = 3
+metadata/_custom_type_script = "uid://clqlxjcsk56f3"
+
+[resource]
+script = ExtResource("3_fefgo")
+id = "meadow"
+display_name = "Meadow"
+description = "Tall grass sways gently in the breeze, concealing herbs, flowers, and the occasional wandering animal. The open land feels peaceful, but even peaceful places can hide danger."
+available_actions = Array[ExtResource("1_1vv03")]([ExtResource("1_np2v2")])
+travel_connections = Array[ExtResource("4_fefgo")]([SubResource("Resource_36u8b")])
+search_loot = Array[Resource]([SubResource("Resource_wuuc8"), SubResource("Resource_hpfw3"), SubResource("Resource_xlnlg"), SubResource("Resource_k18l8")])
+empty_search_weight = 8
+metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

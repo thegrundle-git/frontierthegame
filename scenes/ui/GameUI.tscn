@@ -115,12 +115,10 @@ size_flags_vertical = 3
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="InventoryLabel" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=1375334822]
+[node name="InventoryLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=1901707611]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Inventory
-
-Empty"
+size_flags_vertical = 3
 
 [node name="RightColumn" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow" unique_id=2073829759]
 layout_mode = 2
@@ -141,42 +139,6 @@ text = "Actions"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CraftPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=12433698]
-layout_mode = 2
-
-[node name="CraftList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/CraftPanel" unique_id=1776161968]
-layout_mode = 2
-
-[node name="RecipeLabel" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/CraftPanel/CraftList" unique_id=1619250410]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Crafting
-
-No recipes discovered."
-
-[node name="CraftButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/CraftPanel/CraftList" unique_id=2007992763]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Craft Stone Axe"
-
-[node name="JournalPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=1891697158]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="JournalLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/JournalPanel" unique_id=947956]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="JournalTitle" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/JournalPanel/JournalLayout" unique_id=336282257]
-layout_mode = 2
-text = "Journal"
-
-[node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/JournalPanel/JournalLayout" unique_id=782362239]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-scroll_following = true
-
 [node name="TravelPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=1056504366]
 layout_mode = 2
 
@@ -190,6 +152,72 @@ text = "Travel"
 [node name="TravelList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/TravelPanel/TravelLayout" unique_id=1482779917]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="DetailTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=314125264]
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Journal" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs" unique_id=1891697158]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_tab_index = 0
+
+[node name="JournalTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal" unique_id=848680813]
+unique_name_in_owner = true
+layout_mode = 2
+current_tab = 0
+
+[node name="Chronicle" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=2021029852]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Chronicle" unique_id=606803694]
+unique_name_in_owner = true
+layout_mode = 2
+scroll_following = true
+
+[node name="Locations" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=1193564463]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="LocationsLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Locations" unique_id=1351369458]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No locations recorded."
+
+[node name="Discoveries" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=1940248824]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="DiscoveriesLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Discoveries" unique_id=220362884]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No discoveries recorded."
+
+[node name="Crafting" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs" unique_id=12433698]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="CraftList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Crafting" unique_id=1776161968]
+layout_mode = 2
+
+[node name="RecipeLabel" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Crafting/CraftList" unique_id=1619250410]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+text = "Crafting
+
+No recipes discovered."
+
+[node name="CraftButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Crafting/CraftList" unique_id=2007992763]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "Craft Stone Axe"
 
 [node name="EventOverlay" type="CenterContainer" parent="." unique_id=1164358211]
 unique_name_in_owner = true
@@ -225,4 +253,4 @@ layout_mode = 2
 
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/LoadButton" to="." method="_on_load_button_pressed"]
-[connection signal="pressed" from="ScreenMargin/MainLayout/MiddleRow/RightColumn/CraftPanel/CraftList/CraftButton" to="." method="_on_craft_button_pressed"]
+[connection signal="pressed" from="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Crafting/CraftList/CraftButton" to="." method="_on_craft_button_pressed"]

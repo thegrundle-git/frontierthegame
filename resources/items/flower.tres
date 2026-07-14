@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cjeguvv2epm3y"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_i1juu"]
+
+[resource]
+script = ExtResource("1_i1juu")
+id = "flower"
+display_name = "Wild Flower"
+description = "A small flower rising above the grass. Its bright petals seem almost wasteful in a place where everything else struggles to survive."
+category = "Resource"
+weight = 0.05
+tags = Array[String](["gathering", "plant"])
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

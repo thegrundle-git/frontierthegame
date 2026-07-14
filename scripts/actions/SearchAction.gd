@@ -6,77 +6,125 @@ func perform(survivor: Survivor) -> bool:
 	if survivor == null:
 		return false
 
-	var roll := randi_range(1, 100)
+	var location := GameManager.current_location
 
-	var item_id := ""
-	var amount := 0
-	var event_text := ""
-
-	if roll <= 45:
-		item_id = "stick"
-		amount = 1
-
-		event_text = (
-			survivor.data.display_name
-			+ " searched beneath the brush and found a usable stick."
+	if location == null:
+		_add_event(
+			"There is nowhere to search."
 		)
+		return false
 
-	elif roll <= 75:
-		item_id = "stone"
-		amount = 1
-
-		event_text = (
-			survivor.data.display_name
-			+ " uncovered a loose stone among the dirt and roots."
-		)
-
-	elif roll <= 90:
-		item_id = "berry"
-		amount = 1
-
-		event_text = (
-			survivor.data.display_name
-			+ " found a cluster of wild berries."
-		)
-
-	else:
-		event_text = (
-			survivor.data.display_name
-			+ " searched the area but found nothing useful."
-		)
+	var chosen_entry := _choose_loot_entry(
+		location
+	)
 
 	survivor.gain_knowledge(1)
 
-	if not item_id.is_empty():
-		survivor.inventory.add_item(
-			item_id,
-			amount
+	if chosen_entry == null:
+		_add_event(
+			survivor.data.display_name
+			+ " searched "
+			+ location.display_name
+			+ " but found nothing useful."
 		)
 
-		DiscoveryManager.record_item_observation(
-			item_id
+		DiscoveryManager.check_discoveries()
+		return true
+
+	if chosen_entry.item == null:
+		push_warning(
+			"Search loot entry has no item in location: "
+			+ location.id
 		)
+		return false
+
+	var amount := chosen_entry.get_random_amount()
+	var item := chosen_entry.item
+
+	survivor.inventory.add_item(
+		item.id,
+		amount
+	)
+
+	DiscoveryManager.record_item_observation(
+		item.id
+	)
 
 	DiscoveryManager.check_discoveries()
 
-	_add_event(event_text)
+	_add_event(
+		survivor.data.display_name
+		+ " searched "
+		+ location.display_name
+		+ " and found "
+		+ item.display_name
+		+ "."
+	)
 
-	if not item_id.is_empty():
-		var item_data := ItemDatabase.get_item(
-			item_id
-		)
-
-		if item_data != null:
-			_add_event(
-				"Found: "
-				+ item_data.display_name
-				+ " x"
-				+ str(amount)
-			)
+	_add_event(
+		"Found: "
+		+ item.display_name
+		+ " x"
+		+ str(amount)
+	)
 
 	return true
 
 
+func _choose_loot_entry(
+	location: LocationData
+) -> SearchLootEntryData:
+	var total_weight: int = maxi(
+		location.empty_search_weight,
+		0
+	)
+
+	for entry in location.search_loot:
+		if entry == null:
+			continue
+
+		if entry.item == null:
+			continue
+
+		total_weight += maxi(
+			entry.weight,
+			0
+		)
+
+	if total_weight <= 0:
+		return null
+
+	var roll: int = randi_range(
+		1,
+		total_weight
+	)
+
+	var empty_weight: int = maxi(
+		location.empty_search_weight,
+		0
+	)
+
+	if roll <= empty_weight:
+		return null
+
+	var current_weight: int = empty_weight
+
+	for entry in location.search_loot:
+		if entry == null:
+			continue
+
+		if entry.item == null:
+			continue
+
+		current_weight += maxi(
+			entry.weight,
+			0
+		)
+
+		if roll <= current_weight:
+			return entry
+
+	return null
 func _add_event(message: String) -> void:
 	if GameManager.game_ui != null:
 		GameManager.game_ui.add_event(message)

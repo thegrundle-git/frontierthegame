@@ -1,8 +1,32 @@
 [gd_resource type="Resource" script_class="LocationData" format=3 uid="uid://c34dox5ofuluv"]
 
+[ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="1_tisep"]
 [ext_resource type="Resource" uid="uid://b83evycxax6um" path="res://resources/actions/search_area.tres" id="2_lq47s"]
 [ext_resource type="Script" uid="uid://dxiqo5ie3ebvb" path="res://scripts/resources/LocationData.gd" id="2_tisep"]
 [ext_resource type="Script" uid="uid://clqlxjcsk56f3" path="res://scripts/resources/TravelConnectionData.gd" id="3_lq47s"]
+[ext_resource type="Resource" uid="uid://clcyx5iqp0lgl" path="res://resources/items/stone.tres" id="4_thqau"]
+[ext_resource type="Script" uid="uid://c3lxm4ibtebmo" path="res://scripts/resources/SearchLootEntryData.gd" id="5_77xmv"]
+[ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="6_8y3ha"]
+[ext_resource type="Resource" uid="uid://ctwviw0tgrfik" path="res://resources/items/berry.tres" id="7_5txsx"]
+
+[sub_resource type="Resource" id="Resource_xsfm0"]
+script = ExtResource("5_77xmv")
+item = ExtResource("4_thqau")
+weight = 45
+maximum_amount = 2
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_rv83x"]
+script = ExtResource("5_77xmv")
+item = ExtResource("6_8y3ha")
+weight = 25
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Resource_627l5"]
+script = ExtResource("5_77xmv")
+item = ExtResource("7_5txsx")
+weight = 20
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
 
 [sub_resource type="Resource" id="Resource_b71gb"]
 script = ExtResource("3_lq47s")
@@ -16,6 +40,7 @@ script = ExtResource("2_tisep")
 id = "river"
 display_name = "River"
 description = "A natural freshwater watercourse that supports the surrounding environment. A dependable source of water and a common place to find useful resources."
-available_actions = [ExtResource("2_lq47s")]
-travel_connections = [SubResource("Resource_b71gb")]
+available_actions = Array[ExtResource("1_tisep")]([ExtResource("2_lq47s")])
+travel_connections = Array[ExtResource("3_lq47s")]([SubResource("Resource_b71gb")])
+search_loot = Array[Resource]([SubResource("Resource_xsfm0"), SubResource("Resource_rv83x"), SubResource("Resource_627l5")])
 metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

@@ -12,12 +12,14 @@ func load_items() -> void:
 	items.clear()
 
 	var item_paths: Array[String] = [
-		"res://resources/items/stick.tres",
-		"res://resources/items/stone.tres",
-		"res://resources/items/berry.tres",
-		"res://resources/items/stone_axe.tres",
-		"res://resources/items/wood_log.tres"
-	]
+	"res://resources/items/stick.tres",
+	"res://resources/items/stone.tres",
+	"res://resources/items/berry.tres",
+	"res://resources/items/stone_axe.tres",
+	"res://resources/items/wood_log.tres",
+	"res://resources/items/herb.tres",
+	"res://resources/items/flower.tres"
+]
 
 	for item_path in item_paths:
 		var loaded_resource := load(item_path)

@@ -1,3 +1,24 @@
+## v0.4.2 — Main Menu and Export Stability
+
+### Added
+
+* Main menu with New Game, Continue, and Quit
+* Save-file detection for Continue
+* Explicit gameplay-scene dependency
+* Export-safe resource loading for items, actions, locations, recipes, discoveries, and world events
+
+### Fixed
+
+* Main menu buttons not opening the gameplay scene in exported builds
+* Missing actions and travel options in Windows exports
+* Missing items in packaged builds
+* Primitive Toolmaking failing to unlock
+* World events failing to load
+* Crafting appearing unavailable in exported builds
+
+### Notes
+
+This version establishes a reliable startup flow and ensures the packaged Windows build contains the same playable systems as the editor version.
 ## v0.4.1 — Persistent Worlds
 
 ### Added

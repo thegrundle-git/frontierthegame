@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cmecjlbpkscjm"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_8w3dx"]
+
+[resource]
+script = ExtResource("1_8w3dx")
+id = "herb"
+display_name = "Wild Herb"
+description = "A hardy plant with a sharp, earthy scent. Its exact uses remain uncertain, but plants like this rarely grow without purpose."
+category = "Resource"
+weight = 0.05
+tags = Array[String](["gathering", "plant"])
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

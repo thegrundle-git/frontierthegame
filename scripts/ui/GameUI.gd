@@ -5,7 +5,7 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 
 
 @onready var event_log: RichTextLabel = %EventLog
-@onready var inventory_label: Label = %InventoryLabel
+@onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
 @onready var location_label: Label = %LocationLabel
