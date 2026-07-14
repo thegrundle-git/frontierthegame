@@ -1,9 +1,6 @@
 extends Node
 
 
-const ITEM_FOLDER := "res://resources/items/"
-
-
 var items: Dictionary = {}
 
 
@@ -14,18 +11,27 @@ func _ready() -> void:
 func load_items() -> void:
 	items.clear()
 
-	var file_names := DirAccess.get_files_at(ITEM_FOLDER)
+	var item_paths: Array[String] = [
+		"res://resources/items/stick.tres",
+		"res://resources/items/stone.tres",
+		"res://resources/items/berry.tres",
+		"res://resources/items/stone_axe.tres",
+		"res://resources/items/wood_log.tres"
+	]
 
-	for file_name in file_names:
-		if not file_name.ends_with(".tres"):
-			continue
-
-		var item_path := ITEM_FOLDER + file_name
+	for item_path in item_paths:
 		var loaded_resource := load(item_path)
+
+		if loaded_resource == null:
+			push_error(
+				"Failed to load item: " + item_path
+			)
+			continue
 
 		if loaded_resource is not ItemData:
 			push_warning(
-				"Skipped non-ItemData resource: " + item_path
+				"Skipped non-ItemData resource: "
+				+ item_path
 			)
 			continue
 
@@ -35,6 +41,9 @@ func load_items() -> void:
 
 
 func register(item: ItemData) -> void:
+	if item == null:
+		return
+
 	if item.id.is_empty():
 		push_error(
 			"Item has no ID: " + item.resource_path
@@ -42,9 +51,6 @@ func register(item: ItemData) -> void:
 		return
 
 	if items.has(item.id):
-		push_error(
-			"Duplicate item ID: " + item.id
-		)
 		return
 
 	items[item.id] = item

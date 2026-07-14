@@ -1,9 +1,6 @@
 extends Node
 
 
-const EVENT_FOLDER := "res://resources/events/"
-
-
 var events: Dictionary = {}
 
 
@@ -14,35 +11,40 @@ func _ready() -> void:
 func load_events() -> void:
 	events.clear()
 
-	var file_names := DirAccess.get_files_at(
-		EVENT_FOLDER
-	)
+	var event_paths: Array[String] = [
+		"res://resources/events/abandoned_campsite.tres"
+	]
 
-	for file_name in file_names:
-		if not file_name.ends_with(".tres"):
+	for event_path in event_paths:
+		var loaded_resource := load(event_path)
+
+		if loaded_resource == null:
+			push_error(
+				"Failed to load world event: "
+				+ event_path
+			)
 			continue
 
-		var resource_path := (
-			EVENT_FOLDER + file_name
-		)
-
-		var loaded_resource := load(
-			resource_path
-		)
-
 		if loaded_resource is not WorldEventData:
-			push_warning(
-				"Skipped non-WorldEventData resource: "
-				+ resource_path
+			push_error(
+				"Resource is not WorldEventData: "
+				+ event_path
 			)
 			continue
 
 		register(loaded_resource)
 
-	print("Loaded ", events.size(), " world events.")
+	print(
+		"Loaded ",
+		events.size(),
+		" world events."
+	)
 
 
 func register(event: WorldEventData) -> void:
+	if event == null:
+		return
+
 	if event.id.is_empty():
 		push_error(
 			"World event has no ID: "
@@ -51,10 +53,6 @@ func register(event: WorldEventData) -> void:
 		return
 
 	if events.has(event.id):
-		push_error(
-			"Duplicate world event ID: "
-				+ event.id
-		)
 		return
 
 	events[event.id] = event
@@ -64,7 +62,9 @@ func get_all() -> Array:
 	return events.values()
 
 
-func get_event(event_id: String) -> WorldEventData:
+func get_event(
+	event_id: String
+) -> WorldEventData:
 	if not events.has(event_id):
 		return null
 

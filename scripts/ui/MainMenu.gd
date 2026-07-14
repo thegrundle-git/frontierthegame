@@ -1,9 +1,7 @@
 extends Control
 
 
-const GAME_SCENE: PackedScene = preload(
-	"res://scenes/main.tscn"
-)
+@export var game_scene: PackedScene
 
 
 @onready var new_game_button: Button = %NewGameButton
@@ -11,40 +9,16 @@ const GAME_SCENE: PackedScene = preload(
 @onready var quit_button: Button = %QuitButton
 
 
+var _transition_started: bool = false
+
+
 func _ready() -> void:
-	_configure_mouse_input()
 	_connect_buttons()
 
 	continue_button.disabled = not SaveManager.save_exists()
-
 	new_game_button.grab_focus()
 
 	print("MainMenu ready")
-	print("New Game connected: ", new_game_button.pressed.is_connected(
-		_on_new_game_button_pressed
-	))
-	print("Continue connected: ", continue_button.pressed.is_connected(
-		_on_continue_button_pressed
-	))
-	print("Quit connected: ", quit_button.pressed.is_connected(
-		_on_quit_button_pressed
-	))
-
-
-func _configure_mouse_input() -> void:
-	# The root and layout containers should not consume clicks.
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	for control in get_tree().get_nodes_in_group(
-		"menu_noninteractive"
-	):
-		if control is Control:
-			control.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	# Buttons must receive clicks.
-	new_game_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	continue_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	quit_button.mouse_filter = Control.MOUSE_FILTER_STOP
 
 
 func _connect_buttons() -> void:
@@ -71,21 +45,35 @@ func _connect_buttons() -> void:
 
 
 func _on_new_game_button_pressed() -> void:
+	if _transition_started:
+		return
+
+	_transition_started = true
+	_set_buttons_disabled(true)
+
 	print("New Game pressed")
 
 	GameManager.prepare_new_game()
-	_open_game_scene()
+
+	call_deferred("_open_game_scene")
 
 
 func _on_continue_button_pressed() -> void:
-	print("Continue pressed")
+	if _transition_started:
+		return
 
 	if not SaveManager.save_exists():
 		continue_button.disabled = true
 		return
 
+	_transition_started = true
+	_set_buttons_disabled(true)
+
+	print("Continue pressed")
+
 	GameManager.prepare_saved_game()
-	_open_game_scene()
+
+	call_deferred("_open_game_scene")
 
 
 func _on_quit_button_pressed() -> void:
@@ -94,18 +82,39 @@ func _on_quit_button_pressed() -> void:
 
 
 func _open_game_scene() -> void:
-	if GAME_SCENE == null:
+	if game_scene == null:
 		push_error(
-			"Main gameplay scene was not loaded."
+			"No gameplay scene assigned to MainMenu."
 		)
+
+		_transition_started = false
+		_set_buttons_disabled(false)
 		return
 
 	var error := get_tree().change_scene_to_packed(
-		GAME_SCENE
+		game_scene
 	)
+
+	print("Scene change result: ", error)
 
 	if error != OK:
 		push_error(
 			"Failed to open gameplay scene. Error: "
 			+ str(error)
 		)
+
+		_transition_started = false
+		_set_buttons_disabled(false)
+
+
+func _set_buttons_disabled(
+	disabled: bool
+) -> void:
+	new_game_button.disabled = disabled
+
+	continue_button.disabled = (
+		disabled
+		or not SaveManager.save_exists()
+	)
+
+	quit_button.disabled = disabled

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://hytu2pybqm57"]
 
 [ext_resource type="Script" uid="uid://ot81r3cbkpw1" path="res://scripts/ui/MainMenu.gd" id="1_vjtqc"]
+[ext_resource type="PackedScene" uid="uid://bwvgxsutsb61x" path="res://scenes/Main.tscn" id="2_6jbdy"]
 
 [node name="MainMenu" type="Control" unique_id=1640443835]
 layout_mode = 3
@@ -10,6 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vjtqc")
+game_scene = ExtResource("2_6jbdy")
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1160564163]
 layout_mode = 1

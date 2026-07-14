@@ -1,27 +1,44 @@
 extends Node
 
-const DISCOVERY_FOLDER := "res://resources/discoveries/"
 
 var discoveries: Dictionary = {}
 
-func _ready():
+
+func _ready() -> void:
 	load_discoveries()
 
-func load_discoveries():
+
+func load_discoveries() -> void:
 	discoveries.clear()
 
-	var files := DirAccess.get_files_at(DISCOVERY_FOLDER)
+	var discovery_paths: Array[String] = [
+		"res://resources/discoveries/primitive_toolmaking.tres"
+	]
 
-	for file in files:
-		if not file.ends_with(".tres"):
+	for discovery_path in discovery_paths:
+		var discovery := load(discovery_path)
+
+		if discovery == null:
+			push_error(
+				"Failed to load discovery: "
+				+ discovery_path
+			)
 			continue
 
-		var discovery = load(DISCOVERY_FOLDER + file)
+		if discovery is not DiscoveryData:
+			push_error(
+				"Resource is not DiscoveryData: "
+				+ discovery_path
+			)
+			continue
 
-		if discovery is DiscoveryData:
-			discoveries[discovery.id] = discovery
+		discoveries[discovery.id] = discovery
 
-	print("Loaded ", discoveries.size(), " discoveries.")
+	print(
+		"Loaded ",
+		discoveries.size(),
+		" discoveries."
+	)
 
 
 func get_all() -> Array:
