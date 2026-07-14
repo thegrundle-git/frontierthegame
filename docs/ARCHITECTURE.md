@@ -1,227 +1,464 @@
 # Frontier Architecture
 
-Frontier is a text-driven survival and civilization-building game built in Godot.
+This document describes Frontier’s current technical structure, major systems, data flow, and project conventions.
 
-The project uses data-driven resources and separate gameplay systems so new content can be added without rewriting core logic.
+---
 
-## Core Runtime Flow
+## Project Structure
 
 ```text
-Game starts
-→ GameManager creates the current civilization
-→ GameManager creates the current survivor
-→ GameUI connects to global managers
-→ Player begins an action
-→ ActionManager tracks its duration
-→ TimeManager advances game time
-→ The action resolves
-→ Inventory, skills, observations, and discoveries update
-→ GameUI refreshes
+res://
+├── scenes/
+│   ├── main.tscn
+│   ├── world.tscn
+│   ├── characters/
+│   │   └── Survivor.tscn
+│   └── ui/
+│       ├── GameUI.tscn
+│       └── MainMenu.tscn
+│
+├── scripts/
+│   ├── actions/
+│   ├── autoload/
+│   ├── characters/
+│   ├── resources/
+│   └── ui/
+│
+├── resources/
+│   ├── actions/
+│   ├── characters/
+│   ├── civilizations/
+│   ├── discoveries/
+│   ├── events/
+│   ├── items/
+│   ├── locations/
+│   └── recipes/
+│
+└── docs/
 ```
 
-## Global Managers
+---
 
-### GameManager
+## Startup Flow
 
-Owns the current game session.
+Frontier launches into `MainMenu.tscn`.
 
-Responsibilities:
+The menu provides:
 
-* Creates the current survivor
-* Loads the current civilization
-* Starts player actions
-* Coordinates gameplay systems
-* Provides access to the current survivor and civilization
+* New Game
+* Continue
+* Quit
 
-### ActionManager
+The Main Menu stores a direct `PackedScene` reference to the gameplay entry scene.
 
-Runs one timed action at a time.
+The gameplay entry scene loads:
 
-Responsibilities:
+```text
+Main
+└── World
+	└── UIOverlay
+		└── GameUI
+```
 
-* Tracks the current action
-* Tracks real-time progress
-* Prevents conflicting actions
-* Calls the action completion callback
-* Signals the UI when actions start, progress, and finish
+`UIOverlay` is a `CanvasLayer`, keeping the interface independent from world-space transforms.
 
-### TimeManager
+---
 
-Tracks in-game time.
+## Autoloads
 
-Responsibilities:
+Frontier uses autoload singletons for systems that must be globally accessible.
 
-* Stores day, hour, and minute
-* Advances time when actions finish
-* Emits a signal when time changes
+Current major autoloads include:
 
-### ItemDatabase
+* `GameManager`
+* `ActionManager`
+* `TimeManager`
+* `ItemDatabase`
+* `ActionDatabase`
+* `LocationDatabase`
+* `RecipeDatabase`
+* `DiscoveryDatabase`
+* `DiscoveryManager`
+* `WorldEventDatabase`
+* `WorldEventManager`
+* `SaveManager`
 
-Loads all ItemData resources from the items folder.
+### Responsibilities
 
-Responsibilities:
+#### GameManager
 
-* Registers items by stable ID
-* Provides item information to gameplay and UI systems
-* Prevents duplicate item IDs
+Owns the current game session and shared runtime references:
 
-### RecipeDatabase
+* current survivor;
+* survivor data;
+* current civilization;
+* current location;
+* registered Game UI.
 
-Loads all RecipeData resources from the recipes folder.
+It coordinates:
 
-Responsibilities:
+* world actions;
+* travel;
+* crafting;
+* session initialization;
+* UI refreshes.
 
-* Registers recipes by stable ID
-* Provides recipe information to crafting systems
-* Prevents duplicate recipe IDs
+#### ActionManager
 
-### DiscoveryDatabase
+Runs timed actions and emits progress signals.
 
-Loads all DiscoveryData resources from the discoveries folder.
+It controls:
 
-Responsibilities:
+* active action name;
+* action duration;
+* progress;
+* busy state;
+* completion callbacks;
+* game-time advancement.
 
-* Stores all possible discoveries
-* Provides discoveries to DiscoveryManager
+#### TimeManager
 
-### DiscoveryManager
+Owns the current day and time.
 
-Handles observations and civilization breakthroughs.
+It provides formatted time text and advances time when actions complete.
 
-Responsibilities:
+#### SaveManager
 
-* Records newly observed items
-* Checks discovery requirements
-* Unlocks discoveries
-* Unlocks recipes
-* Reports discoveries to the event log
+Serializes and restores persistent game state using JSON.
 
-## Game State
+Saved state currently includes:
 
-### Survivor
+* save version;
+* day and time;
+* current location;
+* survivor name;
+* inventory;
+* equipped tool;
+* skill levels and XP;
+* civilization knowledge;
+* observed items;
+* discoveries;
+* unlocked recipes;
+* completed one-time events.
 
-Represents the active individual.
+---
 
-Owns:
+## Database Pattern
 
-* SurvivorData
-* Personal inventory
-* Gathering skill
-* Equipped tool
-* Personal statistics
-
-### CivilizationData
-
-Represents knowledge shared by a group.
-
-Owns:
-
-* Insight or knowledge
-* Observed item IDs
-* Discovered technology IDs
-* Unlocked recipe IDs
-
-Civilization knowledge persists independently of individual survivor skill.
-
-### FrontierInventory
-
-Stores item IDs and quantities.
-
-Responsibilities:
-
-* Adds and removes items
-* Checks recipe affordability
-* Removes recipe ingredients
-* Adds recipe results
-
-The inventory stores stable item IDs rather than display names.
-
-## Data Resources
-
-### ItemData
-
-Defines an item.
+Frontier uses database autoloads to map stable string IDs to resource objects.
 
 Examples:
 
-* Stick
-* Stone
-* Wild Berry
-* Wood Log
-* Stone Axe
+```text
+"stick" → stick.tres
+"forest" → forest.tres
+"search_area" → search_area.tres
+```
 
-### IngredientData
+Because exported Windows builds cannot reliably depend on runtime `DirAccess` scans of imported resources, databases currently use explicit resource-path lists.
 
-Defines an item and quantity used by a recipe.
-
-### RecipeData
-
-Defines crafting inputs, outputs, duration, and description.
-
-### DiscoveryData
-
-Defines the requirements and rewards of a civilization discovery.
-
-### SurvivorData
-
-Defines persistent survivor statistics and identity.
-
-### CivilizationData
-
-Defines persistent civilization progress.
-
-## Actions
-
-Actions contain the gameplay result of completed work.
+When adding new content, the matching database path list must also be updated.
 
 Examples:
 
-* SearchAction
-* CraftAction
-* ChopTreeAction
+* new item → update `ItemDatabase.gd`;
+* new location → update `LocationDatabase.gd`;
+* new discovery → update `DiscoveryDatabase.gd`;
+* new world event → update `WorldEventDatabase.gd`;
+* new recipe → update `RecipeDatabase.gd`;
+* new action → update `ActionDatabase.gd`.
 
-Actions should not manage their own timers. GameManager sends timed work to ActionManager, and the action resolves only after completion.
+Stable IDs must not be renamed casually because save files reference IDs rather than display names.
 
-## UI Rules
+---
 
-GameUI displays game state but should not decide gameplay results.
+## Resource-Driven Content
 
-The UI may:
+Frontier uses custom Resource classes to separate game content from gameplay code.
 
-* Request an action
-* Display inventory
-* Display skills
-* Display time and action progress
-* Display the event log
+Current major resource types include:
 
-The UI should not:
+* `ItemData`
+* `ActionData`
+* `LocationData`
+* `TravelConnectionData`
+* `SearchLootEntryData`
+* `RecipeData`
+* `IngredientData`
+* `DiscoveryData`
+* `WorldEventData`
+* `EventOptionData`
+* `SurvivorData`
+* `CivilizationData`
+* `SkillProgress`
 
-* Award items
-* Decide search results
-* Unlock discoveries
-* Remove crafting ingredients
+This allows new content to be authored mostly through `.tres` files.
 
-## Development Workflow
+---
 
-```text
-Design
-→ Build
-→ Test
-→ Working
-→ Commit
-→ Push
+## Locations
+
+Each `LocationData` resource contains:
+
+* stable ID;
+* display name;
+* description;
+* available actions;
+* travel connections;
+* location-specific search loot;
+* empty-search weight.
+
+Typed arrays must be preserved:
+
+```gdscript
+@export var available_actions: Array[ActionData] = []
+@export var travel_connections: Array[TravelConnectionData] = []
+@export var search_loot: Array[SearchLootEntryData] = []
 ```
 
-Internal shorthand:
+Travel connections store destination IDs instead of direct `LocationData` references. This avoids circular resource dependencies.
+
+Current locations:
+
+* Forest
+* River
+* Meadow
+
+---
+
+## Search System
+
+`search_area.tres` is a reusable action available in multiple locations.
+
+`SearchAction.gd` does not own a hardcoded global loot table.
+
+Instead, it reads:
 
 ```text
-WCP
+GameManager.current_location.search_loot
 ```
 
-WCP means:
+Each location defines weighted possible results through `SearchLootEntryData`.
 
-* Working
-* Committed
-* Pushed
+A search entry contains:
 
-Each stable milestone should be committed before beginning the next major system.
+* item;
+* weight;
+* minimum quantity;
+* maximum quantity.
+
+Each location also has an `empty_search_weight`.
+
+This allows new biomes to provide different search results without creating a new search script.
+
+---
+
+## Inventory
+
+Each survivor owns a `FrontierInventory` child node.
+
+Inventory quantities are stored by stable item ID.
+
+The UI resolves each item ID through `ItemDatabase` to display the current player-facing name.
+
+The inventory display uses a scrolling `RichTextLabel` so additional item types do not expand or break the interface.
+
+---
+
+## Skills and Progression
+
+Survivors currently have reusable `SkillProgress` resources.
+
+Current skills:
+
+* Gathering
+* Crafting
+* Exploration
+
+Actions, travel connections, and recipes define their XP rewards through data.
+
+This keeps progression rewards outside action implementation scripts.
+
+---
+
+## Crafting
+
+Recipes are represented by `RecipeData`.
+
+A recipe contains:
+
+* stable ID;
+* display name;
+* ingredients;
+* results;
+* skill ID;
+* XP reward;
+* description.
+
+Crafting is displayed in its own detail tab so expanding recipe information does not reduce the Chronicle area or resize the whole interface.
+
+---
+
+## Discoveries
+
+Discoveries are represented by `DiscoveryData`.
+
+A discovery can depend on:
+
+* civilization knowledge;
+* observed item IDs;
+* previous discoveries;
+* other configured requirements.
+
+Discoveries may unlock recipes or future progression.
+
+Current discovery:
+
+* Primitive Toolmaking
+
+---
+
+## World Events
+
+World events are represented by `WorldEventData`.
+
+Events may define:
+
+* eligible action IDs;
+* eligible location IDs;
+* trigger chance;
+* one-time status;
+* available options.
+
+Each `EventOptionData` may provide:
+
+* result text;
+* item rewards;
+* skill XP;
+* knowledge;
+* game-time cost.
+
+`WorldEventManager` tracks pending events and completed one-time events.
+
+Normal actions are disabled while an event choice is unresolved.
+
+---
+
+## User Interface
+
+`GameUI.tscn` uses container-based layout rather than manual absolute positioning.
+
+Major areas include:
+
+```text
+Header
+Location
+LeftColumn
+├── Survivor
+└── Inventory
+
+RightColumn
+├── Actions
+├── Travel
+└── DetailTabs
+	├── Journal
+	│   └── JournalTabs
+	│       ├── Chronicle
+	│       ├── Locations
+	│       └── Discoveries
+	└── Crafting
+```
+
+Controls that can grow indefinitely must scroll internally instead of increasing their parent container’s minimum size.
+
+This includes:
+
+* Inventory;
+* Chronicle;
+* Locations journal;
+* Discoveries journal;
+* future recipe lists.
+
+Important UI controls use Godot unique names and `%NodeName` lookups so layout changes do not require rewriting long node paths.
+
+---
+
+## Save Compatibility
+
+Save files store stable IDs rather than serialized resource objects.
+
+Examples:
+
+```json
+{
+  "current_location_id": "meadow",
+  "equipped_tool_id": "stone_axe",
+  "inventory": {
+	"berry": 4,
+	"herb": 2
+  }
+}
+```
+
+Display names may change without invalidating saves.
+
+Stable IDs should only change alongside an intentional save migration.
+
+---
+
+## Export Requirements
+
+Before publishing a build:
+
+1. Run an F5 editor test.
+2. Export to a new folder.
+3. Launch the exported console build.
+4. Confirm all database counts are nonzero.
+5. Test New Game.
+6. Test Continue.
+7. Test search, travel, crafting, discoveries, and events.
+8. Save, close, reopen, and load.
+9. Zip the tested EXE and PCK together.
+
+Expected startup database output currently includes:
+
+```text
+Loaded 7 items.
+Loaded 2 actions.
+Loaded 3 locations.
+Loaded 1 world events.
+Loaded 1 discoveries.
+Loaded 1 recipes.
+```
+
+Counts must be updated as content is added.
+
+---
+
+## Architectural Rules
+
+* Prefer resources over hardcoded content.
+* Use stable IDs for persistent references.
+* Use typed exported arrays for custom resources.
+* Avoid direct circular resource references.
+* Update explicit database path lists when adding resources.
+* Use scrolling controls for content that can grow.
+* Keep gameplay data separate from presentation text.
+* Test both F5 and exported builds before WCP.
+* Avoid replacing several core systems in one untested change.
+* Make small changes and verify each one before continuing.
+
+---
+
+## Near-Term Architecture Work
+
+Planned additions include:
+
+* persistent visited-location tracking;
+* permanent journal records;
+* dynamic journal-tab visibility;
+* landmark resources;
+* generated narrative templates;
+* character creation;
+* cleaner main-menu session flow;
+* developer testing tools.
