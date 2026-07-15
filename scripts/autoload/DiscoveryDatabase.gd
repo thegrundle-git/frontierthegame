@@ -43,3 +43,15 @@ func load_discoveries() -> void:
 
 func get_all() -> Array:
 	return discoveries.values()
+
+func get_discovery(
+	discovery_id: String
+) -> DiscoveryData:
+	if not discoveries.has(discovery_id):
+		push_warning(
+			"Unknown discovery ID requested: "
+			+ discovery_id
+		)
+		return null
+
+	return discoveries[discovery_id]

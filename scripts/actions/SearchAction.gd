@@ -6,7 +6,9 @@ func perform(survivor: Survivor) -> bool:
 	if survivor == null:
 		return false
 
-	var location := GameManager.current_location
+	var location: LocationData = (
+		GameManager.current_location
+	)
 
 	if location == null:
 		_add_event(
@@ -14,18 +16,24 @@ func perform(survivor: Survivor) -> bool:
 		)
 		return false
 
-	var chosen_entry := _choose_loot_entry(
-		location
+	var chosen_entry: SearchLootEntryData = (
+		_choose_loot_entry(
+			location
+		)
 	)
 
 	survivor.gain_knowledge(1)
 
 	if chosen_entry == null:
+		var empty_narrative: String = (
+			NarrativeGenerator.generate_empty_search(
+				survivor.data.display_name,
+				location
+			)
+		)
+
 		_add_event(
-			survivor.data.display_name
-			+ " searched "
-			+ location.display_name
-			+ " but found nothing useful."
+			empty_narrative
 		)
 
 		DiscoveryManager.check_discoveries()
@@ -38,8 +46,13 @@ func perform(survivor: Survivor) -> bool:
 		)
 		return false
 
-	var amount := chosen_entry.get_random_amount()
-	var item := chosen_entry.item
+	var amount: int = (
+		chosen_entry.get_random_amount()
+	)
+
+	var item: ItemData = (
+		chosen_entry.item
+	)
 
 	survivor.inventory.add_item(
 		item.id,
@@ -52,13 +65,17 @@ func perform(survivor: Survivor) -> bool:
 
 	DiscoveryManager.check_discoveries()
 
+	var narrative_text: String = (
+		NarrativeGenerator.generate_search_find(
+			survivor.data.display_name,
+			location,
+			item,
+			amount
+		)
+	)
+
 	_add_event(
-		survivor.data.display_name
-		+ " searched "
-		+ location.display_name
-		+ " and found "
-		+ item.display_name
-		+ "."
+		narrative_text
 	)
 
 	_add_event(
@@ -79,7 +96,9 @@ func _choose_loot_entry(
 		0
 	)
 
-	for entry in location.search_loot:
+	for entry: SearchLootEntryData in (
+		location.search_loot
+	):
 		if entry == null:
 			continue
 
@@ -109,7 +128,9 @@ func _choose_loot_entry(
 
 	var current_weight: int = empty_weight
 
-	for entry in location.search_loot:
+	for entry: SearchLootEntryData in (
+		location.search_loot
+	):
 		if entry == null:
 			continue
 
@@ -125,6 +146,12 @@ func _choose_loot_entry(
 			return entry
 
 	return null
-func _add_event(message: String) -> void:
+
+
+func _add_event(
+	message: String
+) -> void:
 	if GameManager.game_ui != null:
-		GameManager.game_ui.add_event(message)
+		GameManager.game_ui.add_event(
+			message
+		)

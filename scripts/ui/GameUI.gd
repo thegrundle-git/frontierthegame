@@ -13,6 +13,7 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 @onready var landmarks_log: RichTextLabel = %LandmarksLog
 @onready var journal_tabs: TabContainer = %JournalTabs
 @onready var landmarks_tab: Control = %Landmarks
+@onready var discoveries_log: RichTextLabel = %DiscoveriesLog
 
 @onready var time_label: Label = %TimeLabel
 @onready var current_action_label: Label = %CurrentActionLabel
@@ -90,8 +91,9 @@ func refresh_all() -> void:
 	update_locations_journal()
 	update_landmarks_journal()
 	update_journal_tab_visibility()
+	update_discoveries_journal()
 	_update_time()
-
+	
 	var survivor: Survivor = (
 		GameManager.current_survivor
 	)
@@ -613,6 +615,45 @@ func update_journal_tab_visibility() -> void:
 		landmarks_tab_index,
 		civilization.discovered_landmark_ids.is_empty()
 	)
+	
+func update_discoveries_journal() -> void:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if (
+		civilization == null
+		or civilization.discovered_ids.is_empty()
+	):
+		discoveries_log.text = (
+			"No discoveries recorded."
+		)
+		return
+
+	var journal_text := ""
+
+	for discovery_id: String in civilization.discovered_ids:
+		var discovery: DiscoveryData = (
+			DiscoveryDatabase.get_discovery(
+				discovery_id
+			)
+		)
+
+		if discovery == null:
+			continue
+
+		if not journal_text.is_empty():
+			journal_text += "\n\n"
+
+		journal_text += (
+			"[b]"
+			+ discovery.display_name
+			+ "[/b]\n"
+			+ discovery.description
+		)
+
+	discoveries_log.text = journal_text
+	
 # -------------------------------------------------------------------
 # Action callbacks
 # -------------------------------------------------------------------
