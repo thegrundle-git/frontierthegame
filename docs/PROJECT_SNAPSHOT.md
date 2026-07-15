@@ -1,60 +1,81 @@
-Frontier Project Snapshot
-Current Version
+# Frontier Project Snapshot
 
-v0.5.0-alpha3
+## Current Version
 
-Project Health
+v0.5.1-alpha1
 
-🟢 Stable pending exported-build verification
+## Project Health
 
-Current Milestone
+🟢 Stable — External testing in progress
+
+## Current Milestone
 
 Vertical Slice
 
-Current Sprint
+## Current Sprint
 
-Sprint 2 — The Living World
+Sprint 3 — The Age of Discovery
 
-Content
-Locations: 3
-Items: 7
-Recipes: 1
-Discoveries: 1
-World Events: 1
-Landmarks: 1
-External Testers: approximately 5
-Implemented Systems
-Main Menu
-New Game and Continue
-Save and Load
-Game Time
-Timed Actions
-Skills and XP
-Knowledge
-Inventory
-Travel
-Crafting
-Discoveries
-World Events
-Location-specific search loot
-Visited-location tracking
-First-visit narration
-Permanent location records
-Landmark discovery and persistence
-Dynamic Journal tabs
-Current World
-Forest
-River
-Meadow
-Current Landmark
-Abandoned Campsite
-Current Focus
+## Content
 
-Turn exploration into permanent world knowledge and begin embedding history into the environment.
+* Locations: 3
+* Items: 7
+* Recipes: 1
+* Discoveries: 4
+* World Events: 1
+* Landmarks: 1
+* Registered World Actions: 3
+* External Testers: approximately 5
 
-Next Goals
-Wild Flora discovery
-Discoveries Journal population
-Abandoned Campsite lore
-Finnley’s first journal fragment
-Narrative Generator v1
+## Current Discoveries
+
+* Primitive Toolmaking
+* Wild Flora
+* Fresh Water
+* Animal Tracks
+
+## Current Locations
+
+* Forest
+* River
+* Meadow
+
+## Current Landmark
+
+* Abandoned Campsite
+
+## Implemented Systems
+
+* Main Menu
+* New Game and Continue
+* Save and Load
+* Game Time
+* Timed Actions
+* Skills and XP
+* Knowledge
+* Inventory
+* Travel
+* Crafting
+* Discoveries
+* Discoveries Journal
+* World Events
+* Landmarks
+* Location-specific search loot
+* Visited-location tracking
+* First-visit narration
+* Narrative Generator v1
+* Experience-based discoveries
+* Knowledge-gated actions
+* Track Animals v1
+
+## Current Focus
+
+Turn knowledge into new gameplay possibilities while expanding exploration content.
+
+## Next Goals
+
+* Data-driven narrative templates
+* Flint
+* Meadow ambient event
+* Additional landmarks
+* Finnley’s first journal fragment

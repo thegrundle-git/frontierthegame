@@ -13,7 +13,8 @@ func load_actions() -> void:
 
 	var action_paths: Array[String] = [
 		"res://resources/actions/search_area.tres",
-		"res://resources/actions/chop_tree.tres"
+		"res://resources/actions/chop_tree.tres",
+		"res://resources/actions/track_animals.tres"
 	]
 
 	for action_path in action_paths:

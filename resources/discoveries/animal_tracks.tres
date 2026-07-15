@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DiscoveryData" format=3 uid="uid://cblb2o88eaygi"]
+
+[ext_resource type="Script" uid="uid://be18tux0tleml" path="res://scripts/resources/DiscoveryData.gd" id="1_tdgxl"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_u7nmx"]
+
+[resource]
+script = ExtResource("1_tdgxl")
+id = "animal_tracks"
+display_name = "Animal Tracks"
+description = "Hooves, paws, and claws leave stories written in the soil. With practice, their direction, age, and purpose become easier to understand."
+required_item_ids = Array[String](["herb"])
+metadata/_custom_type_script = "uid://be18tux0tleml"

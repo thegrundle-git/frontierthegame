@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DiscoveryData" format=3 uid="uid://dnm7sewlvik3i"]
+
+[ext_resource type="Script" uid="uid://be18tux0tleml" path="res://scripts/resources/DiscoveryData.gd" id="1_lcapp"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_bqfch"]
+
+[resource]
+script = ExtResource("1_lcapp")
+id = "fresh_water"
+display_name = "Fresh Water"
+description = "Reliable fresh water is more valuable than nearly any tool. Camps, fields, and future settlements will always grow around dependable sources. Every journey begins and ends with water."
+metadata/_custom_type_script = "uid://be18tux0tleml"

@@ -17,10 +17,14 @@ func perform(survivor: Survivor) -> bool:
 		return false
 
 	var chosen_entry: SearchLootEntryData = (
-		_choose_loot_entry(
-			location
-		)
+	_choose_loot_entry(
+		location
 	)
+)
+
+	DiscoveryManager.record_location_search(
+		location.id
+)
 
 	survivor.gain_knowledge(1)
 

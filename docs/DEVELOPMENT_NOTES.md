@@ -62,3 +62,18 @@ Confirm the correct resource path.
 Confirm the loaded resource type.
 Print the actual runtime field values.
 Inspect the .tres file if the Inspector value does not persist.
+
+## Discovery and Action Lessons
+
+* A discovery should lead toward new possibilities whenever practical.
+* Discovery journal entries must resolve their resources through DiscoveryDatabase.
+* DiscoveryDatabase requires a direct get_discovery() lookup method.
+* Experience-based progress must be stored in persistent civilization data.
+* Older saves require safe fallback values for all new fields.
+* Knowledge-gated buttons should refresh immediately after discovery unlocks.
+* A Script resource cannot call non-static instance methods directly.
+* Action completion scripts must be instantiated before perform() is called.
+* Dynamically called action methods should return a value safely through Variant before Boolean conversion.
+* Action scripts should remain stateless unless persistent state is intentionally stored elsewhere.
+* Narrative text and mechanical reward text should remain separate.
+* Temporary debug prints must be removed before WCP.

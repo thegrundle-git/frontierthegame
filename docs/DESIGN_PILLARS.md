@@ -71,3 +71,23 @@ Finding a place, understanding what happened there, or choosing to remember it c
 Legacy Without Power Creep
 
 Future legacy systems should preserve information, infrastructure, stories, and environmental changes rather than relying primarily on inherited numerical bonuses.
+
+## Knowledge Creates Possibility
+
+Discoveries should do more than fill an encyclopedia.
+
+Learning should reveal actions, locations, recipes, interpretations, and opportunities that were previously unavailable.
+
+The player’s interface may expand as civilization becomes wiser.
+
+## Story Before Repetition
+
+Repeated actions should produce enough narrative variety to feel like experiences rather than identical transactions.
+
+Mechanical results must remain clear, but routine actions should also contribute to the player’s story.
+
+## Civilization Learns Through Experience
+
+Knowledge may come from observation, travel, repetition, experimentation, landmarks, and events.
+
+Progression should reflect a civilization learning how the world works.

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="1_1vv03"]
 [ext_resource type="Resource" uid="uid://b83evycxax6um" path="res://resources/actions/search_area.tres" id="1_np2v2"]
 [ext_resource type="Script" uid="uid://dxiqo5ie3ebvb" path="res://scripts/resources/LocationData.gd" id="3_fefgo"]
+[ext_resource type="Resource" uid="uid://ch2jabciak2g1" path="res://resources/actions/track_animals.tres" id="3_mj1na"]
 [ext_resource type="Resource" uid="uid://cmecjlbpkscjm" path="res://resources/items/herb.tres" id="4_1hl72"]
 [ext_resource type="Script" uid="uid://clqlxjcsk56f3" path="res://scripts/resources/TravelConnectionData.gd" id="4_fefgo"]
 [ext_resource type="Script" uid="uid://c3lxm4ibtebmo" path="res://scripts/resources/SearchLootEntryData.gd" id="5_mj1na"]
@@ -50,7 +51,7 @@ id = "meadow"
 display_name = "Meadow"
 description = "Tall grass sways gently in the breeze, concealing herbs, flowers, and the occasional wandering animal. The open land feels peaceful, but even peaceful places can hide danger."
 first_visit_text = "The forest thins behind Finnley as the world suddenly opens. Tall grass rolls beneath the wind, carrying the sound of insects and distant birds. The wilderness is larger than it first appeared."
-available_actions = Array[ExtResource("1_1vv03")]([ExtResource("1_np2v2")])
+available_actions = Array[ExtResource("1_1vv03")]([ExtResource("1_np2v2"), ExtResource("3_mj1na")])
 travel_connections = Array[ExtResource("4_fefgo")]([SubResource("Resource_36u8b")])
 search_loot = Array[ExtResource("5_mj1na")]([SubResource("Resource_wuuc8"), SubResource("Resource_hpfw3"), SubResource("Resource_xlnlg"), SubResource("Resource_k18l8")])
 empty_search_weight = 8

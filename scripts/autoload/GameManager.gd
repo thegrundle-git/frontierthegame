@@ -19,6 +19,8 @@ var pending_startup_messages: Array[String] = []
 
 var _game_started := false
 
+var track_animals_action := TrackAnimalsAction.new()
+
 var should_load_save_on_start := false
 var game_session_prepared := false
 
@@ -144,23 +146,40 @@ func start_world_action(
 	)
 
 
+
 func _complete_world_action(
 	action_id: String
 ) -> void:
-	if current_survivor == null:
-		return
-
-	var action := ActionDatabase.get_action(
-		action_id
+	var action: ActionData = (
+		ActionDatabase.get_action(
+			action_id
+		)
 	)
 
 	if action == null:
+		push_error(
+			"Completed unknown action: "
+			+ action_id
+		)
 		return
 
 	if action.action_script == null:
+		push_error(
+			"Action has no completion script: "
+			+ action.id
+		)
 		return
 
-	var action_instance = action.action_script.new()
+	var action_instance: Object = (
+		action.action_script.new()
+	)
+
+	if action_instance == null:
+		push_error(
+			"Failed to create action-script instance: "
+			+ action.id
+		)
+		return
 
 	if not action_instance.has_method("perform"):
 		push_error(
@@ -169,24 +188,29 @@ func _complete_world_action(
 		)
 		return
 
-	var succeeded: bool = action_instance.call(
-		"perform",
-		current_survivor
+	var result_variant: Variant = (
+		action_instance.call(
+			"perform",
+			current_survivor
+		)
 	)
 
-	if succeeded:
-		_award_skill_xp(
-			action.skill_id,
-			action.xp_reward
+	var result: bool = bool(
+		result_variant
+	)
+
+	if not result:
+		push_warning(
+			"Action failed to complete: "
+			+ action.id
 		)
 
-		WorldEventManager.try_trigger_after_action(
-			action.id
-		)
+	_award_skill_xp(
+		action.skill_id,
+		action.xp_reward
+	)
 
 	_refresh_ui()
-
-
 func start_travel(
 	destination_id: String
 ) -> bool:
@@ -229,8 +253,10 @@ func start_travel(
 func _complete_travel(
 	destination_id: String
 ) -> void:
-	var connection := _get_travel_connection(
-		destination_id
+	var connection: TravelConnectionData = (
+		_get_travel_connection(
+			destination_id
+		)
 	)
 
 	if connection == null:
@@ -240,8 +266,10 @@ func _complete_travel(
 		)
 		return
 
-	var destination := LocationDatabase.get_location(
-		connection.destination_id
+	var destination: LocationData = (
+		LocationDatabase.get_location(
+			connection.destination_id
+		)
 	)
 
 	if destination == null:
@@ -252,9 +280,14 @@ func _complete_travel(
 		return
 
 	current_location = destination
+
 	_record_location_visit(
-	current_location
-)
+		current_location
+	)
+
+	_check_location_discoveries(
+		current_location
+	)
 
 	_add_event(
 		current_survivor.data.display_name
@@ -263,16 +296,12 @@ func _complete_travel(
 		+ "."
 	)
 
-
-	
 	_award_skill_xp(
 		connection.skill_id,
 		connection.xp_reward
 	)
 
 	_refresh_ui()
-
-
 func craft_recipe(
 	recipe_id: String
 ) -> bool:
@@ -364,11 +393,36 @@ func _award_skill_xp(
 
 
 func get_available_actions() -> Array[ActionData]:
+	var available_actions: Array[ActionData] = []
+
 	if current_location == null:
-		return []
+		return available_actions
 
-	return current_location.available_actions
+	for action: ActionData in current_location.available_actions:
+		if action == null:
+			continue
 
+		if not _is_action_unlocked(action):
+			continue
+
+		available_actions.append(action)
+
+	return available_actions
+	
+func _is_action_unlocked(
+	action: ActionData
+) -> bool:
+	if current_civilization == null:
+		return false
+
+	match action.id:
+		"track_animals":
+			return current_civilization.has_discovery(
+				"animal_tracks"
+			)
+
+		_:
+			return true
 
 func get_travel_connections() -> Array[TravelConnectionData]:
 	if current_location == null:
@@ -563,6 +617,60 @@ func _record_location_visit(
 
 	return true
 	
+func _check_location_discoveries(
+	location: LocationData
+) -> void:
+	if location == null:
+		return
+
+	if current_civilization == null:
+		return
+
+	match location.id:
+		"river":
+			_unlock_location_discovery(
+				"fresh_water"
+			)
+
+func _unlock_location_discovery(
+	discovery_id: String
+) -> void:
+	if discovery_id.is_empty():
+		return
+
+	if current_civilization == null:
+		return
+
+	if discovery_id in current_civilization.discovered_ids:
+		return
+
+	var discovery: DiscoveryData = (
+		DiscoveryDatabase.get_discovery(
+			discovery_id
+		)
+	)
+
+	if discovery == null:
+		push_warning(
+			"Unknown location discovery: "
+			+ discovery_id
+		)
+		return
+
+	current_civilization.discovered_ids.append(
+		discovery_id
+	)
+
+	_add_event(
+		"DISCOVERY RECORDED: "
+		+ discovery.display_name
+	)
+
+	if not discovery.description.is_empty():
+		_add_event(
+			discovery.description
+		)
+
 func _queue_or_add_event(
 	message: String
 ) -> void:

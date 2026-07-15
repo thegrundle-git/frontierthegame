@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DiscoveryData" format=3 uid="uid://dni5yucl4kuek"]
+
+[ext_resource type="Script" uid="uid://be18tux0tleml" path="res://scripts/resources/DiscoveryData.gd" id="1_wlf6s"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_1mmr4"]
+
+[resource]
+script = ExtResource("1_wlf6s")
+id = "wild_flora"
+display_name = "Wild Flora"
+description = "The open wilderness supports more than food alone. Certain plants may be eaten, woven, brewed, or ground into medicine. Learning to recognize them could become essential to survival."
+knowledge_required = 8
+required_item_ids = Array[String](["herb"])
+metadata/_custom_type_script = "uid://be18tux0tleml"

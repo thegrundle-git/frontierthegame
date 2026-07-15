@@ -1,49 +1,36 @@
-Current Sprint
-Sprint 2 — The Living World
-Goal
+# Current Sprint
 
-Make Frontier’s world feel discovered, remembered, and shaped by those who came before.
+## Sprint 3 — The Age of Discovery
 
-Completed
+### Goal
 
-Persistent visited-location tracking
+Make learning expand the player’s understanding of the world and unlock new possibilities.
 
-First-visit narration
+### Completed
 
-Permanent Locations Journal
+* [x] Populate the Discoveries Journal
+* [x] Fix Primitive Toolmaking Journal population
+* [x] Add Narrative Generator v1
+* [x] Add Wild Flora
+* [x] Add Fresh Water
+* [x] Add Animal Tracks
+* [x] Add persistent wilderness-search tracking
+* [x] Add discovery-gated actions
+* [x] Add Track Animals v1
+* [x] Connect ActionData scripts through generic completion logic
 
-LandmarkData resource
+### Current Objectives
 
-LandmarkDatabase
+* [ ] Move narrative phrases into authored resources
+* [ ] Add Flint
+* [ ] Add a second tracking-related discovery
+* [ ] Add a Meadow ambient event
+* [ ] Add a second landmark
+* [ ] Add Finnley’s first anonymous journal fragment
 
-Persistent landmark discoveries
+### Stretch Goals
 
-Dynamic Landmarks Journal tab
-
-Abandoned Campsite landmark
-
-World-event-to-landmark linking
-
-Landmark save and load support
-
-Current Objectives
-
-Populate the Discoveries Journal
-
-Add the Wild Flora discovery
-
-Add lore to the Abandoned Campsite
-
-Add the first Finnley journal fragment
-
-Build Narrative Generator v1
-
-Stretch Goals
-
-Meadow ambient event
-
-Second landmark
-
-First-visited day records
-
-Known-resource tracking
+* [ ] Add tracking-specific loot
+* [ ] Add wildlife-sign discoveries
+* [ ] Add discovery categories
+* [ ] Add required discovery fields directly to ActionData

@@ -60,6 +60,11 @@ func has_recipe(recipe_id: String) -> bool:
 
 @export var visited_location_ids: Array[String] = []
 @export var discovered_landmark_ids: Array[String] = []
+@export var wilderness_search_count: int = 0
+
+func record_wilderness_search() -> int:
+	wilderness_search_count += 1
+	return wilderness_search_count
 
 func has_visited_location(location_id: String) -> bool:
 	return location_id in visited_location_ids

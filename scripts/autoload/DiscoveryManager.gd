@@ -74,5 +74,45 @@ func unlock_discovery(discovery: DiscoveryData) -> void:
 			continue
 
 		GameManager.game_ui.add_event(
-			"Recipe unlocked: " + recipe.display_name
+			"Recipe unlocked: "
+			+ recipe.display_name
 		)
+
+	GameManager.game_ui.rebuild_location_controls()
+	GameManager.game_ui.refresh_all()
+
+func record_location_search(
+	location_id: String
+) -> void:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if civilization == null:
+		return
+
+	if location_id != "forest" and location_id != "meadow":
+		return
+
+	var search_count: int = (
+		civilization.record_wilderness_search()
+	)
+
+	if search_count < 5:
+		return
+
+	var discovery: DiscoveryData = (
+		DiscoveryDatabase.get_discovery(
+			"animal_tracks"
+		)
+	)
+
+	if discovery == null:
+		push_warning(
+			"Animal Tracks discovery was not found."
+		)
+		return
+
+	unlock_discovery(
+		discovery
+	)

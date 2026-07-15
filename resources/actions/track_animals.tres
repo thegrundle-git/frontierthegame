@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ActionData" format=3 uid="uid://ch2jabciak2g1"]
+
+[ext_resource type="Script" uid="uid://drqdxubmxh810" path="res://scripts/actions/TrackAnimalsAction.gd" id="1_36t6h"]
+[ext_resource type="Script" uid="uid://dxw7aqst831bm" path="res://scripts/resources/ActionData.gd" id="2_ndmrh"]
+
+[resource]
+script = ExtResource("2_ndmrh")
+id = "track_animals"
+display_name = "Track Animals"
+description = "Follow signs of wildlife through the surrounding wilderness in search of fresh tracks."
+duration_seconds = 6.0
+game_minutes = 90
+skill_id = "exploration"
+xp_reward = 2
+action_script = ExtResource("1_36t6h")
+metadata/_custom_type_script = "uid://dxw7aqst831bm"

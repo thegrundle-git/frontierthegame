@@ -2,59 +2,45 @@
 
 ## Critical
 
-- Populate the Discoveries Journal tab.
-
-- Add the Wild Flora discovery.
-
-- Verify landmark persistence in an exported build.
-
-- Add first meaningful lore content to the Abandoned Campsite.
-
-- Build Narrative Generator v1.
----
+* [ ] Verify all v0.5.1-alpha1 systems in an exported build.
+* [ ] Confirm Track Animals awards XP only once.
+* [ ] Confirm wilderness search count persists after loading.
+* [ ] Confirm all four discoveries persist after loading.
+* [ ] Confirm discovery-gated action visibility refreshes correctly after Continue.
 
 ## High
 
-- Add additional landmarks.
-
-- Add landmark-specific journal details.
-
-- Record first-visited day for each location.
-
-- Add known resources to location journal entries.
-
-- Add the first Finnley journal fragment.
-
-- Add a Meadow ambient event.
----
+* [ ] Move narrative phrases into NarrativeTemplateData resources.
+* [ ] Add Flint item and discovery.
+* [ ] Add first tracking-specific item or observation.
+* [ ] Add a Meadow ambient event.
+* [ ] Add a second landmark.
+* [ ] Add Finnley’s first anonymous journal fragment.
+* [ ] Add a required discovery field to ActionData.
+* [ ] Replace hardcoded action-unlock matching with resource data.
 
 ## Medium
 
-- Weather.
-- Hunting.
-- Water collection.
-- Deep Forest.
-- Rocky Outcrop.
-- Marsh.
-- Wildlife.
-- Camping and Shelter.
----
+* [ ] Add discovery categories.
+* [ ] Add known resources to location Journal entries.
+* [ ] Record first-visited day.
+* [ ] Add mushrooms.
+* [ ] Add wildlife signs.
+* [ ] Add Deep Forest.
+* [ ] Add Rocky Outcrop.
+* [ ] Add Marsh.
 
 ## Low
 
-- Character creation.
-- Controller support.
-- Steam achievements.
-- Settings menu.
----
+* [ ] Character creation.
+* [ ] Controller support.
+* [ ] Settings menu.
+* [ ] Steam achievements.
 
 ## Someday
 
-- Dynamic civilizations.
-- Player history generation.
-- Multi-generational world.
-- Persistent history across generations.
-- Survivor legacy system.
-- Player-created landmarks surviving future playthroughs.
-- Dynamic place names and myths.
-- Multi-generational civilizations.
+* [ ] Persistent survivor legacy.
+* [ ] History shared across generations.
+* [ ] Player-created landmarks.
+* [ ] Dynamic place names.
+* [ ] Ecological changes across playthroughs.

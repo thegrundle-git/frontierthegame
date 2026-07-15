@@ -29,15 +29,30 @@ The goal is to create a playable survival experience lasting approximately 30–
 - Persistent landmark discoveries
 - Dynamic Landmarks Journal tab
 - Abandoned Campsite landmark
+### Age of Discovery Foundation
+
+* Narrative Generator v1
+* Populated Discoveries Journal
+* Wild Flora discovery
+* Fresh Water discovery
+* Animal Tracks discovery
+* Persistent experience-based discovery tracking
+* Knowledge-gated world actions
+* Track Animals v1
+* Generic ActionData completion-script execution
+
 ---
 
 ## In Progress
 
-- Populate the Discoveries Journal
-- Meadow discovery: Wild Flora
-- Additional landmarks
-- Narrative Generator v1
-- Finnley’s first hidden lore fragments
+* Data-driven narrative templates
+* Additional tracking outcomes
+* Flint discovery and item
+* Meadow ambient event
+* Additional landmarks
+* Finnley’s first anonymous journal fragment
+* Discovery categories
+
 
 ---
 

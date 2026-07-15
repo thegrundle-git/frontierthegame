@@ -12,7 +12,10 @@ func load_discoveries() -> void:
 	discoveries.clear()
 
 	var discovery_paths: Array[String] = [
-		"res://resources/discoveries/primitive_toolmaking.tres"
+		"res://resources/discoveries/primitive_toolmaking.tres",
+		"res://resources/discoveries/wild_flora.tres",
+		"res://resources/discoveries/fresh_water.tres",
+		"res://resources/discoveries/animal_tracks.tres",
 	]
 
 	for discovery_path in discovery_paths:

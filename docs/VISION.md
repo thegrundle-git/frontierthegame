@@ -211,3 +211,17 @@ Whenever a design decision is difficult, ask:
 > "Does this make the player more curious about the world?"
 
 If the answer is yes, it probably belongs in Frontier.
+
+## Knowledge as Progression
+
+Frontier’s central progression is not simply increasing numerical power.
+
+The player explores, observes, experiments, and learns.
+
+Knowledge changes what the player can perceive and what their civilization can attempt.
+
+The intended loop is:
+
+Explore → Observe → Learn → Unlock Possibilities → Explore Further
+
+The interface should grow naturally as new knowledge becomes useful.

@@ -462,3 +462,73 @@ Planned additions include:
 * character creation;
 * cleaner main-menu session flow;
 * developer testing tools.
+
+## Narrative Generator
+
+`NarrativeGenerator` is an autoload responsible for producing atmospheric search narration.
+
+Narration currently varies by:
+
+* survivor name;
+* location ID;
+* item ID;
+* successful or empty result;
+* quantity.
+
+The clear mechanical reward remains separate from narrative text.
+
+Current implementation stores phrase pools in code. Future versions should move these phrases into authored resource files.
+
+## Discovery Sources
+
+Discoveries may currently originate from several sources:
+
+* observed items;
+* accumulated civilization Knowledge;
+* first visits to locations;
+* repeated location actions;
+* direct scripted unlocks.
+
+`DiscoveryManager` remains the primary discovery-unlock coordinator for observation- and experience-driven discoveries.
+
+Location-based discovery hooks currently exist in `GameManager`.
+
+## Experience-Based Discoveries
+
+`CivilizationData` stores:
+
+```gdscript
+@export var wilderness_search_count: int = 0
+```
+
+Forest and Meadow searches increment this value.
+
+At five qualifying searches, Animal Tracks is unlocked.
+
+The count is serialized by SaveManager and defaults to zero for older saves.
+
+## Knowledge-Gated Actions
+
+`GameManager.get_available_actions()` filters the current location’s ActionData collection.
+
+Track Animals is only returned when the civilization has discovered Animal Tracks.
+
+The current implementation uses an action-ID match.
+
+A future ActionData field should replace this hardcoded gate.
+
+## Dynamic Action Script Execution
+
+Each ActionData resource contains an `action_script`.
+
+When a timed action completes:
+
+1. GameManager retrieves its ActionData.
+2. The assigned Script resource is instantiated with `new()`.
+3. The instance is checked for a `perform()` method.
+4. `perform(current_survivor)` is called.
+5. Standard ActionData XP rewards and UI refreshes are handled by GameManager.
+
+Action implementations should return a Boolean success value.
+
+Action scripts should not independently award the ActionData skill XP unless explicitly designed to provide an additional reward.

@@ -143,7 +143,8 @@ func _build_save_data() -> Dictionary:
 			"visited_location_ids": civilization.visited_location_ids.duplicate(),
 			"observed_item_ids": civilization.observed_item_ids.duplicate(),
 			"discovered_ids": civilization.discovered_ids.duplicate(),
-			"unlocked_recipe_ids": civilization.unlocked_recipe_ids.duplicate()
+			"unlocked_recipe_ids": civilization.unlocked_recipe_ids.duplicate(),
+			"wilderness_search_count": civilization.wilderness_search_count,
 		},
 		"world_events": {
 			"completed_event_ids": WorldEventManager.completed_event_ids.duplicate()
@@ -428,6 +429,12 @@ func _apply_civilization_data(
 		)
 	)
 
+	civilization.wilderness_search_count = int(
+	civilization_data.get(
+		"wilderness_search_count",
+		0
+	)
+)
 
 func _apply_world_event_data(
 	event_data: Dictionary

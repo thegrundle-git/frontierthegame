@@ -1,6 +1,40 @@
 # Frontier Changelog
 
 This document records every released version of Frontier.
+---
+## v0.5.1-alpha1 — Age of Discovery
+
+### Added
+
+* Narrative Generator v1 for location- and item-specific search narration.
+* Wild Flora discovery.
+* Fresh Water discovery.
+* Animal Tracks discovery.
+* Persistent wilderness search-count tracking.
+* Experience-based discovery conditions.
+* First knowledge-gated action: Track Animals.
+* Track Animals narrative outcomes.
+* Knowledge rewards from successful tracking.
+* Discovery database lookup support.
+* Permanent Discoveries Journal population.
+
+### Changed
+
+* Search results now include atmospheric narrative while retaining clear item reward messages.
+* Discovery progression now supports item observation, location visits, and repeated actions.
+* Available world actions are filtered by civilization knowledge.
+* Action completion scripts are instantiated dynamically from each ActionData resource.
+* Newly unlocked discoveries can immediately rebuild available action controls.
+* The interface now expands as new knowledge unlocks new possibilities.
+
+### Fixed
+
+* Primitive Toolmaking failing to appear in the Discoveries Journal.
+* Discovery resources being unavailable through direct ID lookup.
+* Track Animals appearing before Animal Tracks was discovered.
+* Action scripts being called directly as static scripts.
+* Nil results being assigned to typed Boolean variables during action completion.
+* Incorrectly indented discovery-journal function being parsed as a standalone lambda.
 
 ---
 ##v0.5.0-alpha3 — Living World Foundation
