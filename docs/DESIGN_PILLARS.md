@@ -49,3 +49,25 @@ Civilizations outlive individuals.
 ## Meaningful Atmosphere
 
 Small moments are more important than spectacle.
+
+---
+
+The World Remembers
+
+Exploration should create permanent knowledge.
+
+Locations, landmarks, discoveries, and histories should remain part of the survivor’s record after they are first encountered.
+
+History Through Environment
+
+Lore should exist in camps, tools, trails, ruins, journals, and landscapes rather than relying primarily on exposition.
+
+Quiet Discovery
+
+Not every meaningful discovery needs a large reward.
+
+Finding a place, understanding what happened there, or choosing to remember it can be its own reward.
+
+Legacy Without Power Creep
+
+Future legacy systems should preserve information, infrastructure, stories, and environmental changes rather than relying primarily on inherited numerical bonuses.

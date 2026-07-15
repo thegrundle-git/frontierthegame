@@ -22,14 +22,22 @@ The goal is to create a playable survival experience lasting approximately 30–
 - Meadow
 - Tabbed Journal
 - Scrollable Inventory
-
+- Persistent visited-location tracking
+- First-visit location narration
+- Permanent Locations Journal
+- Landmark data and database framework
+- Persistent landmark discoveries
+- Dynamic Landmarks Journal tab
+- Abandoned Campsite landmark
 ---
 
 ## In Progress
 
-- Journal Progression
-- Landmark System
-- Narrative Generator
+- Populate the Discoveries Journal
+- Meadow discovery: Wild Flora
+- Additional landmarks
+- Narrative Generator v1
+- Finnley’s first hidden lore fragments
 
 ---
 

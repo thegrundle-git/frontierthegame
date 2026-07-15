@@ -9,6 +9,10 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
 @onready var location_label: Label = %LocationLabel
+@onready var locations_log: RichTextLabel = %LocationsLog
+@onready var landmarks_log: RichTextLabel = %LandmarksLog
+@onready var journal_tabs: TabContainer = %JournalTabs
+@onready var landmarks_tab: Control = %Landmarks
 
 @onready var time_label: Label = %TimeLabel
 @onready var current_action_label: Label = %CurrentActionLabel
@@ -19,16 +23,19 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 
 @onready var recipe_label: Label = %RecipeLabel
 @onready var craft_button: Button = %CraftButton
+
 @onready var event_overlay: CenterContainer = %EventOverlay
 @onready var event_title: Label = %EventTitle
 @onready var event_body: Label = %EventBody
 @onready var event_options: VBoxContainer = %EventOptions
+
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
 
 
 func _ready() -> void:
+	GameManager.game_ui = self
 
 	ActionManager.action_started.connect(
 		_on_action_started
@@ -50,12 +57,6 @@ func _ready() -> void:
 		_update_time
 	)
 
-	build_world_action_buttons()
-	build_travel_buttons()
-	refresh_all()
-
-	current_action_label.text = "Idle"
-	action_progress.value = 0.0
 	WorldEventManager.event_started.connect(
 		_on_world_event_started
 	)
@@ -65,9 +66,20 @@ func _ready() -> void:
 	)
 
 	event_overlay.visible = false
-	GameManager.game_ui = self
-	call_deferred("_request_initial_refresh")
-	
+	current_action_label.text = "Idle"
+	action_progress.value = 0.0
+
+	build_world_action_buttons()
+	build_travel_buttons()
+	refresh_all()
+
+	GameManager.flush_pending_startup_messages()
+
+	call_deferred(
+		"_request_initial_refresh"
+	)
+
+
 func refresh_all() -> void:
 	update_survivor()
 	update_location()
@@ -75,9 +87,14 @@ func refresh_all() -> void:
 	update_crafting()
 	update_world_action_buttons()
 	update_travel_buttons()
+	update_locations_journal()
+	update_landmarks_journal()
+	update_journal_tab_visibility()
 	_update_time()
 
-	var survivor := GameManager.current_survivor
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
 
 	if survivor != null:
 		update_inventory(
@@ -90,21 +107,27 @@ func add_event(event_text: String) -> void:
 		"\n" + event_text
 	)
 
+	var last_line: int = maxi(
+		event_log.get_line_count() - 1,
+		0
+	)
+
 	event_log.scroll_to_line(
-		max(
-			event_log.get_line_count() - 1,
-			0
-		)
+		last_line
 	)
 
 
+# -------------------------------------------------------------------
+# Dynamic controls
+# -------------------------------------------------------------------
+
 func build_world_action_buttons() -> void:
-	for child in action_list.get_children():
+	for child: Node in action_list.get_children():
 		child.queue_free()
 
 	world_action_buttons.clear()
 
-	for action in GameManager.get_available_actions():
+	for action: ActionData in GameManager.get_available_actions():
 		if action == null:
 			continue
 
@@ -130,20 +153,24 @@ func build_world_action_buttons() -> void:
 
 
 func build_travel_buttons() -> void:
-	for child in travel_list.get_children():
+	for child: Node in travel_list.get_children():
 		child.queue_free()
 
 	travel_buttons.clear()
 
-	for connection in GameManager.get_travel_connections():
+	for connection: TravelConnectionData in (
+		GameManager.get_travel_connections()
+	):
 		if connection == null:
 			continue
 
 		if connection.destination_id.is_empty():
 			continue
 
-		var destination := LocationDatabase.get_location(
-			connection.destination_id
+		var destination: LocationData = (
+			LocationDatabase.get_location(
+				connection.destination_id
+			)
 		)
 
 		if destination == null:
@@ -184,8 +211,14 @@ func rebuild_location_controls() -> void:
 	build_travel_buttons()
 
 
+# -------------------------------------------------------------------
+# Main display updates
+# -------------------------------------------------------------------
+
 func update_location() -> void:
-	var location := GameManager.current_location
+	var location: LocationData = (
+		GameManager.current_location
+	)
 
 	if location == null:
 		location_label.text = "Unknown Location"
@@ -199,18 +232,27 @@ func update_location() -> void:
 
 
 func update_world_action_buttons() -> void:
-	var survivor := GameManager.current_survivor
-	var event_pending := (
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
+
+	var event_pending: bool = (
 		WorldEventManager.has_pending_event()
 	)
 
-	for action_id in world_action_buttons:
-		var button: Button = (
-			world_action_buttons[action_id]
+	for action_id_variant: Variant in world_action_buttons:
+		var action_id := str(
+			action_id_variant
 		)
 
-		var action := ActionDatabase.get_action(
-			action_id
+		var button: Button = (
+			world_action_buttons[action_id_variant]
+		)
+
+		var action: ActionData = (
+			ActionDatabase.get_action(
+				action_id
+			)
 		)
 
 		if action == null:
@@ -235,30 +277,35 @@ func update_world_action_buttons() -> void:
 
 		if requirements_met:
 			button.tooltip_text = action.description
-		else:
-			var tool := ItemDatabase.get_item(
-				action.required_tool_id
+			continue
+
+		var tool: ItemData = ItemDatabase.get_item(
+			action.required_tool_id
+		)
+
+		if tool != null:
+			button.tooltip_text = (
+				"Requires equipped "
+				+ tool.display_name
 			)
 
-			if tool != null:
-				button.tooltip_text = (
-					"Requires equipped "
-					+ tool.display_name
-				)
+
 func update_travel_buttons() -> void:
-	var event_pending := (
+	var event_pending: bool = (
 		WorldEventManager.has_pending_event()
 	)
 
-	for destination_id in travel_buttons:
+	for destination_id_variant: Variant in travel_buttons:
 		var button: Button = (
-			travel_buttons[destination_id]
+			travel_buttons[destination_id_variant]
 		)
 
 		button.disabled = (
 			ActionManager.is_busy
 			or event_pending
 		)
+
+
 func update_inventory(
 	inventory: FrontierInventory
 ) -> void:
@@ -267,13 +314,21 @@ func update_inventory(
 	if inventory.items.is_empty():
 		inventory_text += "Empty"
 	else:
-		for item_id in inventory.items:
-			var item_data := ItemDatabase.get_item(
-				item_id
+		for item_id_variant: Variant in inventory.items:
+			var item_id := str(
+				item_id_variant
 			)
 
-			var amount := inventory.get_item_amount(
-				item_id
+			var item_data: ItemData = (
+				ItemDatabase.get_item(
+					item_id
+				)
+			)
+
+			var amount: int = (
+				inventory.get_item_amount(
+					item_id
+				)
 			)
 
 			if item_data == null:
@@ -296,7 +351,9 @@ func update_inventory(
 
 
 func update_survivor() -> void:
-	var survivor := GameManager.current_survivor
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
 
 	if survivor == null:
 		skills_label.text = "Skills unavailable."
@@ -304,7 +361,7 @@ func update_survivor() -> void:
 
 	var skill_text := "Skills\n\n"
 
-	for skill in survivor.get_all_skills():
+	for skill: SkillProgress in survivor.get_all_skills():
 		skill_text += (
 			skill.display_name
 			+ "\nLevel "
@@ -317,14 +374,20 @@ func update_survivor() -> void:
 		)
 
 	skills_label.text = skill_text
+
+
 func update_tool_display() -> void:
-	var survivor := GameManager.current_survivor
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
 
 	if survivor == null:
 		tool_label.text = "Equipped Tool: None"
 		return
 
-	var tool := survivor.get_equipped_tool()
+	var tool: ItemData = (
+		survivor.get_equipped_tool()
+	)
 
 	if tool == null:
 		tool_label.text = "Equipped Tool: None"
@@ -337,12 +400,19 @@ func update_tool_display() -> void:
 
 
 func update_crafting() -> void:
-	var recipe := RecipeDatabase.get_recipe(
-		STONE_AXE_RECIPE_ID
+	var recipe: RecipeData = (
+		RecipeDatabase.get_recipe(
+			STONE_AXE_RECIPE_ID
+		)
 	)
 
-	var survivor := GameManager.current_survivor
-	var civilization := GameManager.current_civilization
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
+
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
 
 	if (
 		recipe == null
@@ -351,9 +421,12 @@ func update_crafting() -> void:
 	):
 		recipe_label.text = "Crafting unavailable."
 		craft_button.disabled = true
+		craft_button.visible = false
 		return
 
-	if not civilization.has_recipe(recipe.id):
+	if not civilization.has_recipe(
+		recipe.id
+	):
 		recipe_label.text = (
 			"Crafting\n\n"
 			+ "No recipes discovered."
@@ -371,15 +444,17 @@ func update_crafting() -> void:
 		+ "\n\nRequires:\n"
 	)
 
-	for ingredient in recipe.ingredients:
+	for ingredient: IngredientData in recipe.ingredients:
 		if (
 			ingredient == null
 			or ingredient.item == null
 		):
 			continue
 
-		var owned := survivor.inventory.get_item_amount(
-			ingredient.item.id
+		var owned: int = (
+			survivor.inventory.get_item_amount(
+				ingredient.item.id
+			)
 		)
 
 		recipe_text += (
@@ -400,6 +475,8 @@ func update_crafting() -> void:
 			recipe
 		)
 	)
+
+
 func _update_time() -> void:
 	time_label.text = TimeManager.get_time_text()
 
@@ -423,6 +500,122 @@ func _format_minutes(
 		+ " min"
 	)
 
+
+# -------------------------------------------------------------------
+# Journal
+# -------------------------------------------------------------------
+
+func update_locations_journal() -> void:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if (
+		civilization == null
+		or civilization.visited_location_ids.is_empty()
+	):
+		locations_log.text = (
+			"No locations recorded."
+		)
+		return
+
+	var journal_text := ""
+
+	for location_id: String in (
+		civilization.visited_location_ids
+	):
+		var location: LocationData = (
+			LocationDatabase.get_location(
+				location_id
+			)
+		)
+
+		if location == null:
+			continue
+
+		if not journal_text.is_empty():
+			journal_text += "\n\n"
+
+		journal_text += (
+			"[b]"
+			+ location.display_name
+			+ "[/b]\n"
+			+ location.description
+		)
+
+	locations_log.text = journal_text
+
+
+func update_landmarks_journal() -> void:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if (
+		civilization == null
+		or civilization.discovered_landmark_ids.is_empty()
+	):
+		landmarks_log.text = (
+			"No landmarks recorded."
+		)
+		return
+
+	var journal_text := ""
+
+	for landmark_id: String in (
+		civilization.discovered_landmark_ids
+	):
+		var landmark: LandmarkData = (
+			LandmarkDatabase.get_landmark(
+				landmark_id
+			)
+		)
+
+		if landmark == null:
+			continue
+
+		if not journal_text.is_empty():
+			journal_text += "\n\n"
+
+		journal_text += (
+			"[b]"
+			+ landmark.display_name
+			+ "[/b]\n"
+			+ landmark.description
+		)
+
+	landmarks_log.text = journal_text
+
+
+func update_journal_tab_visibility() -> void:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if civilization == null:
+		return
+
+
+
+	var landmarks_tab_index: int = (
+		journal_tabs.get_tab_idx_from_control(
+			landmarks_tab
+		)
+	)
+
+	if landmarks_tab_index < 0:
+		push_warning(
+			"Landmarks tab is not a direct child of JournalTabs."
+		)
+		return
+
+	journal_tabs.set_tab_hidden(
+		landmarks_tab_index,
+		civilization.discovered_landmark_ids.is_empty()
+	)
+# -------------------------------------------------------------------
+# Action callbacks
+# -------------------------------------------------------------------
 
 func _on_world_action_pressed(
 	action_id: String
@@ -454,7 +647,9 @@ func _on_action_started(
 func _on_action_progress_changed(
 	progress: float
 ) -> void:
-	action_progress.value = progress * 100.0
+	action_progress.value = (
+		progress * 100.0
+	)
 
 
 func _on_action_completed(
@@ -481,16 +676,22 @@ func _on_craft_button_pressed() -> void:
 	GameManager.craft_recipe(
 		STONE_AXE_RECIPE_ID
 	)
+
+
+# -------------------------------------------------------------------
+# World events
+# -------------------------------------------------------------------
+
 func show_world_event(
 	event: WorldEventData
 ) -> void:
 	event_title.text = event.display_name
 	event_body.text = event.description
 
-	for child in event_options.get_children():
+	for child: Node in event_options.get_children():
 		child.queue_free()
 
-	for option in event.options:
+	for option: EventOptionData in event.options:
 		if option == null:
 			continue
 
@@ -508,7 +709,6 @@ func show_world_event(
 		event_options.add_child(button)
 
 	event_overlay.visible = true
-
 	refresh_all()
 
 
@@ -527,6 +727,7 @@ func _on_world_event_resolved(
 	_option: EventOptionData
 ) -> void:
 	hide_world_event()
+	refresh_all()
 
 
 func _on_event_option_pressed(
@@ -537,18 +738,29 @@ func _on_event_option_pressed(
 	)
 
 
+# -------------------------------------------------------------------
+# Save and load
+# -------------------------------------------------------------------
+
 func _on_save_button_pressed() -> void:
 	SaveManager.save_game()
 
 
 func _on_load_button_pressed() -> void:
-	if SaveManager.load_game():
-		if WorldEventManager.has_pending_event():
-			show_world_event(
-				WorldEventManager.pending_event
-			)
-		else:
-			hide_world_event()
+	if not SaveManager.load_game():
+		return
+
+	if WorldEventManager.has_pending_event():
+		show_world_event(
+			WorldEventManager.pending_event
+		)
+	else:
+		hide_world_event()
+
+	rebuild_location_controls()
+	refresh_all()
+
+
 func _request_initial_refresh() -> void:
 	if GameManager.current_survivor == null:
 		return

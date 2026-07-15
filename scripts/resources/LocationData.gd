@@ -8,6 +8,9 @@ class_name LocationData
 @export_multiline
 var description: String = ""
 
+@export_multiline
+var first_visit_text: String = ""
+
 @export var available_actions: Array[ActionData] = []
 @export var travel_connections: Array[TravelConnectionData] = []
 

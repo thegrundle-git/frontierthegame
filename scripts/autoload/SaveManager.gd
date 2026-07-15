@@ -88,7 +88,6 @@ func load_game() -> bool:
 
 	return true
 
-
 func save_exists() -> bool:
 	return FileAccess.file_exists(
 		SAVE_PATH
@@ -139,7 +138,9 @@ func _build_save_data() -> Dictionary:
 		},
 		"civilization": {
 			"display_name": civilization.display_name,
+			"discovered_landmark_ids": civilization.discovered_landmark_ids.duplicate(),
 			"knowledge": civilization.knowledge,
+			"visited_location_ids": civilization.visited_location_ids.duplicate(),
 			"observed_item_ids": civilization.observed_item_ids.duplicate(),
 			"discovered_ids": civilization.discovered_ids.duplicate(),
 			"unlocked_recipe_ids": civilization.unlocked_recipe_ids.duplicate()
@@ -372,7 +373,24 @@ func _apply_civilization_data(
 			civilization.display_name
 		)
 	)
-
+	
+	civilization.visited_location_ids = (
+	_string_array_from_variant(
+		civilization_data.get(
+			"visited_location_ids",
+			[]
+		)
+	)
+)
+	civilization.discovered_landmark_ids = (
+		_string_array_from_variant(
+			civilization_data.get(
+				"discovered_landmark_ids",
+				[]
+			)
+		)
+	)
+	
 	civilization.knowledge = max(
 		int(
 			civilization_data.get(

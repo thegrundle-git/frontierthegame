@@ -57,3 +57,41 @@ func add_discovery(discovery: DiscoveryData) -> bool:
 
 func has_recipe(recipe_id: String) -> bool:
 	return recipe_id in unlocked_recipe_ids
+
+@export var visited_location_ids: Array[String] = []
+@export var discovered_landmark_ids: Array[String] = []
+
+func has_visited_location(location_id: String) -> bool:
+	return location_id in visited_location_ids
+
+
+func record_location_visit(location_id: String) -> bool:
+	if location_id.is_empty():
+		return false
+
+	if has_visited_location(location_id):
+		return false
+
+	visited_location_ids.append(location_id)
+	return true
+
+func has_discovered_landmark(
+	landmark_id: String
+) -> bool:
+	return landmark_id in discovered_landmark_ids
+
+
+func record_landmark_discovery(
+	landmark_id: String
+) -> bool:
+	if landmark_id.is_empty():
+		return false
+
+	if has_discovered_landmark(landmark_id):
+		return false
+
+	discovered_landmark_ids.append(
+		landmark_id
+	)
+
+	return true

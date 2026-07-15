@@ -88,6 +88,28 @@ History remembers only fragments.
 
 A player's actions should eventually become part of the world's history.
 
+Every survivor dies. Every civilization changes. The world remembers what matters.
+
+Living History
+
+Frontier should quietly carry the consequences of ordinary lives forward.
+
+The player may not immediately know which actions will be remembered.
+
+Future survivors may inherit:
+
+camps;
+roads;
+landmarks;
+journals;
+place names;
+environmental changes;
+incomplete or distorted stories.
+
+Legacy should feel like history, not a conventional prestige menu.
+
+Every survivor dies. Every civilization changes. The world remembers what matter
+
 ---
 
 # The First Survivor

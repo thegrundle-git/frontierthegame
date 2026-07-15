@@ -15,6 +15,8 @@ var current_location: LocationData
 
 var game_ui: Control
 
+var pending_startup_messages: Array[String] = []
+
 var _game_started := false
 
 var should_load_save_on_start := false
@@ -63,6 +65,10 @@ func start_new_game() -> void:
 		STARTING_LOCATION_ID
 	)
 
+	_record_location_visit(
+	current_location
+)
+
 	if current_civilization == null:
 		push_error(
 			"Failed to load the starting civilization."
@@ -97,6 +103,7 @@ func start_new_game() -> void:
 	current_survivor.initialize(
 		survivor_data
 	)
+
 func start_world_action(
 	action_id: String
 ) -> bool:
@@ -245,6 +252,9 @@ func _complete_travel(
 		return
 
 	current_location = destination
+	_record_location_visit(
+	current_location
+)
 
 	_add_event(
 		current_survivor.data.display_name
@@ -253,6 +263,8 @@ func _complete_travel(
 		+ "."
 	)
 
+
+	
 	_award_skill_xp(
 		connection.skill_id,
 		connection.xp_reward
@@ -476,7 +488,8 @@ func _initialize_game() -> void:
 	RecipeDatabase.load_recipes()
 	DiscoveryDatabase.load_discoveries()
 	WorldEventDatabase.load_events()
-
+	LandmarkDatabase.load_landmarks()
+	
 	start_new_game()
 
 	if should_load_save_on_start:
@@ -519,3 +532,51 @@ func _reset_runtime_state() -> void:
 	TimeManager.day = 1
 	TimeManager.hour = 8
 	TimeManager.minute = 0
+
+func _record_location_visit(
+	location: LocationData
+) -> bool:
+	if location == null:
+		return false
+
+	if current_civilization == null:
+		return false
+
+	var first_visit: bool = (
+		current_civilization.record_location_visit(
+			location.id
+		)
+	)
+
+	if not first_visit:
+		return false
+
+	_queue_or_add_event(
+		location.display_name
+		+ " has been recorded in the Journal."
+	)
+
+	if not location.first_visit_text.is_empty():
+		_queue_or_add_event(
+			location.first_visit_text
+		)
+
+	return true
+	
+func _queue_or_add_event(
+	message: String
+) -> void:
+	if game_ui != null:
+		game_ui.add_event(message)
+		return
+
+	pending_startup_messages.append(message)
+	
+func flush_pending_startup_messages() -> void:
+	if game_ui == null:
+		return
+
+	for message in pending_startup_messages:
+		game_ui.add_event(message)
+
+	pending_startup_messages.clear()

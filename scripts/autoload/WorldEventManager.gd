@@ -95,8 +95,16 @@ func resolve_option(option_id: String) -> bool:
 	return true
 
 
-func _start_event(event: WorldEventData) -> void:
+func _start_event(
+	event: WorldEventData
+) -> void:
 	pending_event = event
+
+
+
+
+
+	_record_matching_landmark(event)
 
 	if GameManager.game_ui != null:
 		GameManager.game_ui.add_event("")
@@ -105,6 +113,58 @@ func _start_event(event: WorldEventData) -> void:
 		)
 
 	event_started.emit(event)
+
+
+func _record_matching_landmark(
+	event: WorldEventData
+) -> void:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if civilization == null:
+		return
+
+
+
+
+	for landmark_variant: Variant in LandmarkDatabase.get_all():
+		var landmark: LandmarkData = (
+			landmark_variant as LandmarkData
+		)
+
+		if landmark == null:
+			continue
+
+
+
+		if landmark.event_id != event.id:
+			continue
+
+		var newly_discovered: bool = (
+			civilization.record_landmark_discovery(
+				landmark.id
+			)
+		)
+
+		if not newly_discovered:
+
+			return
+
+
+
+		if GameManager.game_ui != null:
+			GameManager.game_ui.add_event(
+				"LANDMARK DISCOVERED: "
+				+ landmark.display_name
+			)
+
+			GameManager.game_ui.call_deferred(
+				"refresh_all"
+			)
+
+		return
+
 
 
 func _apply_option(option: EventOptionData) -> void:
