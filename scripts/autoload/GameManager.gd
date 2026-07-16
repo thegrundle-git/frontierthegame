@@ -283,11 +283,9 @@ func _complete_travel(
 
 	_record_location_visit(
 		current_location
-	)
+)
 
-	_check_location_discoveries(
-		current_location
-	)
+	DiscoveryManager.check_discoveries()
 
 	_add_event(
 		current_survivor.data.display_name
@@ -617,59 +615,6 @@ func _record_location_visit(
 
 	return true
 	
-func _check_location_discoveries(
-	location: LocationData
-) -> void:
-	if location == null:
-		return
-
-	if current_civilization == null:
-		return
-
-	match location.id:
-		"river":
-			_unlock_location_discovery(
-				"fresh_water"
-			)
-
-func _unlock_location_discovery(
-	discovery_id: String
-) -> void:
-	if discovery_id.is_empty():
-		return
-
-	if current_civilization == null:
-		return
-
-	if discovery_id in current_civilization.discovered_ids:
-		return
-
-	var discovery: DiscoveryData = (
-		DiscoveryDatabase.get_discovery(
-			discovery_id
-		)
-	)
-
-	if discovery == null:
-		push_warning(
-			"Unknown location discovery: "
-			+ discovery_id
-		)
-		return
-
-	current_civilization.discovered_ids.append(
-		discovery_id
-	)
-
-	_add_event(
-		"DISCOVERY RECORDED: "
-		+ discovery.display_name
-	)
-
-	if not discovery.description.is_empty():
-		_add_event(
-			discovery.description
-		)
 
 func _queue_or_add_event(
 	message: String

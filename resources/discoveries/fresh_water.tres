@@ -8,4 +8,5 @@ script = ExtResource("1_lcapp")
 id = "fresh_water"
 display_name = "Fresh Water"
 description = "Reliable fresh water is more valuable than nearly any tool. Camps, fields, and future settlements will always grow around dependable sources. Every journey begins and ends with water."
+required_location_ids = Array[String](["river"])
 metadata/_custom_type_script = "uid://be18tux0tleml"

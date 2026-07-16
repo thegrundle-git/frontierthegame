@@ -103,7 +103,7 @@ The project is under active development and is not yet feature complete.
 
 Current version:
 
-**v0.5.1-alpha2 — Civilization Storage Foundation**
+**v0.5.1-alpha3 — Location-Gated Discoveries**
 
 ## License
 
