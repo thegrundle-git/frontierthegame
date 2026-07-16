@@ -5,6 +5,10 @@ class_name ChopTreeAction
 const REQUIRED_TOOL_ID := "stone_axe"
 const WOOD_LOG_ITEM_ID := "wood_log"
 
+const STRENGTH_XP_REWARD := 2
+const STRENGTH_BONUS_LEVEL := 10
+const GATHERING_BONUS_LEVEL := 5
+
 
 func perform(
 	survivor: Survivor
@@ -41,6 +45,10 @@ func perform(
 		amount
 	)
 
+	survivor.gain_strength_xp(
+		STRENGTH_XP_REWARD
+	)
+
 	survivor.gain_knowledge(2)
 
 	DiscoveryManager.record_item_observation(
@@ -74,6 +82,8 @@ func perform(
 func _calculate_log_yield(
 	survivor: Survivor
 ) -> int:
+	var amount := 1
+
 	var gathering: SkillProgress = (
 		survivor.get_skill(
 			"gathering"
@@ -82,11 +92,23 @@ func _calculate_log_yield(
 
 	if (
 		gathering != null
-		and gathering.level >= 5
+		and gathering.level >= GATHERING_BONUS_LEVEL
 	):
-		return 2
+		amount += 1
 
-	return 1
+	var strength: SkillProgress = (
+		survivor.get_skill(
+			"strength"
+		)
+	)
+
+	if (
+		strength != null
+		and strength.level >= STRENGTH_BONUS_LEVEL
+	):
+		amount += 1
+
+	return amount
 
 
 func _add_event(

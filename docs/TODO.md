@@ -29,6 +29,11 @@
 * [ ] Add Deep Forest.
 * [ ] Add Rocky Outcrop.
 * [ ] Add Marsh.
+* [ ] Improve Chronicle readability with spacing or dividers between events.
+* [ ] Add manual transfers between expedition inventory and Camp Storage.
+* [ ] Add Deposit All with Keep protection.
+* [ ] Add weight and bulk capacity displays.
+* [ ] Add a dedicated survivor equipment panel.
 
 ## Low
 

@@ -177,7 +177,6 @@ func build_world_action_buttons() -> void:
 		action_list.add_child(button)
 		world_action_buttons[action.id] = button
 
-	# Add Return Home after all normal actions.
 	return_home_button = Button.new()
 	return_home_button.name = "ReturnHomeButton"
 	return_home_button.text = "Return Home"
@@ -190,9 +189,25 @@ func build_world_action_buttons() -> void:
 		_on_return_home_pressed
 	)
 
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	var current_location: LocationData = (
+		GameManager.current_location
+	)
+
+	return_home_button.visible = (
+		civilization != null
+		and current_location != null
+		and current_location.id
+		== civilization.home_location_id
+	)
+
 	action_list.add_child(
 		return_home_button
 	)
+
 
 func build_travel_buttons() -> void:
 	for child: Node in travel_list.get_children():

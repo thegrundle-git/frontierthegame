@@ -3,6 +3,7 @@ class_name CivilizationData
 
 
 @export var display_name: String = "Unnamed Civilization"
+@export var home_location_id: String = "forest"
 
 @export var visited_location_ids: Array[String] = []
 @export var discovered_landmark_ids: Array[String] = []

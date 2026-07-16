@@ -2,6 +2,27 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.2-alpha1 — Physical Progression Foundation
+
+### Added
+
+* Trainable Strength skill.
+* Strength XP rewards from chopping trees.
+* Strength-based carry-weight capacity calculation.
+* Data-driven civilization home-location field.
+
+### Changed
+
+* Strength Level 10 adds an additional Wood Log to tree-chopping yield.
+* Return Home is only available at the civilization’s home location.
+* Existing save logic automatically preserves Strength progression.
+
+### Fixed
+
+* Return Home allowing instant access to camp from the River or Meadow.
+
+---
+
 ## v0.5.1-alpha3 — Location-Gated Discoveries
 
 ### Added
