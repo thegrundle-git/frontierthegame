@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://1bobkraw02vv" path="res://scripts/ui/GameUI.gd" id="1_r8hcy"]
 [ext_resource type="PackedScene" uid="uid://dgmcykvgvwvpm" path="res://scenes/ui/HomeUI.tscn" id="2_3pxe2"]
+[ext_resource type="PackedScene" uid="uid://c84ip6rn6xat4" path="res://scenes/ui/StorageUI.tscn" id="3_jwej7"]
 
 [node name="GameUI" type="Control" unique_id=1054040398]
 layout_mode = 3
@@ -294,6 +295,11 @@ layout_mode = 2
 text = "Back to Home"
 
 [node name="HomeUI" parent="." unique_id=1443133491 instance=ExtResource("2_3pxe2")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="StorageUI" parent="." unique_id=295644592 instance=ExtResource("3_jwej7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

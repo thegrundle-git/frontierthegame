@@ -33,6 +33,7 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 @onready var home_ui: HomeUI = %HomeUI
 @onready var crafting_panel: Control = %Crafting
 @onready var back_to_home_button: Button = %BackToHomeButton
+@onready var storage_ui: StorageUI = %StorageUI
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
@@ -69,6 +70,15 @@ func _ready() -> void:
 		_on_world_event_resolved
 	)
 
+	home_ui.storage_requested.connect(
+  	  _on_home_storage_requested
+)
+
+	storage_ui.back_requested.connect(
+   	 _on_storage_back_requested
+)
+
+	storage_ui.visible = false
 	event_overlay.visible = false
 	home_ui.visible = false
 	crafting_panel.visible = false
@@ -861,4 +871,17 @@ func _on_home_crafting_requested() -> void:
 
 func _on_back_to_home_pressed() -> void:
 	crafting_panel.visible = false
+	home_ui.visible = true
+
+func _on_home_storage_requested() -> void:
+	home_ui.visible = false
+
+	storage_ui.refresh_storage()
+
+	storage_ui.visible = true
+
+
+func _on_storage_back_requested() -> void:
+	storage_ui.visible = false
+
 	home_ui.visible = true

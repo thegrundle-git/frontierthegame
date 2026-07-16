@@ -74,8 +74,7 @@ text = "Fire"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-tooltip_text = "Not yet available."
-disabled = true
+tooltip_text = "View supplies stored at Home."
 text = "Storage"
 
 [node name="CraftingButton" type="Button" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=1898380297]

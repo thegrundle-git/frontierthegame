@@ -4,7 +4,7 @@ class_name HomeUI
 
 signal leave_home_requested
 signal crafting_requested
-
+signal storage_requested
 
 @onready var fire_button: Button = %FireButton
 @onready var storage_button: Button = %StorageButton
@@ -23,6 +23,9 @@ func _ready() -> void:
 		_on_crafting_button_pressed
 	)
 
+	storage_button.pressed.connect(
+	_on_storage_pressed
+)
 
 func _on_leave_home_button_pressed() -> void:
 	leave_home_requested.emit()
@@ -30,3 +33,6 @@ func _on_leave_home_button_pressed() -> void:
 
 func _on_crafting_button_pressed() -> void:
 	crafting_requested.emit()
+
+func _on_storage_pressed() -> void:
+	storage_requested.emit()
