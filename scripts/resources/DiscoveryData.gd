@@ -11,6 +11,7 @@ var description: String = ""
 @export var knowledge_required: int = 0
 
 @export var required_item_ids: Array[String] = []
+@export var required_location_ids: Array[String] = []
 
 @export var unlocked_recipes: Array[RecipeData] = []
 

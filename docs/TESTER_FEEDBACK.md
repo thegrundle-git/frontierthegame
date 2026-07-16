@@ -24,6 +24,7 @@
 * Completion scripts were called directly rather than instantiated.
 * A discovery-journal function was incorrectly indented.
 * Landmark event data failed to populate its linked landmark.
+* Fresh Water could unlock while searching outside the River.
 
 ## Watch List
 

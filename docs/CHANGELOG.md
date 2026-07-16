@@ -2,6 +2,25 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.1-alpha3 — Location-Gated Discoveries
+
+### Added
+
+* Data-driven location requirements for discoveries.
+* River visit requirement for the Fresh Water discovery.
+
+### Changed
+
+* Location-based discoveries are now evaluated by the generic discovery system.
+* Travel records the destination visit before checking discovery requirements.
+
+### Fixed
+
+* Fresh Water incorrectly unlocking while searching in the Forest or Meadow.
+* Competing hardcoded and generic Fresh Water unlock paths.
+
+---
+
 ## v0.5.1-alpha2 — Civilization Storage Foundation
 
 ### Added
