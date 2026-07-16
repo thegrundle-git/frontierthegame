@@ -2,7 +2,11 @@ extends Node
 class_name Survivor
 
 
+const BASE_CARRY_WEIGHT := 20.0
+const CARRY_WEIGHT_PER_STRENGTH_LEVEL := 2.0
+
 const SKILL_ORDER: Array[String] = [
+	"strength",
 	"gathering",
 	"crafting",
 	"exploration"
@@ -34,6 +38,11 @@ func initialize(
 
 func _initialize_skills() -> void:
 	skills.clear()
+
+	_create_skill(
+		"strength",
+		"Strength"
+	)
 
 	_create_skill(
 		"gathering",
@@ -135,6 +144,34 @@ func gain_gathering_xp(
 	gain_skill_xp(
 		"gathering",
 		amount
+	)
+
+
+func gain_strength_xp(
+	amount: int
+) -> void:
+	gain_skill_xp(
+		"strength",
+		amount
+	)
+
+
+func get_carry_weight_capacity() -> float:
+	var strength: SkillProgress = (
+		get_skill(
+			"strength"
+		)
+	)
+
+	if strength == null:
+		return BASE_CARRY_WEIGHT
+
+	return (
+		BASE_CARRY_WEIGHT
+		+ (
+			float(strength.level)
+			* CARRY_WEIGHT_PER_STRENGTH_LEVEL
+		)
 	)
 
 
