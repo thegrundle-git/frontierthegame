@@ -30,10 +30,13 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 @onready var event_body: Label = %EventBody
 @onready var event_options: VBoxContainer = %EventOptions
 
+@onready var home_ui: HomeUI = %HomeUI
+@onready var crafting_panel: Control = %Crafting
+@onready var back_to_home_button: Button = %BackToHomeButton
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
-
+var return_home_button: Button
 
 func _ready() -> void:
 	GameManager.game_ui = self
@@ -67,6 +70,8 @@ func _ready() -> void:
 	)
 
 	event_overlay.visible = false
+	home_ui.visible = false
+	crafting_panel.visible = false
 	current_action_label.text = "Idle"
 	action_progress.value = 0.0
 
@@ -79,8 +84,17 @@ func _ready() -> void:
 	call_deferred(
 		"_request_initial_refresh"
 	)
+	home_ui.leave_home_requested.connect(
+		_on_leave_home_requested
+)
 
+	home_ui.crafting_requested.connect(
+		_on_home_crafting_requested
+)
 
+	back_to_home_button.pressed.connect(
+		_on_back_to_home_pressed
+)
 func refresh_all() -> void:
 	update_survivor()
 	update_location()
@@ -153,6 +167,22 @@ func build_world_action_buttons() -> void:
 		action_list.add_child(button)
 		world_action_buttons[action.id] = button
 
+	# Add Return Home after all normal actions.
+	return_home_button = Button.new()
+	return_home_button.name = "ReturnHomeButton"
+	return_home_button.text = "Return Home"
+	return_home_button.tooltip_text = (
+		"Return to the safety of home."
+	)
+	return_home_button.custom_minimum_size.y = 38
+
+	return_home_button.pressed.connect(
+		_on_return_home_pressed
+	)
+
+	action_list.add_child(
+		return_home_button
+	)
 
 func build_travel_buttons() -> void:
 	for child: Node in travel_list.get_children():
@@ -242,6 +272,7 @@ func update_world_action_buttons() -> void:
 		WorldEventManager.has_pending_event()
 	)
 
+
 	for action_id_variant: Variant in world_action_buttons:
 		var action_id := str(
 			action_id_variant
@@ -291,6 +322,11 @@ func update_world_action_buttons() -> void:
 				+ tool.display_name
 			)
 
+		if return_home_button != null:
+			return_home_button.disabled = (
+				ActionManager.is_busy
+				or event_pending
+		)
 
 func update_travel_buttons() -> void:
 	var event_pending: bool = (
@@ -808,3 +844,21 @@ func _request_initial_refresh() -> void:
 
 	rebuild_location_controls()
 	refresh_all()
+
+func _on_return_home_pressed() -> void:
+	crafting_panel.visible = false
+	home_ui.visible = true
+
+func _on_leave_home_requested() -> void:
+	crafting_panel.visible = false
+	home_ui.visible = false
+
+func _on_home_crafting_requested() -> void:
+	home_ui.visible = false
+	crafting_panel.visible = true
+	update_crafting()
+
+
+func _on_back_to_home_pressed() -> void:
+	crafting_panel.visible = false
+	home_ui.visible = true

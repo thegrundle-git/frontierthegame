@@ -1,0 +1,107 @@
+[gd_scene format=3 uid="uid://dgmcykvgvwvpm"]
+
+[ext_resource type="Script" uid="uid://wh5qfu4mohif" path="res://scripts/ui/HomeUI.gd" id="1_8tlva"]
+
+[node name="HomeUi" type="Control" unique_id=1443133491]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -1.0
+offset_right = -20.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8tlva")
+
+[node name="Background" type="ColorRect" parent="." unique_id=909114177]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12955844, 0.1295585, 0.12955841, 1)
+
+[node name="HomeCenter" type="CenterContainer" parent="." unique_id=630057285]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HomePanel" type="PanelContainer" parent="HomeCenter" unique_id=415818117]
+custom_minimum_size = Vector2(600, 500)
+layout_mode = 2
+
+[node name="HomeMargin" type="MarginContainer" parent="HomeCenter/HomePanel" unique_id=663534482]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="HomeLayout" type="VBoxContainer" parent="HomeCenter/HomePanel/HomeMargin" unique_id=1895852642]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HomeTitle" type="Label" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=1413021096]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Home"
+horizontal_alignment = 1
+
+[node name="HomeDescription" type="Label" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=59416481]
+layout_mode = 2
+text = "A place to rest, prepare, and preserve what has been gathered from the wilderness."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TopSeparator" type="HSeparator" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=1306443690]
+layout_mode = 2
+
+[node name="FireButton" type="Button" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=1584116527]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+tooltip_text = "Not yet available."
+disabled = true
+text = "Fire"
+
+[node name="StorageButton" type="Button" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=829536220]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+tooltip_text = "Not yet available."
+disabled = true
+text = "Storage"
+
+[node name="CraftingButton" type="Button" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=1898380297]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "Crafting"
+
+[node name="CookingButton" type="Button" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=1083648024]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+tooltip_text = "Not yet available."
+disabled = true
+text = "Cooking"
+
+[node name="RestButton" type="Button" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=1012933222]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+tooltip_text = "Not yet available."
+disabled = true
+text = "Rest"
+
+[node name="LeaveHomeButton" type="Button" parent="HomeCenter/HomePanel/HomeMargin/HomeLayout" unique_id=567251686]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+text = "Leave Home"
