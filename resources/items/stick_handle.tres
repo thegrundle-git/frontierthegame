@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bb1lc7b6hufp8"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_oip30"]
+
+[resource]
+script = ExtResource("1_oip30")
+id = "stick_handle"
+display_name = "Stick Handle"
+description = "A straight length of wood stripped of bark and smoothed where a hand will close around it. Little more than a prepared stick, but preparation is what separates a tool from debris."
+category = "component"
+weight = 0.45
+stack_size = 10
+tags = Array[String](["tool_component", "handle", "wood"])
+component_slot = "handle"
+material_id = "wood"
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

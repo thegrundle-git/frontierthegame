@@ -2,19 +2,24 @@
 
 [ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_wfc1c"]
 [ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_bvt1a"]
-[ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="2_sj6sv"]
-[ext_resource type="Resource" uid="uid://clcyx5iqp0lgl" path="res://resources/items/stone.tres" id="3_qvuqr"]
+[ext_resource type="Resource" uid="uid://buv6y2lxkom06" path="res://resources/items/stone_axe_head.tres" id="2_qvuqr"]
+[ext_resource type="Resource" uid="uid://bb1lc7b6hufp8" path="res://resources/items/stick_handle.tres" id="3_circ6"]
 [ext_resource type="Resource" uid="uid://cmkt2vm4y7xsa" path="res://resources/items/stone_axe.tres" id="4_circ6"]
+[ext_resource type="Resource" uid="uid://ix1x1geo5cdn" path="res://resources/items/fiber_binding.tres" id="4_vt1gm"]
 
-[sub_resource type="Resource" id="Resource_v66kp"]
+[sub_resource type="Resource" id="Resource_4g4n1"]
 script = ExtResource("1_wfc1c")
-item = ExtResource("2_sj6sv")
-amount = 2
+item = ExtResource("2_qvuqr")
 metadata/_custom_type_script = "uid://dgx01py1umnc5"
 
-[sub_resource type="Resource" id="Resource_sj6sv"]
+[sub_resource type="Resource" id="Resource_0wgsu"]
 script = ExtResource("1_wfc1c")
-item = ExtResource("3_qvuqr")
+item = ExtResource("3_circ6")
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[sub_resource type="Resource" id="Resource_wq47c"]
+script = ExtResource("1_wfc1c")
+item = ExtResource("4_vt1gm")
 metadata/_custom_type_script = "uid://dgx01py1umnc5"
 
 [sub_resource type="Resource" id="Resource_qvuqr"]
@@ -25,10 +30,10 @@ metadata/_custom_type_script = "uid://dgx01py1umnc5"
 [resource]
 script = ExtResource("2_bvt1a")
 id = "stone_axe_recipe"
-display_name = "Stone Axe"
-ingredients = Array[ExtResource("1_wfc1c")]([SubResource("Resource_v66kp"), SubResource("Resource_sj6sv")])
+display_name = "Assemble Stone Axe"
+ingredients = Array[ExtResource("1_wfc1c")]([SubResource("Resource_4g4n1"), SubResource("Resource_0wgsu"), SubResource("Resource_wq47c")])
 results = Array[ExtResource("1_wfc1c")]([SubResource("Resource_qvuqr")])
 craft_time = 30
 xp_reward = 5
-description = "A simple hand tool constructed by securing a knapped stone head to a hardwood haft using natural cordage. While primitive in design, the broad cutting edge provides sufficient force for felling small trees, processing timber, and other basic survival tasks. Its effectiveness relies more on careful construction than refined materials."
+description = "Seat the shaped stone head against the prepared handle, then lash the joint tightly with twisted fiber. Each component is crude alone; together they become a working axe."
 metadata/_custom_type_script = "uid://ck8q7c4l76io2"

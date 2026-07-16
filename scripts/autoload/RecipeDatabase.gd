@@ -12,11 +12,16 @@ func load_recipes() -> void:
 	recipes.clear()
 
 	var recipe_paths: Array[String] = [
+		"res://resources/recipes/stone_axe_head_recipe.tres",
+		"res://resources/recipes/stick_handle_recipe.tres",
+		"res://resources/recipes/fiber_binding_recipe.tres",
 		"res://resources/recipes/stone_axe_recipe.tres"
 	]
 
-	for recipe_path in recipe_paths:
-		var recipe_resource := load(recipe_path)
+	for recipe_path: String in recipe_paths:
+		var recipe_resource: Resource = load(
+			recipe_path
+		)
 
 		if recipe_resource == null:
 			push_error(
@@ -32,7 +37,9 @@ func load_recipes() -> void:
 			)
 			continue
 
-		register(recipe_resource)
+		register(
+			recipe_resource
+		)
 
 	print(
 		"Loaded ",
@@ -41,14 +48,16 @@ func load_recipes() -> void:
 	)
 
 
-func register(recipe: RecipeData) -> void:
+func register(
+	recipe: RecipeData
+) -> void:
 	if recipe == null:
 		return
 
 	if recipe.id.is_empty():
 		push_error(
 			"Recipe has no ID: "
-				+ recipe.resource_path
+			+ recipe.resource_path
 		)
 		return
 
@@ -64,12 +73,14 @@ func get_recipe(
 	if not recipes.has(recipe_id):
 		push_warning(
 			"Unknown recipe ID requested: "
-				+ recipe_id
+			+ recipe_id
 		)
 		return null
 
 	return recipes[recipe_id]
 
 
-func has_recipe(recipe_id: String) -> bool:
+func has_recipe(
+	recipe_id: String
+) -> bool:
 	return recipes.has(recipe_id)

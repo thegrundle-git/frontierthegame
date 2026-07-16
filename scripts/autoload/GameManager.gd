@@ -300,6 +300,7 @@ func _complete_travel(
 	)
 
 	_refresh_ui()
+
 func craft_recipe(
 	recipe_id: String
 ) -> bool:
@@ -324,9 +325,9 @@ func craft_recipe(
 		)
 		return false
 
-	if not current_civilization.inventory.can_afford_recipe(
+	if not can_afford_recipe_from_accessible_inventories(
 	recipe
-	):
+):
 		_add_event(
 		"Not enough materials to craft "
 		+ recipe.display_name
@@ -633,3 +634,118 @@ func flush_pending_startup_messages() -> void:
 		game_ui.add_event(message)
 
 	pending_startup_messages.clear()
+
+func is_at_home_location() -> bool:
+	if current_civilization == null:
+		return false
+
+	if current_location == null:
+		return false
+
+	return (
+		current_location.id
+		== current_civilization.home_location_id
+	)
+
+
+func get_accessible_crafting_inventories(
+) -> Array[FrontierInventory]:
+	var inventories: Array[FrontierInventory] = []
+
+	if current_survivor == null:
+		return inventories
+
+	if (
+		is_at_home_location()
+		and current_civilization != null
+		and current_civilization.inventory != null
+	):
+		inventories.append(
+			current_civilization.inventory
+		)
+
+	if current_survivor.inventory != null:
+		inventories.append(
+			current_survivor.inventory
+		)
+
+	return inventories
+
+
+func get_accessible_crafting_item_amount(
+	item_id: String
+) -> int:
+	var total := 0
+
+	for inventory: FrontierInventory in (
+		get_accessible_crafting_inventories()
+	):
+		total += inventory.get_item_amount(
+			item_id
+		)
+
+	return total
+
+
+func can_afford_recipe_from_accessible_inventories(
+	recipe: RecipeData
+) -> bool:
+	if recipe == null:
+		return false
+
+	for ingredient: IngredientData in recipe.ingredients:
+		if (
+			ingredient == null
+			or ingredient.item == null
+		):
+			return false
+
+		var available: int = (
+			get_accessible_crafting_item_amount(
+				ingredient.item.id
+			)
+		)
+
+		if available < ingredient.amount:
+			return false
+
+	return true
+
+
+func consume_recipe_ingredients_from_accessible_inventories(
+	recipe: RecipeData
+) -> bool:
+	if not can_afford_recipe_from_accessible_inventories(
+		recipe
+	):
+		return false
+
+	var inventories: Array[FrontierInventory] = (
+		get_accessible_crafting_inventories()
+	)
+
+	for ingredient: IngredientData in recipe.ingredients:
+		var remaining: int = ingredient.amount
+
+		for inventory: FrontierInventory in inventories:
+			if remaining <= 0:
+				break
+
+			var amount_to_remove: int = mini(
+				remaining,
+				inventory.get_item_amount(
+					ingredient.item.id
+				)
+			)
+
+			if amount_to_remove <= 0:
+				continue
+
+			inventory.remove_item(
+				ingredient.item.id,
+				amount_to_remove
+			)
+
+			remaining -= amount_to_remove
+
+	return true

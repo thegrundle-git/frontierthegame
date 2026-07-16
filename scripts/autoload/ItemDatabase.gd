@@ -12,21 +12,27 @@ func load_items() -> void:
 	items.clear()
 
 	var item_paths: Array[String] = [
-	"res://resources/items/stick.tres",
-	"res://resources/items/stone.tres",
-	"res://resources/items/berry.tres",
-	"res://resources/items/stone_axe.tres",
-	"res://resources/items/wood_log.tres",
-	"res://resources/items/herb.tres",
-	"res://resources/items/flower.tres"
-]
+		"res://resources/items/stick.tres",
+		"res://resources/items/stone.tres",
+		"res://resources/items/berry.tres",
+		"res://resources/items/stone_axe.tres",
+		"res://resources/items/wood_log.tres",
+		"res://resources/items/herb.tres",
+		"res://resources/items/flower.tres",
+		"res://resources/items/stone_axe_head.tres",
+		"res://resources/items/stick_handle.tres",
+		"res://resources/items/fiber_binding.tres"
+	]
 
-	for item_path in item_paths:
-		var loaded_resource := load(item_path)
+	for item_path: String in item_paths:
+		var loaded_resource: Resource = load(
+			item_path
+		)
 
 		if loaded_resource == null:
 			push_error(
-				"Failed to load item: " + item_path
+				"Failed to load item: "
+				+ item_path
 			)
 			continue
 
@@ -37,18 +43,27 @@ func load_items() -> void:
 			)
 			continue
 
-		register(loaded_resource)
+		register(
+			loaded_resource
+		)
 
-	print("Loaded ", items.size(), " items.")
+	print(
+		"Loaded ",
+		items.size(),
+		" items."
+	)
 
 
-func register(item: ItemData) -> void:
+func register(
+	item: ItemData
+) -> void:
 	if item == null:
 		return
 
 	if item.id.is_empty():
 		push_error(
-			"Item has no ID: " + item.resource_path
+			"Item has no ID: "
+			+ item.resource_path
 		)
 		return
 
@@ -58,15 +73,20 @@ func register(item: ItemData) -> void:
 	items[item.id] = item
 
 
-func get_item(item_id: String) -> ItemData:
+func get_item(
+	item_id: String
+) -> ItemData:
 	if not items.has(item_id):
 		push_warning(
-			"Unknown item ID requested: " + item_id
+			"Unknown item ID requested: "
+			+ item_id
 		)
 		return null
 
 	return items[item_id]
 
 
-func has_item(item_id: String) -> bool:
+func has_item(
+	item_id: String
+) -> bool:
 	return items.has(item_id)

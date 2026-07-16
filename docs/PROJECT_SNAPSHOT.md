@@ -2,7 +2,7 @@
 
 ## Current Version
 
-v0.5.2-alpha1
+v0.5.3-alpha1
 
 ## Project Health
 
@@ -19,8 +19,8 @@ Sprint 3 — The Age of Discovery
 ## Content
 
 * Locations: 3
-* Items: 7
-* Recipes: 1
+* Items: 10
+* Recipes: 4
 * Discoveries: 4
 * World Events: 1
 * Landmarks: 1
@@ -71,10 +71,14 @@ Sprint 3 — The Age of Discovery
 * Location-gated discoveries
 * Trainable Strength progression
 * Data-driven civilization home location
+* Modular component crafting
+* Multi-recipe crafting interface
+* Combined Pack and Camp crafting access
+* Exclusive equipped-tool ownership
 
 ## Current Focus
 
-Expand the vertical slice with new discoveries, resources, events, and exploration content while preserving stable data-driven systems.
+Expand modular crafting with material choices, unique equipment history, Flint, and component-derived tool statistics.
 
 ## Next Goals
 

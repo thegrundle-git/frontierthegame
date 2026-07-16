@@ -206,8 +206,11 @@ func _apply_save_data(
 	)
 
 	_apply_civilization_data(
-		save_data.get("civilization", {})
-	)
+	save_data.get("civilization", {})
+)
+
+	if GameManager.current_survivor != null:
+		GameManager.current_survivor.normalize_equipped_tool_ownership()
 
 	_apply_world_event_data(
 		save_data.get("world_events", {})
@@ -498,6 +501,8 @@ func _apply_civilization_data(
 		0
 	)
 )
+
+	civilization.synchronize_unlocked_recipes()
 
 func _apply_world_event_data(
 	event_data: Dictionary
