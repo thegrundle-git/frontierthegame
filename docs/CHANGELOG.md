@@ -2,6 +2,29 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.2-alpha2 — Expedition Inventory Transfers
+
+### Added
+
+* Two-sided inventory interface for Finnley’s Pack and Camp Storage.
+* Manual item transfers in either direction.
+* Transfer quantity selection.
+* Deposit All action.
+* Keep protection for carried item stacks.
+* Save/load persistence for Keep selections.
+
+### Changed
+
+* Wilderness search rewards now enter the survivor’s expedition inventory.
+* Tree-chopping rewards now enter the survivor’s expedition inventory.
+* Resources must be returned home and deposited before they can be used for crafting.
+
+### Fixed
+
+* Gathered resources instantly appearing in civilization storage without being carried home.
+
+---
+
 ## v0.5.2-alpha1 — Physical Progression Foundation
 
 ### Added

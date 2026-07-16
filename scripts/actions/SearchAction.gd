@@ -71,10 +71,10 @@ func perform(
 		chosen_entry.item
 	)
 
-	civilization.inventory.add_item(
+	survivor.inventory.add_item(
 		item.id,
 		amount
-	)
+)
 
 	DiscoveryManager.record_item_observation(
 		item.id

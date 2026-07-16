@@ -12,6 +12,7 @@ No known major issues.
 * Discovery categories are not yet displayed.
 * The Discoveries tab is always visible, even before the first discovery.
 * Only one landmark and one world event currently exist.
+* Expedition inventory weight and bulk limits are not yet enforced.
 
 ## Watch List
 
