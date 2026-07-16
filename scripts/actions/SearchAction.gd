@@ -74,7 +74,7 @@ func perform(
 	survivor.inventory.add_item(
 		item.id,
 		amount
-)
+	)
 
 	DiscoveryManager.record_item_observation(
 		item.id
