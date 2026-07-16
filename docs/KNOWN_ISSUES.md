@@ -15,7 +15,6 @@ No known major issues.
 
 ## Watch List
 
-* Verify ActionData scripts instantiate correctly in exported builds.
 * Watch for duplicate XP after dynamically executed actions.
 * Confirm older saves default wilderness_search_count to zero.
 * Confirm Continue rebuilds knowledge-gated action buttons.
