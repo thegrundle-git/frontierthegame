@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 1
+const SAVE_VERSION := 2
 
 
 func save_game() -> bool:
@@ -138,6 +138,9 @@ func _build_save_data() -> Dictionary:
 		},
 		"civilization": {
 			"display_name": civilization.display_name,
+			"inventory": _serialize_inventory(
+				civilization.inventory
+			),
 			"discovered_landmark_ids": civilization.discovered_landmark_ids.duplicate(),
 			"knowledge": civilization.knowledge,
 			"visited_location_ids": civilization.visited_location_ids.duplicate(),
@@ -361,12 +364,42 @@ func _apply_skill_data(
 func _apply_civilization_data(
 	civilization_data: Dictionary
 ) -> void:
-	var civilization := (
+	var civilization: CivilizationData = (
 		GameManager.current_civilization
 	)
 
 	if civilization == null:
 		return
+
+	if civilization_data.has("inventory"):
+		var saved_inventory: Variant = (
+			civilization_data.get(
+				"inventory",
+				{}
+			)
+		)
+
+		if saved_inventory is Dictionary:
+			_apply_inventory_data(
+				civilization.inventory,
+				saved_inventory
+			)
+	else:
+		var survivor: Survivor = (
+			GameManager.current_survivor
+		)
+
+		if (
+			survivor != null
+			and survivor.inventory != null
+		):
+			civilization.inventory.items = (
+				survivor.inventory.items.duplicate(
+					true
+				)
+			)
+
+			survivor.inventory.items.clear()
 
 	civilization.display_name = str(
 		civilization_data.get(
@@ -477,7 +510,9 @@ func _validate_save_data(
 		)
 	)
 
-	if version != SAVE_VERSION:
+	if (
+		version < 1
+		or version > SAVE_VERSION):
 		push_error(
 			"Unsupported save version: "
 			+ str(version)

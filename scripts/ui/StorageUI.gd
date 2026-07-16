@@ -16,37 +16,61 @@ func _ready() -> void:
 
 
 func refresh_storage() -> void:
-	var survivor := GameManager.current_survivor
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
 
-	if survivor == null:
+	if civilization == null:
 		storage_log.text = "No storage available."
 		return
 
-	var inventory := survivor.inventory
+	var inventory: FrontierInventory = (
+		civilization.inventory
+	)
 
-	var text := ""
+	if inventory == null:
+		storage_log.text = "No storage available."
+		return
+
+	var storage_text := ""
 
 	if inventory.items.is_empty():
-		text = "Storage is empty."
+		storage_text = "Storage is empty."
 	else:
-		for item_id in inventory.items:
-			var item := ItemDatabase.get_item(item_id)
+		for item_id_variant: Variant in inventory.items:
+			var item_id := str(
+				item_id_variant
+			)
+
+			var item: ItemData = (
+				ItemDatabase.get_item(
+					item_id
+				)
+			)
+
+			var amount: int = (
+				inventory.get_item_amount(
+					item_id
+				)
+			)
 
 			if item == null:
+				storage_text += (
+					item_id
+					+ " x"
+					+ str(amount)
+					+ "\n"
+				)
 				continue
 
-			text += (
+			storage_text += (
 				item.display_name
 				+ " x"
-				+ str(
-					inventory.get_item_amount(
-						item_id
-					)
-				)
+				+ str(amount)
 				+ "\n"
 			)
 
-	storage_log.text = text
+	storage_log.text = storage_text
 
 
 func _on_back_pressed() -> void:

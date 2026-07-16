@@ -12,18 +12,27 @@ func perform(
 	if recipe == null:
 		return false
 
-	var civilization := GameManager.current_civilization
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
 
 	if civilization == null:
 		return false
 
-	if not civilization.has_recipe(recipe.id):
+	if civilization.inventory == null:
+		return false
+
+	if not civilization.has_recipe(
+		recipe.id
+	):
 		_add_event(
 			"That recipe has not been discovered."
 		)
 		return false
 
-	if not survivor.inventory.can_afford_recipe(recipe):
+	if not civilization.inventory.can_afford_recipe(
+		recipe
+	):
 		_add_event(
 			"Not enough materials to craft "
 			+ recipe.display_name
@@ -31,12 +40,14 @@ func perform(
 		)
 		return false
 
-	if not survivor.inventory.remove_recipe_ingredients(
+	if not civilization.inventory.remove_recipe_ingredients(
 		recipe
 	):
 		return false
 
-	survivor.inventory.add_recipe_results(recipe)
+	civilization.inventory.add_recipe_results(
+		recipe
+	)
 
 	_add_event(
 		survivor.data.display_name
@@ -60,8 +71,11 @@ func _auto_equip_first_tool(
 	if not survivor.equipped_tool_id.is_empty():
 		return
 
-	for result in recipe.results:
-		if result == null or result.item == null:
+	for result: IngredientData in recipe.results:
+		if (
+			result == null
+			or result.item == null
+		):
 			continue
 
 		if "tool" not in result.item.tags:
@@ -74,6 +88,10 @@ func _auto_equip_first_tool(
 		return
 
 
-func _add_event(message: String) -> void:
-	if GameManager.game_ui:
-		GameManager.game_ui.add_event(message)
+func _add_event(
+	message: String
+) -> void:
+	if GameManager.game_ui != null:
+		GameManager.game_ui.add_event(
+			message
+		)

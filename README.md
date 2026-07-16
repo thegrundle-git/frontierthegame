@@ -103,7 +103,7 @@ The project is under active development and is not yet feature complete.
 
 Current version:
 
-**v0.1.9 — Data-Driven Actions and First Location**
+**v0.5.1-alpha2 — Civilization Storage Foundation**
 
 ## License
 

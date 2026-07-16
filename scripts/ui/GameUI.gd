@@ -500,7 +500,7 @@ func update_crafting() -> void:
 			continue
 
 		var owned: int = (
-			survivor.inventory.get_item_amount(
+			civilization.inventory.get_item_amount(
 				ingredient.item.id
 			)
 		)
@@ -519,7 +519,7 @@ func update_crafting() -> void:
 	craft_button.disabled = (
 		ActionManager.is_busy
 		or WorldEventManager.has_pending_event()
-		or not survivor.inventory.can_afford_recipe(
+		or not civilization.inventory.can_afford_recipe(
 			recipe
 		)
 	)
