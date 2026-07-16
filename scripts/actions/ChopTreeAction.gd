@@ -6,7 +6,9 @@ const REQUIRED_TOOL_ID := "stone_axe"
 const WOOD_LOG_ITEM_ID := "wood_log"
 
 
-func perform(survivor: Survivor) -> bool:
+func perform(
+	survivor: Survivor
+) -> bool:
 	if survivor == null:
 		return false
 
@@ -18,11 +20,23 @@ func perform(survivor: Survivor) -> bool:
 		)
 		return false
 
-	var amount := _calculate_log_yield(
-		survivor
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
 	)
 
-	survivor.inventory.add_item(
+	if civilization == null:
+		push_error(
+			"Cannot store gathered wood without a civilization."
+		)
+		return false
+
+	var amount: int = (
+		_calculate_log_yield(
+			survivor
+		)
+	)
+
+	civilization.inventory.add_item(
 		WOOD_LOG_ITEM_ID,
 		amount
 	)
@@ -40,8 +54,10 @@ func perform(survivor: Survivor) -> bool:
 		+ " felled a small tree and cut away the usable timber."
 	)
 
-	var wood_log := ItemDatabase.get_item(
-		WOOD_LOG_ITEM_ID
+	var wood_log: ItemData = (
+		ItemDatabase.get_item(
+			WOOD_LOG_ITEM_ID
+		)
 	)
 
 	if wood_log != null:
@@ -58,8 +74,10 @@ func perform(survivor: Survivor) -> bool:
 func _calculate_log_yield(
 	survivor: Survivor
 ) -> int:
-	var gathering := survivor.get_skill(
-		"gathering"
+	var gathering: SkillProgress = (
+		survivor.get_skill(
+			"gathering"
+		)
 	)
 
 	if (
@@ -71,6 +89,10 @@ func _calculate_log_yield(
 	return 1
 
 
-func _add_event(message: String) -> void:
+func _add_event(
+	message: String
+) -> void:
 	if GameManager.game_ui != null:
-		GameManager.game_ui.add_event(message)
+		GameManager.game_ui.add_event(
+			message
+		)

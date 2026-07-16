@@ -27,9 +27,7 @@ func initialize(
 		return
 
 	data = survivor_data
-
 	inventory = FrontierInventory.new()
-	add_child(inventory)
 
 	_initialize_skills()
 
@@ -74,15 +72,20 @@ func gain_skill_xp(
 	if amount <= 0:
 		return
 
-	var skill := get_skill(skill_id)
+	var skill: SkillProgress = get_skill(
+		skill_id
+	)
 
 	if skill == null:
 		push_warning(
-			"Unknown skill ID: " + skill_id
+			"Unknown skill ID: "
+			+ skill_id
 		)
 		return
 
-	var levels_gained := skill.add_xp(amount)
+	var levels_gained: int = (
+		skill.add_xp(amount)
+	)
 
 	_add_event(
 		"+"
@@ -115,8 +118,10 @@ func get_skill(
 func get_all_skills() -> Array[SkillProgress]:
 	var result: Array[SkillProgress] = []
 
-	for skill_id in SKILL_ORDER:
-		var skill := get_skill(skill_id)
+	for skill_id: String in SKILL_ORDER:
+		var skill: SkillProgress = (
+			get_skill(skill_id)
+		)
 
 		if skill != null:
 			result.append(skill)
@@ -124,14 +129,18 @@ func get_all_skills() -> Array[SkillProgress]:
 	return result
 
 
-func gain_gathering_xp(amount: int) -> void:
+func gain_gathering_xp(
+	amount: int
+) -> void:
 	gain_skill_xp(
 		"gathering",
 		amount
 	)
 
 
-func gain_knowledge(amount: int) -> void:
+func gain_knowledge(
+	amount: int
+) -> void:
 	if amount <= 0:
 		return
 
@@ -141,15 +150,28 @@ func gain_knowledge(amount: int) -> void:
 	GameManager.current_civilization.knowledge += amount
 
 
-func equip_tool(item_id: String) -> bool:
-	if inventory == null:
+func equip_tool(
+	item_id: String
+) -> bool:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if civilization == null:
 		return false
 
-	if not inventory.has_item(item_id):
+	if civilization.inventory == null:
 		return false
 
-	var item_data := ItemDatabase.get_item(
+	if not civilization.inventory.has_item(
 		item_id
+	):
+		return false
+
+	var item_data: ItemData = (
+		ItemDatabase.get_item(
+			item_id
+		)
 	)
 
 	if item_data == null:
@@ -185,6 +207,10 @@ func get_equipped_tool() -> ItemData:
 	)
 
 
-func _add_event(message: String) -> void:
+func _add_event(
+	message: String
+) -> void:
 	if GameManager.game_ui != null:
-		GameManager.game_ui.add_event(message)
+		GameManager.game_ui.add_event(
+			message
+		)

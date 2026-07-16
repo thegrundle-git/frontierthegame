@@ -326,13 +326,13 @@ func craft_recipe(
 		)
 		return false
 
-	if not current_survivor.inventory.can_afford_recipe(
-		recipe
+	if not current_civilization.inventory.can_afford_recipe(
+	recipe
 	):
 		_add_event(
-			"Not enough materials to craft "
-			+ recipe.display_name
-			+ "."
+		"Not enough materials to craft "
+		+ recipe.display_name
+		+ "."
 		)
 		return false
 

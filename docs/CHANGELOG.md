@@ -2,6 +2,31 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.1-alpha2 — Civilization Storage Foundation
+
+### Added
+
+* Civilization-owned inventory for shared camp resources.
+* Dedicated Camp Storage display.
+* Save version 2 support for civilization inventory data.
+* Automatic migration of version 1 survivor inventory into Camp Storage.
+
+### Changed
+
+* Wilderness search rewards now enter Camp Storage.
+* Wood gathered from tree chopping now enters Camp Storage.
+* Crafting materials are consumed from Camp Storage.
+* Crafted items are deposited into Camp Storage.
+* Survivors can equip tools owned by their civilization.
+* Inventory is now a lightweight data object usable by survivors and civilizations.
+
+### Fixed
+
+* Camp Storage displaying the survivor’s personal inventory.
+* Civilization resources being lost after saving and loading.
+
+---
+
 ## v0.5.1-alpha1 — Age of Discovery
 
 ### Added

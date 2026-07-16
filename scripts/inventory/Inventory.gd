@@ -1,11 +1,17 @@
-extends Node
+extends RefCounted
 class_name FrontierInventory
 
 
 var items: Dictionary = {}
 
 
-func add_item(item_id: String, amount: int = 1) -> void:
+func add_item(
+	item_id: String,
+	amount: int = 1
+) -> void:
+	if item_id.is_empty():
+		return
+
 	if amount <= 0:
 		return
 
@@ -14,14 +20,28 @@ func add_item(item_id: String, amount: int = 1) -> void:
 	else:
 		items[item_id] = amount
 
-	print("Added: ", item_id, " x", amount)
+	print(
+		"Added: ",
+		item_id,
+		" x",
+		amount
+	)
 
 
-func remove_item(item_id: String, amount: int = 1) -> bool:
+func remove_item(
+	item_id: String,
+	amount: int = 1
+) -> bool:
+	if item_id.is_empty():
+		return false
+
 	if amount <= 0:
 		return false
 
-	if not has_amount(item_id, amount):
+	if not has_amount(
+		item_id,
+		amount
+	):
 		return false
 
 	items[item_id] -= amount
@@ -32,27 +52,42 @@ func remove_item(item_id: String, amount: int = 1) -> bool:
 	return true
 
 
-func get_item_amount(item_id: String) -> int:
+func get_item_amount(
+	item_id: String
+) -> int:
 	if not items.has(item_id):
 		return 0
 
 	return int(items[item_id])
 
 
-func has_item(item_id: String) -> bool:
+func has_item(
+	item_id: String
+) -> bool:
 	return get_item_amount(item_id) > 0
 
 
-func has_amount(item_id: String, amount: int) -> bool:
+func has_amount(
+	item_id: String,
+	amount: int
+) -> bool:
+	if amount <= 0:
+		return false
+
 	return get_item_amount(item_id) >= amount
 
 
-func can_afford_recipe(recipe: RecipeData) -> bool:
+func can_afford_recipe(
+	recipe: RecipeData
+) -> bool:
 	if recipe == null:
 		return false
 
-	for ingredient in recipe.ingredients:
-		if ingredient == null or ingredient.item == null:
+	for ingredient: IngredientData in recipe.ingredients:
+		if (
+			ingredient == null
+			or ingredient.item == null
+		):
 			return false
 
 		if not has_amount(
@@ -64,11 +99,13 @@ func can_afford_recipe(recipe: RecipeData) -> bool:
 	return true
 
 
-func remove_recipe_ingredients(recipe: RecipeData) -> bool:
+func remove_recipe_ingredients(
+	recipe: RecipeData
+) -> bool:
 	if not can_afford_recipe(recipe):
 		return false
 
-	for ingredient in recipe.ingredients:
+	for ingredient: IngredientData in recipe.ingredients:
 		remove_item(
 			ingredient.item.id,
 			ingredient.amount
@@ -77,12 +114,17 @@ func remove_recipe_ingredients(recipe: RecipeData) -> bool:
 	return true
 
 
-func add_recipe_results(recipe: RecipeData) -> void:
+func add_recipe_results(
+	recipe: RecipeData
+) -> void:
 	if recipe == null:
 		return
 
-	for result in recipe.results:
-		if result == null or result.item == null:
+	for result: IngredientData in recipe.results:
+		if (
+			result == null
+			or result.item == null
+		):
 			continue
 
 		add_item(

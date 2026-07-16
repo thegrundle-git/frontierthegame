@@ -2,7 +2,9 @@ extends Node
 class_name SearchAction
 
 
-func perform(survivor: Survivor) -> bool:
+func perform(
+	survivor: Survivor
+) -> bool:
 	if survivor == null:
 		return false
 
@@ -16,15 +18,25 @@ func perform(survivor: Survivor) -> bool:
 		)
 		return false
 
-	var chosen_entry: SearchLootEntryData = (
-	_choose_loot_entry(
-		location
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
 	)
-)
+
+	if civilization == null:
+		push_error(
+			"Cannot search without a civilization."
+		)
+		return false
+
+	var chosen_entry: SearchLootEntryData = (
+		_choose_loot_entry(
+			location
+		)
+	)
 
 	DiscoveryManager.record_location_search(
 		location.id
-)
+	)
 
 	survivor.gain_knowledge(1)
 
@@ -41,6 +53,7 @@ func perform(survivor: Survivor) -> bool:
 		)
 
 		DiscoveryManager.check_discoveries()
+
 		return true
 
 	if chosen_entry.item == null:
@@ -58,7 +71,7 @@ func perform(survivor: Survivor) -> bool:
 		chosen_entry.item
 	)
 
-	survivor.inventory.add_item(
+	civilization.inventory.add_item(
 		item.id,
 		amount
 	)
@@ -100,9 +113,7 @@ func _choose_loot_entry(
 		0
 	)
 
-	for entry: SearchLootEntryData in (
-		location.search_loot
-	):
+	for entry: SearchLootEntryData in location.search_loot:
 		if entry == null:
 			continue
 
@@ -132,9 +143,7 @@ func _choose_loot_entry(
 
 	var current_weight: int = empty_weight
 
-	for entry: SearchLootEntryData in (
-		location.search_loot
-	):
+	for entry: SearchLootEntryData in location.search_loot:
 		if entry == null:
 			continue
 
