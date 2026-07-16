@@ -2,7 +2,7 @@
 
 ## Critical
 
-* [ ] Verify all v0.5.1-alpha1 systems in an exported build.
+* [x] Verify the core v0.5.2-alpha1 gameplay loop in an exported Windows build.
 * [ ] Confirm Track Animals awards XP only once.
 * [ ] Confirm wilderness search count persists after loading.
 * [ ] Confirm all four discoveries persist after loading.

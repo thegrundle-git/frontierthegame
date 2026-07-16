@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.1-alpha1
+v0.5.2-alpha1
 
 ## Project Health
 
-🟢 Stable — External testing in progress
+🟢 Stable — Core Windows export regression passed
 
 ## Current Milestone
 
@@ -67,10 +67,14 @@ Sprint 3 — The Age of Discovery
 * Experience-based discoveries
 * Knowledge-gated actions
 * Track Animals v1
+* Civilization-owned Camp Storage
+* Location-gated discoveries
+* Trainable Strength progression
+* Data-driven civilization home location
 
 ## Current Focus
 
-Turn knowledge into new gameplay possibilities while expanding exploration content.
+Expand the vertical slice with new discoveries, resources, events, and exploration content while preserving stable data-driven systems.
 
 ## Next Goals
 
