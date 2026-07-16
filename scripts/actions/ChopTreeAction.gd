@@ -40,7 +40,7 @@ func perform(
 		)
 	)
 
-	civilization.inventory.add_item(
+	survivor.inventory.add_item(
 		WOOD_LOG_ITEM_ID,
 		amount
 	)

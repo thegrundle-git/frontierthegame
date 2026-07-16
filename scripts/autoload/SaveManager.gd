@@ -132,6 +132,9 @@ func _build_save_data() -> Dictionary:
 			"inventory": _serialize_inventory(
 				survivor.inventory
 			),
+			"kept_item_ids": (
+				survivor.inventory.kept_item_ids.duplicate()
+			),
 			"skills": _serialize_skills(
 				survivor
 			)
@@ -258,7 +261,9 @@ func _apply_location_data(
 func _apply_survivor_data(
 	survivor_data: Dictionary
 ) -> void:
-	var survivor := GameManager.current_survivor
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
 
 	if survivor == null:
 		return
@@ -279,12 +284,37 @@ func _apply_survivor_data(
 
 	_apply_inventory_data(
 		survivor.inventory,
-		survivor_data.get("inventory", {})
+		survivor_data.get(
+			"inventory",
+			{}
+		)
 	)
+
+	var saved_kept_item_ids: Array[String] = (
+		_string_array_from_variant(
+			survivor_data.get(
+				"kept_item_ids",
+				[]
+			)
+		)
+	)
+
+	survivor.inventory.kept_item_ids.clear()
+
+	for item_id: String in saved_kept_item_ids:
+		if survivor.inventory.has_item(
+			item_id
+		):
+			survivor.inventory.kept_item_ids.append(
+				item_id
+			)
 
 	_apply_skill_data(
 		survivor,
-		survivor_data.get("skills", {})
+		survivor_data.get(
+			"skills",
+			{}
+		)
 	)
 
 

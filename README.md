@@ -103,7 +103,7 @@ The project is under active development and is not yet feature complete.
 
 Current version:
 
-**v0.5.2-alpha1 — Physical Progression Foundation**
+**v0.5.2-alpha2 — Expedition Inventory Transfers**
 
 ## License
 
