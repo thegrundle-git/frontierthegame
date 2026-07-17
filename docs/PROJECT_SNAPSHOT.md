@@ -2,7 +2,7 @@
 
 ## Current Version
 
-v0.5.3-alpha1
+v0.5.3-alpha2
 
 ## Project Health
 
@@ -75,15 +75,21 @@ Sprint 3 — The Age of Discovery
 * Multi-recipe crafting interface
 * Combined Pack and Camp crafting access
 * Exclusive equipped-tool ownership
+* Material-ranked interchangeable components
+* Material-dependent finished tools
+* Flint resource, component, and axe progression
+* Basic manual equipment controls
+* Tag-based tool requirements
 
 ## Current Focus
 
-Expand modular crafting with material choices, unique equipment history, Flint, and component-derived tool statistics.
+Build on material variants with unique equipment instances that preserve component history, then expand the basic tool controls into a dedicated equipment panel.
 
 ## Next Goals
 
+* Unique equipment instances and component history
+* Full component-derived equipment statistics
 * Data-driven narrative templates
-* Flint
 * Meadow ambient event
 * Additional landmarks
 * Finnley’s first journal fragment

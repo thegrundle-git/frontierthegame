@@ -718,14 +718,12 @@ func can_afford_recipe_from_accessible_inventories(
 	for ingredient: IngredientData in recipe.ingredients:
 		if (
 			ingredient == null
-			or ingredient.item == null
+			or not ingredient.is_valid()
 		):
 			return false
 
-		var available: int = (
-			get_accessible_crafting_item_amount(
-				ingredient.item.id
-			)
+		var available := _get_accessible_ingredient_amount(
+			ingredient
 		)
 
 		if available < ingredient.amount:
@@ -735,7 +733,8 @@ func can_afford_recipe_from_accessible_inventories(
 
 
 func consume_recipe_ingredients_from_accessible_inventories(
-	recipe: RecipeData
+	recipe: RecipeData,
+	consumed_components: Dictionary = {}
 ) -> bool:
 	if not can_afford_recipe_from_accessible_inventories(
 		recipe
@@ -748,6 +747,47 @@ func consume_recipe_ingredients_from_accessible_inventories(
 
 	for ingredient: IngredientData in recipe.ingredients:
 		var remaining: int = ingredient.amount
+
+		if ingredient.uses_component_slot():
+			var candidates: Array[ItemData] = (
+				ItemDatabase.get_components_for_slot(
+					ingredient.component_slot
+				)
+			)
+
+			for component: ItemData in candidates:
+				if remaining <= 0:
+					break
+
+				for inventory: FrontierInventory in inventories:
+					if remaining <= 0:
+						break
+
+					var amount_to_remove: int = mini(
+						remaining,
+						inventory.get_item_amount(
+							component.id
+						)
+					)
+
+					if amount_to_remove <= 0:
+						continue
+
+					inventory.remove_item(
+						component.id,
+						amount_to_remove
+					)
+
+					if not consumed_components.has(
+						ingredient.component_slot
+					):
+						consumed_components[
+							ingredient.component_slot
+						] = component
+
+					remaining -= amount_to_remove
+
+			continue
 
 		for inventory: FrontierInventory in inventories:
 			if remaining <= 0:
@@ -771,3 +811,38 @@ func consume_recipe_ingredients_from_accessible_inventories(
 			remaining -= amount_to_remove
 
 	return true
+
+func get_accessible_crafting_ingredient_amount(
+	ingredient: IngredientData
+) -> int:
+	return _get_accessible_ingredient_amount(
+		ingredient
+	)
+
+func _get_accessible_ingredient_amount(
+	ingredient: IngredientData
+) -> int:
+	if ingredient == null:
+		return 0
+
+	if not ingredient.uses_component_slot():
+		if ingredient.item == null:
+			return 0
+
+		return get_accessible_crafting_item_amount(
+			ingredient.item.id
+		)
+
+	var total := 0
+	var candidates: Array[ItemData] = (
+		ItemDatabase.get_components_for_slot(
+			ingredient.component_slot
+		)
+	)
+
+	for component: ItemData in candidates:
+		total += get_accessible_crafting_item_amount(
+			component.id
+		)
+
+	return total

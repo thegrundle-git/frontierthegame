@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="RecipeData" format=3 uid="uid://cg6b3vyglmal5"]
+
+[ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_ingredient"]
+[ext_resource type="Script" uid="uid://c0xuh20fcib35" path="res://scripts/resources/MaterialResultVariantData.gd" id="2_7qf8d"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_recipe"]
+[ext_resource type="Resource" uid="uid://c5qt1whddh485" path="res://resources/items/flint.tres" id="3_flint"]
+[ext_resource type="Resource" uid="uid://cm2qj038hc63o" path="res://resources/items/flint_axe_head.tres" id="4_head"]
+
+[sub_resource type="Resource" id="Ingredient_flint"]
+script = ExtResource("1_ingredient")
+item = ExtResource("3_flint")
+amount = 2
+
+[sub_resource type="Resource" id="Result_head"]
+script = ExtResource("1_ingredient")
+item = ExtResource("4_head")
+
+[resource]
+script = ExtResource("2_recipe")
+id = "flint_axe_head_recipe"
+display_name = "Knapped Flint Axe Head"
+ingredients = Array[ExtResource("1_ingredient")]([SubResource("Ingredient_flint")])
+results = Array[ExtResource("1_ingredient")]([SubResource("Result_head")])
+craft_time = 25
+xp_reward = 3
+description = "Work the flint with controlled blows, driving away thin flakes until a keen axe edge remains."
+metadata/_custom_type_script = "uid://ck8q7c4l76io2"

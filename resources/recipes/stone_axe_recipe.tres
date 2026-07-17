@@ -1,39 +1,47 @@
-[gd_resource type="Resource" script_class="RecipeData" format=3 uid="uid://s7vndo6ynh6v"]
+[gd_resource type="Resource" script_class="RecipeData" format=3 uid="uid://drhckgbgn4my3"]
 
-[ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_wfc1c"]
-[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_bvt1a"]
-[ext_resource type="Resource" uid="uid://buv6y2lxkom06" path="res://resources/items/stone_axe_head.tres" id="2_qvuqr"]
-[ext_resource type="Resource" uid="uid://bb1lc7b6hufp8" path="res://resources/items/stick_handle.tres" id="3_circ6"]
-[ext_resource type="Resource" uid="uid://cmkt2vm4y7xsa" path="res://resources/items/stone_axe.tres" id="4_circ6"]
-[ext_resource type="Resource" uid="uid://ix1x1geo5cdn" path="res://resources/items/fiber_binding.tres" id="4_vt1gm"]
+[ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_ingredient"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_recipe"]
+[ext_resource type="Resource" uid="uid://bb1lc7b6hufp8" path="res://resources/items/stick_handle.tres" id="3_handle"]
+[ext_resource type="Resource" uid="uid://ix1x1geo5cdn" path="res://resources/items/fiber_binding.tres" id="4_binding"]
+[ext_resource type="Resource" uid="uid://cmkt2vm4y7xsa" path="res://resources/items/stone_axe.tres" id="5_stone_axe"]
+[ext_resource type="Resource" uid="uid://ct1vs6uxllyca" path="res://resources/items/flint_axe.tres" id="6_flint_axe"]
+[ext_resource type="Script" uid="uid://c0xuh20fcib35" path="res://scripts/resources/MaterialResultVariantData.gd" id="7_variant"]
 
-[sub_resource type="Resource" id="Resource_4g4n1"]
-script = ExtResource("1_wfc1c")
-item = ExtResource("2_qvuqr")
-metadata/_custom_type_script = "uid://dgx01py1umnc5"
+[sub_resource type="Resource" id="Ingredient_head"]
+script = ExtResource("1_ingredient")
+component_slot = "head"
 
-[sub_resource type="Resource" id="Resource_0wgsu"]
-script = ExtResource("1_wfc1c")
-item = ExtResource("3_circ6")
-metadata/_custom_type_script = "uid://dgx01py1umnc5"
+[sub_resource type="Resource" id="Ingredient_handle"]
+script = ExtResource("1_ingredient")
+item = ExtResource("3_handle")
 
-[sub_resource type="Resource" id="Resource_wq47c"]
-script = ExtResource("1_wfc1c")
-item = ExtResource("4_vt1gm")
-metadata/_custom_type_script = "uid://dgx01py1umnc5"
+[sub_resource type="Resource" id="Ingredient_binding"]
+script = ExtResource("1_ingredient")
+item = ExtResource("4_binding")
 
-[sub_resource type="Resource" id="Resource_qvuqr"]
-script = ExtResource("1_wfc1c")
-item = ExtResource("4_circ6")
-metadata/_custom_type_script = "uid://dgx01py1umnc5"
+[sub_resource type="Resource" id="Result_flint_axe"]
+script = ExtResource("1_ingredient")
+item = ExtResource("6_flint_axe")
+
+[sub_resource type="Resource" id="Variant_flint"]
+script = ExtResource("7_variant")
+material_id = "flint"
+results = Array[ExtResource("1_ingredient")]([SubResource("Result_flint_axe")])
+
+[sub_resource type="Resource" id="Result_stone_axe"]
+script = ExtResource("1_ingredient")
+item = ExtResource("5_stone_axe")
 
 [resource]
-script = ExtResource("2_bvt1a")
+script = ExtResource("2_recipe")
 id = "stone_axe_recipe"
-display_name = "Assemble Stone Axe"
-ingredients = Array[ExtResource("1_wfc1c")]([SubResource("Resource_4g4n1"), SubResource("Resource_0wgsu"), SubResource("Resource_wq47c")])
-results = Array[ExtResource("1_wfc1c")]([SubResource("Resource_qvuqr")])
+display_name = "Assemble Axe"
+ingredients = Array[ExtResource("1_ingredient")]([SubResource("Ingredient_head"), SubResource("Ingredient_handle"), SubResource("Ingredient_binding")])
+results = Array[ExtResource("1_ingredient")]([SubResource("Result_stone_axe")])
 craft_time = 30
 xp_reward = 5
-description = "Seat the shaped stone head against the prepared handle, then lash the joint tightly with twisted fiber. Each component is crude alone; together they become a working axe."
+variant_component_slot = "head"
+material_result_variants = Array[ExtResource("7_variant")]([SubResource("Variant_flint")])
+description = "Seat the best available shaped head against the prepared handle, then lash the joint tightly with twisted fiber. The head material determines the finished axe."
 metadata/_custom_type_script = "uid://ck8q7c4l76io2"

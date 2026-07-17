@@ -13,4 +13,5 @@ stack_size = 10
 tags = Array[String](["tool_component", "axe_head", "stone"])
 component_slot = "head"
 material_id = "stone"
+material_quality = 1
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

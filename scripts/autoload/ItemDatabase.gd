@@ -21,7 +21,10 @@ func load_items() -> void:
 		"res://resources/items/flower.tres",
 		"res://resources/items/stone_axe_head.tres",
 		"res://resources/items/stick_handle.tres",
-		"res://resources/items/fiber_binding.tres"
+		"res://resources/items/fiber_binding.tres",
+		"res://resources/items/flint.tres",
+		"res://resources/items/flint_axe_head.tres",
+		"res://resources/items/flint_axe.tres",
 	]
 
 	for item_path: String in item_paths:
@@ -90,3 +93,35 @@ func has_item(
 	item_id: String
 ) -> bool:
 	return items.has(item_id)
+
+func get_components_for_slot(
+	component_slot: String
+) -> Array[ItemData]:
+	var matches: Array[ItemData] = []
+
+	if component_slot.is_empty():
+		return matches
+
+	for item_value: Variant in items.values():
+		var item := item_value as ItemData
+
+		if item == null:
+			continue
+
+		if item.component_slot != component_slot:
+			continue
+
+		matches.append(item)
+
+	matches.sort_custom(
+		func(
+			first: ItemData,
+			second: ItemData
+		) -> bool:
+			if first.material_quality == second.material_quality:
+				return first.id < second.id
+
+			return first.material_quality > second.material_quality
+	)
+
+	return matches

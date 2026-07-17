@@ -33,10 +33,12 @@
 * [x] Add manual transfers between expedition inventory and Camp Storage.
 * [x] Add Deposit All with Keep protection.
 * [ ] Add weight and bulk capacity displays.
-* [ ] Add a dedicated survivor equipment panel.
+* [x] Add basic survivor equipment selection and unequip controls.
+* [ ] Expand basic equipment controls into a dedicated multi-slot equipment panel.
 * [x] Add the first modular Stone Axe component-crafting chain.
 * [ ] Add unique equipment instances that preserve their component history.
-* [ ] Calculate equipment statistics from selected components.
+* [x] Add the first material-derived tool efficiency statistic.
+* [ ] Calculate full equipment statistics from every selected component.
 * [ ] Expose field crafting outside the home interface.
 
 ## Low

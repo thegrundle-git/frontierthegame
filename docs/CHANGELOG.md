@@ -2,13 +2,32 @@
 
 This document records every released version of Frontier.
 ---
-## Unreleased
+## v0.5.3-alpha2 — Tool Material Variants
+
+### Added
+
+* Flint as a rare River search resource.
+* Flint Axe Head component and knapping recipe.
+* Flint Axe material variant with improved chopping efficiency.
+* Material-quality ranking for interchangeable crafting components.
+* Material-dependent recipe results.
+* Manual tool selector with Equip and Unequip controls.
+* Tag-based action tool requirements.
+
+### Changed
+
+* Assemble Axe now accepts the best available head material.
+* Flint Axe gathers one additional base Wood Log compared with Stone Axe.
+* Chop Tree now accepts any equipped axe rather than one exact item ID.
+* Equipped tools can be deliberately exchanged instead of relying only on crafting auto-equip.
+* River search data is stored as one clean resource definition.
 
 ### Fixed
 
 * Chronicle entries now use compact dividers between completed actions instead of unstructured blank space.
 
 ---
+
 
 ## v0.5.3-alpha1 — Modular Crafting Foundation
 

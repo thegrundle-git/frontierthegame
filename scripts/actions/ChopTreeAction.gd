@@ -2,7 +2,6 @@ extends Node
 class_name ChopTreeAction
 
 
-const REQUIRED_TOOL_ID := "stone_axe"
 const WOOD_LOG_ITEM_ID := "wood_log"
 
 const STRENGTH_XP_REWARD := 2
@@ -16,9 +15,11 @@ func perform(
 	if survivor == null:
 		return false
 
-	if not survivor.has_equipped_tool(
-		REQUIRED_TOOL_ID
-	):
+	var equipped_axe := _get_equipped_axe(
+		survivor
+	)
+
+	if equipped_axe == null:
 		_add_event(
 			"A suitable axe must be equipped before chopping trees."
 		)
@@ -36,7 +37,8 @@ func perform(
 
 	var amount: int = (
 		_calculate_log_yield(
-			survivor
+			survivor,
+			equipped_axe
 		)
 	)
 
@@ -79,10 +81,38 @@ func perform(
 	return true
 
 
-func _calculate_log_yield(
+func _get_equipped_axe(
 	survivor: Survivor
+) -> ItemData:
+	if survivor.equipped_tool_id.is_empty():
+		return null
+
+	var equipped_item: ItemData = (
+		ItemDatabase.get_item(
+			survivor.equipped_tool_id
+		)
+	)
+
+	if equipped_item == null:
+		return null
+
+	if "tool" not in equipped_item.tags:
+		return null
+
+	if "axe" not in equipped_item.tags:
+		return null
+
+	return equipped_item
+
+
+func _calculate_log_yield(
+	survivor: Survivor,
+	equipped_axe: ItemData
 ) -> int:
-	var amount := 1
+	var amount := maxi(
+		equipped_axe.tool_efficiency,
+		1
+	)
 
 	var gathering: SkillProgress = (
 		survivor.get_skill(

@@ -212,7 +212,15 @@ func add_recipe_results(
 	if recipe == null:
 		return
 
-	for result: IngredientData in recipe.results:
+	add_ingredient_results(
+		recipe.results
+	)
+
+
+func add_ingredient_results(
+	results: Array[IngredientData]
+) -> void:
+	for result: IngredientData in results:
 		if (
 			result == null
 			or result.item == null
