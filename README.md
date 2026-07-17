@@ -103,7 +103,7 @@ The project is under active development and is not yet feature complete.
 
 Current version:
 
-**v0.5.3-alpha2 — Tool Material Variants**
+**v0.5.4-alpha1 — Interface Foundation**
 
 ## License
 

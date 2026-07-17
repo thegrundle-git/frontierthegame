@@ -3,6 +3,7 @@
 ## Critical
 
 * [x] Verify the core v0.5.2-alpha1 gameplay loop in an exported Windows build.
+* [ ] Verify the v0.5.4-alpha1 interface foundation at 1280×720 in an exported Windows build.
 * [ ] Confirm Track Animals awards XP only once.
 * [ ] Confirm wilderness search count persists after loading.
 * [ ] Confirm all four discoveries persist after loading.
@@ -29,11 +30,14 @@
 * [ ] Add Deep Forest.
 * [ ] Add Rocky Outcrop.
 * [ ] Add Marsh.
-* [ ] Improve Chronicle readability with spacing or dividers between events.
+* [x] Improve Chronicle readability with spacing or dividers between events.
 * [x] Add manual transfers between expedition inventory and Camp Storage.
 * [x] Add Deposit All with Keep protection.
 * [ ] Add weight and bulk capacity displays.
 * [x] Add basic survivor equipment selection and unequip controls.
+* [x] Rebalance Skills, Inventory, and Journal interface proportions.
+* [x] Add bounded, accessible Actions and Travel accordion sections.
+* [x] Prevent variable UI content from resizing or shifting the root interface.
 * [ ] Expand basic equipment controls into a dedicated multi-slot equipment panel.
 * [x] Add the first modular Stone Axe component-crafting chain.
 * [ ] Add unique equipment instances that preserve their component history.

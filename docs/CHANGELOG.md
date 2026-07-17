@@ -2,6 +2,30 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.4-alpha1 — Interface Foundation
+
+### Added
+
+* Expandable Actions and Travel accordion sections.
+* Bounded scrolling for variable action, travel, inventory, Journal, and event content.
+* Keyboard focus and explanatory tooltips for primary interactive controls.
+
+### Changed
+
+* Rebalanced Skills, Inventory, and Journal proportions for the 1280×720 interface.
+* Journal now receives priority reading space and expands into available room.
+* Actions and Travel now collapse or scroll instead of shifting the overall interface as controls populate.
+* Interactive controls use more consistent, usable minimum sizing.
+* Event dialog supports longer scrolling content.
+* Chronicle entries use clearer spacing and divider formatting.
+
+### Fixed
+
+* Variable button lists and text content resizing or pushing the root interface.
+* Journal reading space becoming too small as Actions and Travel populated.
+
+---
+
 ## v0.5.3-alpha2 — Tool Material Variants
 
 ### Added
