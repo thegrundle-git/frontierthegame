@@ -1,6 +1,11 @@
 extends Control
 
 
+const INTERACTIVE_CONTROL_MINIMUM_HEIGHT := 42.0
+const EVENT_SEPARATOR := "────────────────────────"
+const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
+
+
 
 
 @onready var event_log: RichTextLabel = %EventLog
@@ -23,6 +28,13 @@ extends Control
 
 @onready var action_list: VBoxContainer = %ActionList
 @onready var travel_list: VBoxContainer = %TravelList
+@onready var upper_right_region: VBoxContainer = %UpperRightRegion
+@onready var actions_panel: PanelContainer = %ActionsPanel
+@onready var travel_panel: PanelContainer = %TravelPanel
+@onready var actions_content_scroll: ScrollContainer = %ActionsContentScroll
+@onready var travel_content_scroll: ScrollContainer = %TravelContentScroll
+@onready var actions_toggle_button: Button = %ActionsToggleButton
+@onready var travel_toggle_button: Button = %TravelToggleButton
 
 @onready var recipe_label: Label = %RecipeLabel
 @onready var craft_button: Button = %CraftButton
@@ -43,9 +55,21 @@ var selected_recipe_id: String = ""
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
 var return_home_button: Button
+var actions_expanded: bool = true
+var travel_expanded: bool = false
 
 func _ready() -> void:
 	GameManager.game_ui = self
+
+	actions_toggle_button.pressed.connect(
+		_on_actions_toggle_pressed
+	)
+
+	travel_toggle_button.pressed.connect(
+		_on_travel_toggle_pressed
+	)
+
+	_update_accordion_visual_state()
 
 	equip_tool_button.pressed.connect(
 		_on_equip_tool_pressed
@@ -118,6 +142,73 @@ func _ready() -> void:
 	back_to_home_button.pressed.connect(
 		_on_back_to_home_pressed
 )
+
+
+func _on_actions_toggle_pressed() -> void:
+	actions_expanded = not actions_expanded
+
+	if actions_expanded:
+		travel_expanded = false
+
+	_update_accordion_visual_state()
+
+
+func _on_travel_toggle_pressed() -> void:
+	travel_expanded = not travel_expanded
+
+	if travel_expanded:
+		actions_expanded = false
+
+	_update_accordion_visual_state()
+
+
+func _update_accordion_visual_state() -> void:
+	actions_content_scroll.visible = actions_expanded
+	travel_content_scroll.visible = travel_expanded
+	actions_panel.size_flags_vertical = (
+		Control.SIZE_EXPAND_FILL
+		if actions_expanded
+		else Control.SIZE_SHRINK_BEGIN
+	)
+	travel_panel.size_flags_vertical = (
+		Control.SIZE_EXPAND_FILL
+		if travel_expanded
+		else Control.SIZE_SHRINK_BEGIN
+	)
+
+	actions_toggle_button.text = (
+		"Actions ▾" if actions_expanded else "Actions ▸"
+	)
+	actions_toggle_button.tooltip_text = (
+		"Collapse Actions"
+		if actions_expanded
+		else "Expand Actions"
+	)
+
+	travel_toggle_button.text = (
+		"Travel ▾" if travel_expanded else "Travel ▸"
+	)
+	travel_toggle_button.tooltip_text = (
+		"Collapse Travel"
+		if travel_expanded
+		else "Expand Travel"
+	)
+
+	var has_open_section := (
+		actions_expanded or travel_expanded
+	)
+	upper_right_region.custom_minimum_size.y = (
+		ACCORDION_OPEN_MINIMUM_HEIGHT
+		if has_open_section
+		else 0.0
+	)
+	upper_right_region.size_flags_vertical = (
+		Control.SIZE_EXPAND_FILL
+		if has_open_section
+		else Control.SIZE_SHRINK_BEGIN
+	)
+
+
 func refresh_all() -> void:
 	update_survivor()
 	update_location()
@@ -142,14 +233,22 @@ func refresh_all() -> void:
 
 
 func add_event(event_text: String) -> void:
+	var existing_text := event_log.get_parsed_text()
+	var has_existing_entries := not existing_text.is_empty()
+
 	if event_text.is_empty():
-		event_log.append_text(
-			"\n────────────────────────\n"
-		)
+		if has_existing_entries:
+			event_log.append_text(
+				"\n\n" + EVENT_SEPARATOR + "\n"
+			)
 	else:
-		event_log.append_text(
-			"\n" + event_text
-		)
+		if (
+			has_existing_entries
+			and not existing_text.ends_with("\n")
+		):
+			event_log.append_text("\n\n")
+
+		event_log.append_text(event_text)
 
 	var last_line: int = maxi(
 		event_log.get_line_count() - 1,
@@ -184,7 +283,10 @@ func build_world_action_buttons() -> void:
 
 		button.text = action.display_name
 		button.tooltip_text = action.description
-		button.custom_minimum_size.y = 38
+		button.custom_minimum_size.y = (
+			INTERACTIVE_CONTROL_MINIMUM_HEIGHT
+		)
+		button.focus_mode = Control.FOCUS_ALL
 
 		button.pressed.connect(
 			_on_world_action_pressed.bind(
@@ -201,7 +303,10 @@ func build_world_action_buttons() -> void:
 	return_home_button.tooltip_text = (
 		"Return to the safety of home."
 	)
-	return_home_button.custom_minimum_size.y = 38
+	return_home_button.custom_minimum_size.y = (
+		INTERACTIVE_CONTROL_MINIMUM_HEIGHT
+	)
+	return_home_button.focus_mode = Control.FOCUS_ALL
 
 	return_home_button.pressed.connect(
 		_on_return_home_pressed
@@ -269,7 +374,10 @@ func build_travel_buttons() -> void:
 		)
 
 		button.tooltip_text = connection.description
-		button.custom_minimum_size.y = 38
+		button.custom_minimum_size.y = (
+			INTERACTIVE_CONTROL_MINIMUM_HEIGHT
+		)
+		button.focus_mode = Control.FOCUS_ALL
 
 		button.pressed.connect(
 			_on_travel_pressed.bind(
@@ -463,13 +571,13 @@ func update_survivor() -> void:
 	for skill: SkillProgress in survivor.get_all_skills():
 		skill_text += (
 			skill.display_name
-			+ "\nLevel "
+			+ " — Level "
 			+ str(skill.level)
 			+ " — XP "
 			+ str(skill.xp)
 			+ " / "
 			+ str(skill.get_xp_needed())
-			+ "\n\n"
+			+ "\n"
 		)
 
 	skills_label.text = skill_text
@@ -763,7 +871,10 @@ func _ensure_recipe_selector() -> void:
 
 	recipe_selector = OptionButton.new()
 	recipe_selector.name = "RecipeSelector"
-	recipe_selector.custom_minimum_size.y = 38
+	recipe_selector.custom_minimum_size.y = (
+		INTERACTIVE_CONTROL_MINIMUM_HEIGHT
+	)
+	recipe_selector.focus_mode = Control.FOCUS_ALL
 
 	recipe_selector.item_selected.connect(
 		_on_recipe_selected
@@ -1129,7 +1240,10 @@ func show_world_event(
 		var button := Button.new()
 
 		button.text = option.display_text
-		button.custom_minimum_size.y = 42
+		button.custom_minimum_size.y = (
+			INTERACTIVE_CONTROL_MINIMUM_HEIGHT
+		)
+		button.focus_mode = Control.FOCUS_ALL
 
 		button.pressed.connect(
 			_on_event_option_pressed.bind(

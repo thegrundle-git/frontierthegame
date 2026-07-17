@@ -30,6 +30,14 @@ Content should be created primarily through resources rather than gameplay code.
 
 ---
 
+## Readable and Stable Interfaces
+
+Important information must remain readable. Variable content should scroll or collapse rather than resize the overall interface.
+
+Accessibility and keyboard navigation are part of usability, not optional polish.
+
+---
+
 ## Material Choice Creates Identity
 
 Crafting materials should change how finished equipment performs, not merely rename or recolor it.

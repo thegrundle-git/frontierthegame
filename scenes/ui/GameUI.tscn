@@ -20,24 +20,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="MainLayout" type="VBoxContainer" parent="ScreenMargin" unique_id=1436810312]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderPanel" type="PanelContainer" parent="ScreenMargin/MainLayout" unique_id=523145342]
 layout_mode = 2
 
 [node name="HeaderLayout" type="HBoxContainer" parent="ScreenMargin/MainLayout/HeaderPanel" unique_id=461087498]
 layout_mode = 2
+theme_override_constants/separation = 12
 
 [node name="TitleLabel" type="Label" parent="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout" unique_id=901055769]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
 text = "FRONTIER"
 
 [node name="TimeLabel" type="Label" parent="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout" unique_id=83001577]
@@ -48,20 +50,25 @@ text = "Day 1 — 08:00"
 
 [node name="CurrentActionLabel" type="Label" parent="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout" unique_id=371326667]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Idle"
 
 [node name="SaveButton" type="Button" parent="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout" unique_id=670213951]
+custom_minimum_size = Vector2(88, 40)
 layout_mode = 2
+tooltip_text = "Save the current game."
 text = "Save"
 
 [node name="LoadButton" type="Button" parent="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout" unique_id=526972389]
+custom_minimum_size = Vector2(88, 40)
 layout_mode = 2
+tooltip_text = "Load the current save."
 text = "Load"
 
 [node name="ActionProgress" type="ProgressBar" parent="ScreenMargin/MainLayout" unique_id=1754371207]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="LocationPanel" type="PanelContainer" parent="ScreenMargin/MainLayout" unique_id=922197224]
@@ -69,11 +76,13 @@ layout_mode = 2
 
 [node name="LocationLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/LocationPanel" unique_id=962072177]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="LocationLabel" type="Label" parent="ScreenMargin/MainLayout/LocationPanel/LocationLayout" unique_id=1013132934]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Forest
 
 A dense stretch of untamed woodland."
@@ -82,10 +91,12 @@ autowrap_mode = 3
 [node name="MiddleRow" type="HBoxContainer" parent="ScreenMargin/MainLayout" unique_id=724868924]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 12
 
 [node name="LeftColumn" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow" unique_id=435323539]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="SurvivorPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn" unique_id=906880774]
 layout_mode = 2
@@ -115,21 +126,27 @@ theme_override_constants/separation = 6
 
 [node name="ToolSelector" type="OptionButton" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout/EquipmentControls" unique_id=1430706833]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Choose an accessible tool to equip."
 
 [node name="EquipToolButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout/EquipmentControls" unique_id=2056889999]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(88, 40)
 layout_mode = 2
+tooltip_text = "Equip the selected tool."
 text = "Equip"
 
 [node name="UnequipToolButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout/EquipmentControls" unique_id=145721423]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 40)
 layout_mode = 2
+tooltip_text = "Return the equipped tool to the pack."
 text = "Unequip"
 
 [node name="InventoryPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn" unique_id=375295770]
+custom_minimum_size = Vector2(320, 150)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -140,44 +157,91 @@ theme_override_constants/separation = 8
 [node name="InventoryLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=1901707611]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="RightColumn" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow" unique_id=2073829759]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+theme_override_constants/separation = 6
 
-[node name="ActionsPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=1943840883]
-layout_mode = 2
-
-[node name="ActionsLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ActionsPanel" unique_id=763711668]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="ActionsTitle" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ActionsPanel/ActionsLayout" unique_id=1942218701]
-layout_mode = 2
-text = "Actions"
-
-[node name="ActionList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ActionsPanel/ActionsLayout" unique_id=1529068601]
+[node name="UpperRightRegion" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn"]
 unique_name_in_owner = true
-layout_mode = 2
-
-[node name="TravelPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=1056504366]
-layout_mode = 2
-
-[node name="TravelLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/TravelPanel" unique_id=1701085096]
-layout_mode = 2
-
-[node name="TravelTitle" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/TravelPanel/TravelLayout" unique_id=1896659793]
-layout_mode = 2
-text = "Travel"
-
-[node name="TravelList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/TravelPanel/TravelLayout" unique_id=1482779917]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="DetailTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=314125264]
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 4.0
+theme_override_constants/separation = 6
+
+[node name="ActionsPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion" unique_id=1943840883]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionsLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel" unique_id=763711668]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ActionsToggleButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout" unique_id=1942218701]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+tooltip_text = "Collapse Actions"
+text = "Actions ▾"
+alignment = 0
+
+[node name="ActionsContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ActionList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout/ActionsContentScroll" unique_id=1529068601]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="TravelPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion" unique_id=1056504366]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="TravelLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel" unique_id=1701085096]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TravelToggleButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout" unique_id=1896659793]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 2
+tooltip_text = "Expand Travel"
+text = "Travel ▸"
+alignment = 0
+
+[node name="TravelContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="TravelList" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout/TravelContentScroll" unique_id=1482779917]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="DetailTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=314125264]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 6.0
 current_tab = 0
 
 [node name="Journal" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs" unique_id=1891697158]
@@ -188,36 +252,49 @@ metadata/_tab_index = 0
 [node name="JournalTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal" unique_id=848680813]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 current_tab = 0
 
 [node name="Chronicle" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=2021029852]
 layout_mode = 2
+size_flags_vertical = 3
 metadata/_tab_index = 0
 
 [node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Chronicle" unique_id=606803694]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+theme_override_constants/line_separation = 3
 scroll_following = true
+selection_enabled = true
 
 [node name="Locations" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=1193564463]
 visible = false
 layout_mode = 2
+size_flags_vertical = 3
 metadata/_tab_index = 1
 
 [node name="LocationsLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Locations" unique_id=1351369458]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 bbcode_enabled = true
 text = "No locations recorded."
 
 [node name="Discoveries" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=1940248824]
 visible = false
 layout_mode = 2
+size_flags_vertical = 3
 metadata/_tab_index = 2
 
 [node name="DiscoveriesLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Discoveries" unique_id=220362884]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 bbcode_enabled = true
 text = "No discoveries recorded."
 
@@ -225,11 +302,14 @@ text = "No discoveries recorded."
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+size_flags_vertical = 3
 metadata/_tab_index = 3
 
 [node name="LandmarksLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Landmarks" unique_id=836744476]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 bbcode_enabled = true
 text = "No landmarks recorded."
 
@@ -245,25 +325,37 @@ grow_vertical = 2
 mouse_filter = 0
 
 [node name="EventPanel" type="PanelContainer" parent="EventOverlay" unique_id=2025741291]
-custom_minimum_size = Vector2(500, 300)
+custom_minimum_size = Vector2(520, 320)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="EventLayout" type="VBoxContainer" parent="EventOverlay/EventPanel" unique_id=706928194]
 layout_mode = 2
+theme_override_constants/separation = 12
 
 [node name="EventTitle" type="Label" parent="EventOverlay/EventPanel/EventLayout" unique_id=2047442061]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_font_sizes/font_size = 22
 
-[node name="EventBody" type="Label" parent="EventOverlay/EventPanel/EventLayout" unique_id=22556129]
+[node name="EventBodyScroll" type="ScrollContainer" parent="EventOverlay/EventPanel/EventLayout" unique_id=47278620]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="EventBody" type="Label" parent="EventOverlay/EventPanel/EventLayout/EventBodyScroll" unique_id=22556129]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(440, 0)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
 autowrap_mode = 3
 
 [node name="EventOptions" type="VBoxContainer" parent="EventOverlay/EventPanel/EventLayout" unique_id=202600490]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="Crafting" type="PanelContainer" parent="." unique_id=12433698]
 unique_name_in_owner = true
@@ -305,13 +397,13 @@ autowrap_mode = 3
 
 [node name="CraftButton" type="Button" parent="Crafting/CraftingCenter/CraftingPanel/CraftingLayout" unique_id=2007992763]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Craft Stone Axe"
 
 [node name="BackToHomeButton" type="Button" parent="Crafting/CraftingCenter/CraftingPanel/CraftingLayout" unique_id=210938268]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 38)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Back to Home"
 
