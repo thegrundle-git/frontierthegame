@@ -1004,10 +1004,16 @@ func _request_initial_refresh() -> void:
 	refresh_all()
 
 func _on_return_home_pressed() -> void:
+	if not GameManager.enter_home():
+		return
+
 	crafting_panel.visible = false
 	home_ui.visible = true
 
+
 func _on_leave_home_requested() -> void:
+	GameManager.leave_home()
+
 	crafting_panel.visible = false
 	home_ui.visible = false
 

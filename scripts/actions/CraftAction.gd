@@ -75,7 +75,7 @@ func _get_crafting_output_inventory(
 	survivor: Survivor,
 	civilization: CivilizationData
 ) -> FrontierInventory:
-	if GameManager.is_at_home_location():
+	if GameManager.is_survivor_at_home():
 		return civilization.inventory
 
 	return survivor.inventory

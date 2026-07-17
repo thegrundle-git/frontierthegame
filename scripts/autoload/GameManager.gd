@@ -23,6 +23,7 @@ var track_animals_action := TrackAnimalsAction.new()
 
 var should_load_save_on_start := false
 var game_session_prepared := false
+var survivor_is_at_home := false
 
 func _ready() -> void:
 	pass
@@ -574,6 +575,7 @@ func _reset_runtime_state() -> void:
 	current_civilization = null
 	current_location = null
 	game_ui = null
+	survivor_is_at_home = false
 
 	ActionManager.is_busy = false
 	ActionManager.current_action_name = ""
@@ -648,6 +650,26 @@ func is_at_home_location() -> bool:
 	)
 
 
+func enter_home() -> bool:
+	if not is_at_home_location():
+		return false
+
+	survivor_is_at_home = true
+
+	return true
+
+
+func leave_home() -> void:
+	survivor_is_at_home = false
+
+
+func is_survivor_at_home() -> bool:
+	return (
+		survivor_is_at_home
+		and is_at_home_location()
+	)
+
+
 func get_accessible_crafting_inventories(
 ) -> Array[FrontierInventory]:
 	var inventories: Array[FrontierInventory] = []
@@ -656,7 +678,7 @@ func get_accessible_crafting_inventories(
 		return inventories
 
 	if (
-		is_at_home_location()
+		is_survivor_at_home()
 		and current_civilization != null
 		and current_civilization.inventory != null
 	):

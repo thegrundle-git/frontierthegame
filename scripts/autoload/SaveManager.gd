@@ -189,7 +189,10 @@ func _apply_save_data(
 	save_data: Dictionary
 ) -> void:
 	_apply_time_data(
-		save_data.get("time", {})
+		save_data.get(
+			"time",
+			{}
+		)
 	)
 
 	_apply_location_data(
@@ -202,23 +205,30 @@ func _apply_save_data(
 	)
 
 	_apply_survivor_data(
-		save_data.get("survivor", {})
+		save_data.get(
+			"survivor",
+			{}
+		)
 	)
 
 	_apply_civilization_data(
-	save_data.get("civilization", {})
-)
+		save_data.get(
+			"civilization",
+			{}
+		)
+	)
 
 	if GameManager.current_survivor != null:
 		GameManager.current_survivor.normalize_equipped_tool_ownership()
 
 	_apply_world_event_data(
-		save_data.get("world_events", {})
+		save_data.get(
+			"world_events",
+			{}
+		)
 	)
 
 	TimeManager.time_changed.emit()
-
-
 func _apply_time_data(
 	time_data: Dictionary
 ) -> void:

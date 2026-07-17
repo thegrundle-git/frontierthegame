@@ -23,12 +23,19 @@ This document records every released version of Frontier.
 * Crafting outputs go to Camp Storage at home and Finnley’s Pack away from home.
 * Equipped tools are removed from inventories while equipped.
 * Primitive Toolmaking now unlocks four component and assembly recipes.
+* Home, Storage, and Crafting now preserve the shared HUD.
+* Crafting progress, game time, Save, and Load remain visible inside Camp interfaces.
+* Camp access is tracked separately from merely being in the Forest.
 
 ### Fixed
 
 * Players being forced to deposit carried materials before crafting at home.
 * Equipped tools simultaneously appearing in Camp Storage.
 * Older saves failing to receive recipes added to existing discoveries.
+* Camp interface being shifted left and exposing the world interface on the right.
+* Camp overlays shifting the entire game downward and cutting off lower tabs.
+* Crafting hiding action progress, game time, Save, and Load controls.
+* Forest field crafting incorrectly having access to Camp Storage.
 
 ---
 
