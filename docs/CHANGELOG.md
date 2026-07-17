@@ -2,6 +2,33 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.5-alpha1 — Civilization History Ledger
+
+### Added
+
+* Typed `CivilizationHistoryEntry` resources.
+* Unique persistent civilization milestones.
+* Dedicated History tab in the Journal.
+* First Wilderness Search milestone.
+* First Discovery milestone.
+* First Crafted Tool milestone.
+* Save version 3 history serialization.
+* Initial Design Philosophy document.
+
+### Changed
+
+* Civilization history now saves and loads in milestone insertion order.
+* Duplicate milestone IDs are rejected by `CivilizationData`.
+* Chronicle narration remains transient and separate from durable civilization memory.
+* Version 1 and 2 saves remain compatible and load with an empty history ledger.
+* Older saves do not fabricate retroactive milestones.
+
+### Verified
+
+* Manual gameplay testing passed for milestone recording, duplicate prevention, Journal display, saving, and loading.
+
+---
+
 ## v0.5.4-alpha1 — Interface Foundation
 
 ### Added

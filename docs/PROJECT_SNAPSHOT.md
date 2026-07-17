@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.4-alpha1
+v0.5.5-alpha1
 
 ## Project Health
 
-🟢 Stable — Core Windows export regression passed
+🟢 Stable — Core Windows export regression and Civilization History Ledger manual gameplay testing passed
 
 ## Current Milestone
 
@@ -85,10 +85,28 @@ Sprint 3 — The Age of Discovery
 * Accessible Actions and Travel accordion controls
 * Bounded scrolling for variable interface content
 * Improved event dialog and Chronicle presentation
+* Civilization History Ledger
+* Dedicated Journal History tab
+* Unique persistent civilization milestones
+* Save version 3 history serialization
+
+## Civilization History
+
+The Civilization History Ledger is implemented and displayed in its own Journal tab.
+
+Current milestone types:
+
+* First wilderness search
+* First discovery
+* First crafted tool
+
+Entries save and load in insertion order. `CivilizationData` rejects duplicate milestone IDs, while routine Chronicle narration remains transient.
+
+The current save version is 3. Version 1 and 2 saves remain compatible and begin with an empty ledger. Manual gameplay testing passed for milestone recording, duplicate prevention, Journal display, saving, and loading.
 
 ## Current Focus
 
-Stabilize the v0.5.4-alpha1 interface foundation at 1280×720, then build on material variants with unique equipment instances that preserve component history.
+Continue the vertical slice from the tested v0.5.5-alpha1 civilization-history foundation, then build on material variants with unique equipment instances that preserve component history.
 
 ## Next Goals
 

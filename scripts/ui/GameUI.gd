@@ -9,6 +9,7 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 
 
 @onready var event_log: RichTextLabel = %EventLog
+@onready var history_log: RichTextLabel = %HistoryLog
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
@@ -218,6 +219,7 @@ func refresh_all() -> void:
 	update_travel_buttons()
 	update_locations_journal()
 	update_landmarks_journal()
+	update_history_journal()
 	update_journal_tab_visibility()
 	update_discoveries_journal()
 	_update_time()
@@ -1003,6 +1005,53 @@ func _format_minutes(
 # -------------------------------------------------------------------
 # Journal
 # -------------------------------------------------------------------
+
+func update_history_journal() -> void:
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if (
+		civilization == null
+		or civilization.history_entries.is_empty()
+	):
+		history_log.text = (
+			"No milestones have been recorded."
+		)
+		return
+
+	var history_text := ""
+
+	for entry: CivilizationHistoryEntry in (
+		civilization.history_entries
+	):
+		if entry == null:
+			continue
+
+		if not history_text.is_empty():
+			history_text += "\n\n"
+
+		history_text += entry.title
+		history_text += (
+			"\nDay "
+			+ str(entry.day)
+			+ " — "
+			+ str(entry.hour).pad_zeros(2)
+			+ ":"
+			+ str(entry.minute).pad_zeros(2)
+		)
+
+		if not entry.contributor_name.is_empty():
+			history_text += (
+				"\nContributor: "
+				+ entry.contributor_name
+			)
+
+		if not entry.description.is_empty():
+			history_text += "\n" + entry.description
+
+	history_log.text = history_text
+
 
 func update_locations_journal() -> void:
 	var civilization: CivilizationData = (

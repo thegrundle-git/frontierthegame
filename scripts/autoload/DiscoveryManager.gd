@@ -104,6 +104,11 @@ func unlock_discovery(
 		discovery.display_name
 	)
 
+	_record_first_discovery(
+		civilization,
+		discovery
+	)
+
 	if GameManager.game_ui == null:
 		return
 
@@ -129,6 +134,46 @@ func unlock_discovery(
 
 	GameManager.game_ui.rebuild_location_controls()
 	GameManager.game_ui.refresh_all()
+
+
+func _record_first_discovery(
+	civilization: CivilizationData,
+	discovery: DiscoveryData
+) -> void:
+	var contributor_name := ""
+	var survivor: Survivor = GameManager.current_survivor
+
+	if survivor != null and survivor.data != null:
+		contributor_name = survivor.data.display_name
+
+	var description := (
+		"The civilization made its first discovery: "
+		+ discovery.display_name
+		+ "."
+	)
+
+	if not contributor_name.is_empty():
+		description = (
+			contributor_name
+			+ " made the civilization's first discovery: "
+			+ discovery.display_name
+			+ "."
+		)
+
+	var recorded := civilization.record_history_event(
+		CivilizationData.HISTORY_FIRST_DISCOVERY,
+		"First Discovery: " + discovery.display_name,
+		description,
+		"discovery",
+		"",
+		contributor_name,
+		TimeManager.day,
+		TimeManager.hour,
+		TimeManager.minute
+	)
+
+	if recorded and GameManager.game_ui != null:
+		GameManager.game_ui.update_history_journal()
 
 
 func record_location_search(

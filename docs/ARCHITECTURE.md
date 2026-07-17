@@ -139,6 +139,7 @@ Saved state currently includes:
 * observed items;
 * discoveries;
 * unlocked recipes;
+* civilization history entries;
 * completed one-time events.
 
 ---
@@ -190,6 +191,7 @@ Current major resource types include:
 * `EventOptionData`
 * `SurvivorData`
 * `CivilizationData`
+* `CivilizationHistoryEntry`
 * `SkillProgress`
 
 This allows new content to be authored mostly through `.tres` files.
@@ -364,6 +366,7 @@ RightColumn
 	├── Journal
 	│   └── JournalTabs
 	│       ├── Chronicle
+	│       ├── History
 	│       ├── Locations
 	│       └── Discoveries
 	└── Crafting
@@ -375,15 +378,44 @@ This includes:
 
 * Inventory;
 * Chronicle;
+* History journal;
 * Locations journal;
 * Discoveries journal;
 * future recipe lists.
 
 Important UI controls use Godot unique names and `%NodeName` lookups so layout changes do not require rewriting long node paths.
 
+### Chronicle and Civilization History
+
+The Chronicle and History tabs serve different lifetimes.
+
+The Chronicle displays immediate action narration through `GameUI.add_event()`. Chronicle messages are transient and are not included in save data.
+
+The History tab displays durable entries stored by the current `CivilizationData`. `GameUI.update_history_journal()` rebuilds the display from those entries while preserving their insertion order.
+
+`CivilizationHistoryEntry` is a typed Resource containing:
+
+* stable event ID;
+* title and description;
+* category;
+* contributor ID and display name;
+* in-game day, hour, and minute.
+
+`CivilizationData` owns the history-entry collection and is the uniqueness authority. It rejects null entries, empty event IDs, and duplicate event IDs. Actions and managers record only explicitly selected meaningful milestones after their underlying gameplay result succeeds.
+
+The current milestones are:
+
+* first wilderness search;
+* first discovery;
+* first crafted tool.
+
+There is no separate history manager or history autoload. Routine gameplay messages do not enter durable history automatically.
+
 ---
 
 ## Save Compatibility
+
+The current save version is 3.
 
 Save files store stable IDs rather than serialized resource objects.
 
@@ -403,6 +435,10 @@ Examples:
 Display names may change without invalidating saves.
 
 Stable IDs should only change alongside an intentional save migration.
+
+Save version 3 serializes civilization history entries as ordered JSON dictionaries. Loading reconstructs typed entries through `CivilizationData.record_history_entry()` so malformed, empty, or duplicate event IDs do not enter the ledger. Saved day, hour, and minute values are converted and clamped defensively.
+
+Version 1 and 2 saves remain supported. Because they contain no history-entry collection, they load with an empty ledger. The migration does not fabricate retroactive milestones from inventory, discoveries, search counts, or other current state.
 
 ---
 
