@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://ix1x1geo5cdn"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_htipb"]
+
+[resource]
+script = ExtResource("1_htipb")
+id = "fiber_binding"
+display_name = "Fiber Binding"
+description = "Tough plant fibers twisted into a short length of primitive cordage. Weak strands become stubborn when wound together, strong enough to hold a tool head against its haft."
+category = "component"
+weight = 0.15
+stack_size = 20
+tags = Array[String](["tool_component", "binding", "plant_fiber"])
+component_slot = "binding"
+material_id = "plant_fiber"
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

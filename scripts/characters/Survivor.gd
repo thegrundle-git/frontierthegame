@@ -190,20 +190,11 @@ func gain_knowledge(
 func equip_tool(
 	item_id: String
 ) -> bool:
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if civilization == null:
+	if item_id.is_empty():
 		return false
 
-	if civilization.inventory == null:
-		return false
-
-	if not civilization.inventory.has_item(
-		item_id
-	):
-		return false
+	if equipped_tool_id == item_id:
+		return true
 
 	var item_data: ItemData = (
 		ItemDatabase.get_item(
@@ -217,6 +208,24 @@ func equip_tool(
 	if "tool" not in item_data.tags:
 		return false
 
+	var source_inventory: FrontierInventory = (
+		_find_accessible_inventory_with_item(
+			item_id
+		)
+	)
+
+	if source_inventory == null:
+		return false
+
+	if not equipped_tool_id.is_empty():
+		unequip_tool()
+
+	if not source_inventory.remove_item(
+		item_id,
+		1
+	):
+		return false
+
 	equipped_tool_id = item_id
 
 	_add_event(
@@ -227,6 +236,86 @@ func equip_tool(
 	)
 
 	return true
+
+
+func unequip_tool() -> bool:
+	if equipped_tool_id.is_empty():
+		return false
+
+	if inventory == null:
+		return false
+
+	var previous_tool_id := equipped_tool_id
+
+	inventory.add_item(
+		previous_tool_id,
+		1
+	)
+
+	equipped_tool_id = ""
+
+	var item_data: ItemData = (
+		ItemDatabase.get_item(
+			previous_tool_id
+		)
+	)
+
+	if item_data != null:
+		_add_event(
+			data.display_name
+			+ " unequipped "
+			+ item_data.display_name
+			+ "."
+		)
+
+	return true
+
+
+func normalize_equipped_tool_ownership() -> void:
+	if equipped_tool_id.is_empty():
+		return
+
+	if (
+		inventory != null
+		and inventory.has_item(
+			equipped_tool_id
+		)
+	):
+		inventory.remove_item(
+			equipped_tool_id,
+			1
+		)
+		return
+
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if (
+		civilization != null
+		and civilization.inventory != null
+		and civilization.inventory.has_item(
+			equipped_tool_id
+		)
+	):
+		civilization.inventory.remove_item(
+			equipped_tool_id,
+			1
+		)
+
+
+func _find_accessible_inventory_with_item(
+	item_id: String
+) -> FrontierInventory:
+	for accessible_inventory: FrontierInventory in (
+		GameManager.get_accessible_crafting_inventories()
+	):
+		if accessible_inventory.has_item(
+			item_id
+		):
+			return accessible_inventory
+
+	return null
 
 
 func has_equipped_tool(

@@ -133,3 +133,23 @@ func record_landmark_discovery(
 	)
 
 	return true
+
+func synchronize_unlocked_recipes() -> void:
+	for discovery_id: String in discovered_ids:
+		var discovery: DiscoveryData = (
+			DiscoveryDatabase.get_discovery(
+				discovery_id
+			)
+		)
+
+		if discovery == null:
+			continue
+
+		for recipe: RecipeData in discovery.unlocked_recipes:
+			if recipe == null:
+				continue
+
+			if recipe.id not in unlocked_recipe_ids:
+				unlocked_recipe_ids.append(
+					recipe.id
+				)

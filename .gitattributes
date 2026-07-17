@@ -1,2 +1,12 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Keep repository text files consistent across Windows and other platforms.
+* text=auto eol=lf
+
+# Godot text resources must always use LF.
+*.gd text eol=lf
+*.tscn text eol=lf
+*.tres text eol=lf
+*.godot text eol=lf
+*.cfg text eol=lf
+
+# Project documentation also uses LF.
+*.md text eol=lf

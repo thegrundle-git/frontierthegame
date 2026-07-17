@@ -13,6 +13,8 @@ No known major issues.
 * The Discoveries tab is always visible, even before the first discovery.
 * Only one landmark and one world event currently exist.
 * Expedition inventory weight and bulk limits are not yet enforced.
+* Assembled tools do not yet preserve individual component history or generated statistics.
+* Field crafting rules exist, but crafting is not yet accessible outside the home interface.
 
 ## Watch List
 

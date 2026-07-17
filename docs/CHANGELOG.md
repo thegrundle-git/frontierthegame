@@ -2,6 +2,43 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.3-alpha1 — Modular Crafting Foundation
+
+### Added
+
+* Modular tool-component metadata for item resources.
+* Stone Axe Head component.
+* Stick Handle component.
+* Fiber Binding component.
+* Separate recipes for crafting all three components.
+* Multi-recipe crafting selector.
+* Combined home crafting access across Finnley’s Pack and Camp Storage.
+* Backward-compatible recipe synchronization for existing discoveries.
+* Equipped-tool ownership normalization for older saves.
+
+### Changed
+
+* Stone Axe crafting now requires a crafted head, handle, and binding.
+* Crafting at home consumes Camp Storage materials first, then carried materials.
+* Crafting outputs go to Camp Storage at home and Finnley’s Pack away from home.
+* Equipped tools are removed from inventories while equipped.
+* Primitive Toolmaking now unlocks four component and assembly recipes.
+* Home, Storage, and Crafting now preserve the shared HUD.
+* Crafting progress, game time, Save, and Load remain visible inside Camp interfaces.
+* Camp access is tracked separately from merely being in the Forest.
+
+### Fixed
+
+* Players being forced to deposit carried materials before crafting at home.
+* Equipped tools simultaneously appearing in Camp Storage.
+* Older saves failing to receive recipes added to existing discoveries.
+* Camp interface being shifted left and exposing the world interface on the right.
+* Camp overlays shifting the entire game downward and cutting off lower tabs.
+* Crafting hiding action progress, game time, Save, and Load controls.
+* Forest field crafting incorrectly having access to Camp Storage.
+
+---
+
 ## v0.5.2-alpha2 — Expedition Inventory Transfers
 
 ### Added

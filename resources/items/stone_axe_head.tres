@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://buv6y2lxkom06"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_28eg4"]
+
+[resource]
+script = ExtResource("1_28eg4")
+id = "stone_axe_head"
+display_name = "Stone Axe Head"
+description = "A broad wedge of stone shaped by repeated, deliberate strikes. The edge is crude and uneven, but the weight behind it promises a useful bite once mounted to a handle."
+category = "component"
+weight = 1.75
+stack_size = 10
+tags = Array[String](["tool_component", "axe_head", "stone"])
+component_slot = "head"
+material_id = "stone"
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

@@ -34,6 +34,10 @@
 * [x] Add Deposit All with Keep protection.
 * [ ] Add weight and bulk capacity displays.
 * [ ] Add a dedicated survivor equipment panel.
+* [x] Add the first modular Stone Axe component-crafting chain.
+* [ ] Add unique equipment instances that preserve their component history.
+* [ ] Calculate equipment statistics from selected components.
+* [ ] Expose field crafting outside the home interface.
 
 ## Low
 

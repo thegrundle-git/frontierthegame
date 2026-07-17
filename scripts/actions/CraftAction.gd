@@ -19,9 +19,6 @@ func perform(
 	if civilization == null:
 		return false
 
-	if civilization.inventory == null:
-		return false
-
 	if not civilization.has_recipe(
 		recipe.id
 	):
@@ -30,7 +27,7 @@ func perform(
 		)
 		return false
 
-	if not civilization.inventory.can_afford_recipe(
+	if not GameManager.can_afford_recipe_from_accessible_inventories(
 		recipe
 	):
 		_add_event(
@@ -40,12 +37,22 @@ func perform(
 		)
 		return false
 
-	if not civilization.inventory.remove_recipe_ingredients(
+	if not GameManager.consume_recipe_ingredients_from_accessible_inventories(
 		recipe
 	):
 		return false
 
-	civilization.inventory.add_recipe_results(
+	var output_inventory: FrontierInventory = (
+		_get_crafting_output_inventory(
+			survivor,
+			civilization
+		)
+	)
+
+	if output_inventory == null:
+		return false
+
+	output_inventory.add_recipe_results(
 		recipe
 	)
 
@@ -62,6 +69,16 @@ func perform(
 	)
 
 	return true
+
+
+func _get_crafting_output_inventory(
+	survivor: Survivor,
+	civilization: CivilizationData
+) -> FrontierInventory:
+	if GameManager.is_survivor_at_home():
+		return civilization.inventory
+
+	return survivor.inventory
 
 
 func _auto_equip_first_tool(

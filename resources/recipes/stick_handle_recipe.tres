@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="RecipeData" format=3 uid="uid://dcdn1iqjokpp8"]
+
+[ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_hfqlf"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_03ht4"]
+[ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="2_rxxn1"]
+[ext_resource type="Resource" uid="uid://bb1lc7b6hufp8" path="res://resources/items/stick_handle.tres" id="3_e1m83"]
+
+[sub_resource type="Resource" id="Resource_rxxn1"]
+script = ExtResource("1_hfqlf")
+item = ExtResource("2_rxxn1")
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[sub_resource type="Resource" id="Resource_e1m83"]
+script = ExtResource("1_hfqlf")
+item = ExtResource("3_e1m83")
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[resource]
+script = ExtResource("2_03ht4")
+id = "stick_handle_recipe"
+display_name = "Prepare Stick Handle"
+ingredients = Array[ExtResource("1_hfqlf")]([SubResource("Resource_rxxn1")])
+results = Array[ExtResource("1_hfqlf")]([SubResource("Resource_e1m83")])
+craft_time = 10
+xp_reward = 1
+description = "Strip away bark and rough growth, then smooth the wood until it can be held without tearing the hand."
+metadata/_custom_type_script = "uid://ck8q7c4l76io2"

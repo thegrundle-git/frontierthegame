@@ -1,7 +1,6 @@
 extends Control
 
 
-const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 
 
 @onready var event_log: RichTextLabel = %EventLog
@@ -24,6 +23,9 @@ const STONE_AXE_RECIPE_ID := "stone_axe_recipe"
 
 @onready var recipe_label: Label = %RecipeLabel
 @onready var craft_button: Button = %CraftButton
+
+var recipe_selector: OptionButton
+var selected_recipe_id: String = ""
 
 @onready var event_overlay: CenterContainer = %EventOverlay
 @onready var event_title: Label = %EventTitle
@@ -463,11 +465,7 @@ func update_tool_display() -> void:
 
 
 func update_crafting() -> void:
-	var recipe: RecipeData = (
-		RecipeDatabase.get_recipe(
-			STONE_AXE_RECIPE_ID
-		)
-	)
+	_ensure_recipe_selector()
 
 	var survivor: Survivor = (
 		GameManager.current_survivor
@@ -478,32 +476,54 @@ func update_crafting() -> void:
 	)
 
 	if (
-		recipe == null
-		or survivor == null
+		survivor == null
 		or civilization == null
 	):
+		recipe_selector.visible = false
 		recipe_label.text = "Crafting unavailable."
 		craft_button.disabled = true
 		craft_button.visible = false
 		return
 
-	if not civilization.has_recipe(
-		recipe.id
-	):
+	_populate_recipe_selector(
+		civilization
+	)
+
+	if selected_recipe_id.is_empty():
+		recipe_selector.visible = false
 		recipe_label.text = (
 			"Crafting\n\n"
 			+ "No recipes discovered."
 		)
-
 		craft_button.disabled = true
 		craft_button.visible = false
 		return
 
+	var recipe: RecipeData = (
+		RecipeDatabase.get_recipe(
+			selected_recipe_id
+		)
+	)
+
+	if recipe == null:
+		recipe_selector.visible = false
+		recipe_label.text = "Crafting unavailable."
+		craft_button.disabled = true
+		craft_button.visible = false
+		return
+
+	recipe_selector.visible = true
+	recipe_selector.disabled = false
 	craft_button.visible = true
+	craft_button.text = (
+		"Craft "
+		+ recipe.display_name
+	)
 
 	var recipe_text := (
-		"Crafting\n\n"
-		+ recipe.display_name
+		recipe.display_name
+		+ "\n\n"
+		+ recipe.description
 		+ "\n\nRequires:\n"
 	)
 
@@ -515,10 +535,10 @@ func update_crafting() -> void:
 			continue
 
 		var owned: int = (
-			civilization.inventory.get_item_amount(
-				ingredient.item.id
-			)
-		)
+	GameManager.get_accessible_crafting_item_amount(
+		ingredient.item.id
+	)
+)
 
 		recipe_text += (
 			ingredient.item.display_name
@@ -534,10 +554,120 @@ func update_crafting() -> void:
 	craft_button.disabled = (
 		ActionManager.is_busy
 		or WorldEventManager.has_pending_event()
-		or not civilization.inventory.can_afford_recipe(
-			recipe
+		or not GameManager.can_afford_recipe_from_accessible_inventories(
+	recipe
+)
+	)
+
+
+func _ensure_recipe_selector() -> void:
+	if is_instance_valid(
+		recipe_selector
+	):
+		return
+
+	recipe_selector = OptionButton.new()
+	recipe_selector.name = "RecipeSelector"
+	recipe_selector.custom_minimum_size.y = 38
+
+	recipe_selector.item_selected.connect(
+		_on_recipe_selected
+	)
+
+	var crafting_layout: VBoxContainer = (
+		recipe_label.get_parent()
+	)
+
+	crafting_layout.add_child(
+		recipe_selector
+	)
+
+	crafting_layout.move_child(
+		recipe_selector,
+		recipe_label.get_index()
+	)
+
+
+func _populate_recipe_selector(
+	civilization: CivilizationData
+) -> void:
+	var previous_recipe_id := (
+		selected_recipe_id
+	)
+
+	recipe_selector.clear()
+
+	for recipe_id: String in (
+		civilization.unlocked_recipe_ids
+	):
+		var recipe: RecipeData = (
+			RecipeDatabase.get_recipe(
+				recipe_id
+			)
+		)
+
+		if recipe == null:
+			continue
+
+		recipe_selector.add_item(
+			recipe.display_name
+		)
+
+		var index: int = (
+			recipe_selector.item_count - 1
+		)
+
+		recipe_selector.set_item_metadata(
+			index,
+			recipe.id
+		)
+
+	if recipe_selector.item_count <= 0:
+		selected_recipe_id = ""
+		return
+
+	var selected_index := 0
+
+	for index: int in range(
+		recipe_selector.item_count
+	):
+		var recipe_id := str(
+			recipe_selector.get_item_metadata(
+				index
+			)
+		)
+
+		if recipe_id == previous_recipe_id:
+			selected_index = index
+			break
+
+	recipe_selector.select(
+		selected_index
+	)
+
+	selected_recipe_id = str(
+		recipe_selector.get_item_metadata(
+			selected_index
 		)
 	)
+
+
+func _on_recipe_selected(
+	index: int
+) -> void:
+	if (
+		index < 0
+		or index >= recipe_selector.item_count
+	):
+		return
+
+	selected_recipe_id = str(
+		recipe_selector.get_item_metadata(
+			index
+		)
+	)
+
+	update_crafting()
 
 
 func _update_time() -> void:
@@ -775,8 +905,11 @@ func _on_busy_changed(
 
 
 func _on_craft_button_pressed() -> void:
+	if selected_recipe_id.is_empty():
+		return
+
 	GameManager.craft_recipe(
-		STONE_AXE_RECIPE_ID
+		selected_recipe_id
 	)
 
 
@@ -871,10 +1004,16 @@ func _request_initial_refresh() -> void:
 	refresh_all()
 
 func _on_return_home_pressed() -> void:
+	if not GameManager.enter_home():
+		return
+
 	crafting_panel.visible = false
 	home_ui.visible = true
 
+
 func _on_leave_home_requested() -> void:
+	GameManager.leave_home()
+
 	crafting_panel.visible = false
 	home_ui.visible = false
 

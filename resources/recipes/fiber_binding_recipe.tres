@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="RecipeData" format=3 uid="uid://xm16lm0bw5x1"]
+
+[ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_2yj6i"]
+[ext_resource type="Resource" uid="uid://cmecjlbpkscjm" path="res://resources/items/herb.tres" id="2_h3sae"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_n4lrl"]
+[ext_resource type="Resource" uid="uid://ix1x1geo5cdn" path="res://resources/items/fiber_binding.tres" id="3_xkewo"]
+
+[sub_resource type="Resource" id="Resource_h3sae"]
+script = ExtResource("1_2yj6i")
+item = ExtResource("2_h3sae")
+amount = 2
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[sub_resource type="Resource" id="Resource_xkewo"]
+script = ExtResource("1_2yj6i")
+item = ExtResource("3_xkewo")
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[resource]
+script = ExtResource("2_n4lrl")
+id = "fiber_binding_recipe"
+display_name = "Twist Fiber Binding"
+ingredients = Array[ExtResource("1_2yj6i")]([SubResource("Resource_h3sae")])
+results = Array[ExtResource("1_2yj6i")]([SubResource("Resource_xkewo")])
+craft_time = 15
+xp_reward = 2
+description = "Separate the strongest plant fibers, twist them into strands, then wind the strands together into crude cordage."
+metadata/_custom_type_script = "uid://ck8q7c4l76io2"

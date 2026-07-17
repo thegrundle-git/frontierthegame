@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="RecipeData" format=3 uid="uid://b51xy50n0ilne"]
+
+[ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_sbqfi"]
+[ext_resource type="Resource" uid="uid://clcyx5iqp0lgl" path="res://resources/items/stone.tres" id="2_4fskc"]
+[ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_yyiky"]
+[ext_resource type="Resource" uid="uid://buv6y2lxkom06" path="res://resources/items/stone_axe_head.tres" id="3_fkhdf"]
+
+[sub_resource type="Resource" id="Resource_fkhdf"]
+script = ExtResource("1_sbqfi")
+item = ExtResource("2_4fskc")
+amount = 2
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[sub_resource type="Resource" id="Resource_pj1uy"]
+script = ExtResource("1_sbqfi")
+item = ExtResource("3_fkhdf")
+metadata/_custom_type_script = "uid://dgx01py1umnc5"
+
+[resource]
+script = ExtResource("2_yyiky")
+id = "stone_axe_head_recipe"
+display_name = "Knapped Stone Axe Head"
+ingredients = Array[ExtResource("1_sbqfi")]([SubResource("Resource_fkhdf")])
+results = Array[ExtResource("1_sbqfi")]([SubResource("Resource_pj1uy")])
+craft_time = 20
+xp_reward = 2
+description = "Strike one stone against another, removing flakes until a broad cutting edge begins to emerge."
+metadata/_custom_type_script = "uid://ck8q7c4l76io2"
