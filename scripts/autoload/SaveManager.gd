@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 3
+const SAVE_VERSION := 4
 
 
 func save_game() -> bool:
@@ -127,7 +127,11 @@ func _build_save_data() -> Dictionary:
 		},
 		"current_location_id": location.id,
 		"survivor": {
+			"character_id": survivor.data.character_id,
 			"display_name": survivor.data.display_name,
+			"life_record": _serialize_life_record(
+				survivor.data.life_record
+			),
 			"equipped_tool_id": survivor.equipped_tool_id,
 			"inventory": _serialize_inventory(
 				survivor.inventory
@@ -186,6 +190,25 @@ func _serialize_skills(
 		}
 
 	return skill_data
+
+
+func _serialize_life_record(
+	life_record: CharacterLifeRecord
+) -> Dictionary:
+	if life_record == null:
+		return {}
+
+	return {
+		"searches_completed": life_record.searches_completed,
+		"item_units_gathered": life_record.item_units_gathered,
+		"crafting_actions_completed": life_record.crafting_actions_completed,
+		"item_units_crafted": life_record.item_units_crafted,
+		"discoveries_contributed": life_record.discoveries_contributed,
+		"knowledge_earned": life_record.knowledge_earned,
+		"skill_levels_gained": life_record.skill_levels_gained,
+		"first_recorded_day": life_record.first_recorded_day,
+		"latest_recorded_day": life_record.latest_recorded_day,
+	}
 
 
 func _serialize_history_entries(
@@ -308,10 +331,33 @@ func _apply_survivor_data(
 	if survivor == null:
 		return
 
+	var saved_character_id_variant: Variant = (
+		survivor_data.get(
+			"character_id",
+			null
+		)
+	)
+
+	if saved_character_id_variant is String:
+		var saved_character_id := str(
+			saved_character_id_variant
+		)
+
+		if not saved_character_id.is_empty():
+			survivor.data.character_id = saved_character_id
+
 	survivor.data.display_name = str(
 		survivor_data.get(
 			"display_name",
 			survivor.data.display_name
+		)
+	)
+
+	_apply_life_record_data(
+		survivor,
+		survivor_data.get(
+			"life_record",
+			{}
 		)
 	)
 
@@ -356,6 +402,94 @@ func _apply_survivor_data(
 			{}
 		)
 	)
+
+
+func _apply_life_record_data(
+	survivor: Survivor,
+	life_record_data: Variant
+) -> void:
+	var life_record := CharacterLifeRecord.new()
+	survivor.data.life_record = life_record
+
+	if life_record_data is not Dictionary:
+		push_warning(
+			"Skipped malformed character life-record data."
+		)
+		return
+
+	var record_data: Dictionary = life_record_data
+	life_record.searches_completed = max(
+		_history_int_from_variant(
+			record_data.get("searches_completed", 0),
+			0
+		),
+		0
+	)
+	life_record.item_units_gathered = max(
+		_history_int_from_variant(
+			record_data.get("item_units_gathered", 0),
+			0
+		),
+		0
+	)
+	life_record.crafting_actions_completed = max(
+		_history_int_from_variant(
+			record_data.get("crafting_actions_completed", 0),
+			0
+		),
+		0
+	)
+	life_record.item_units_crafted = max(
+		_history_int_from_variant(
+			record_data.get("item_units_crafted", 0),
+			0
+		),
+		0
+	)
+	life_record.discoveries_contributed = max(
+		_history_int_from_variant(
+			record_data.get("discoveries_contributed", 0),
+			0
+		),
+		0
+	)
+	life_record.knowledge_earned = max(
+		_history_int_from_variant(
+			record_data.get("knowledge_earned", 0),
+			0
+		),
+		0
+	)
+	life_record.skill_levels_gained = max(
+		_history_int_from_variant(
+			record_data.get("skill_levels_gained", 0),
+			0
+		),
+		0
+	)
+	life_record.first_recorded_day = max(
+		_history_int_from_variant(
+			record_data.get("first_recorded_day", 0),
+			0
+		),
+		0
+	)
+	life_record.latest_recorded_day = max(
+		_history_int_from_variant(
+			record_data.get("latest_recorded_day", 0),
+			0
+		),
+		0
+	)
+
+	if (
+		life_record.first_recorded_day > 0
+		and life_record.latest_recorded_day > 0
+	):
+		life_record.latest_recorded_day = max(
+			life_record.latest_recorded_day,
+			life_record.first_recorded_day
+		)
 
 
 func _apply_inventory_data(

@@ -10,6 +10,7 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 
 @onready var event_log: RichTextLabel = %EventLog
 @onready var history_log: RichTextLabel = %HistoryLog
+@onready var legacy_preview_log: RichTextLabel = %LegacyPreviewLog
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
@@ -220,6 +221,7 @@ func refresh_all() -> void:
 	update_locations_journal()
 	update_landmarks_journal()
 	update_history_journal()
+	update_legacy_preview()
 	update_journal_tab_visibility()
 	update_discoveries_journal()
 	_update_time()
@@ -1051,6 +1053,76 @@ func update_history_journal() -> void:
 			history_text += "\n" + entry.description
 
 	history_log.text = history_text
+
+
+func update_legacy_preview() -> void:
+	var survivor: Survivor = GameManager.current_survivor
+
+	if (
+		survivor == null
+		or survivor.data == null
+		or survivor.data.life_record == null
+	):
+		legacy_preview_log.text = "No character life record is available."
+		return
+
+	var life_record: CharacterLifeRecord = (
+		survivor.data.life_record
+	)
+	var first_day_text := "Not yet recorded"
+	var latest_day_text := "Not yet recorded"
+
+	if life_record.first_recorded_day > 0:
+		first_day_text = str(
+			life_record.first_recorded_day
+		)
+
+	if life_record.latest_recorded_day > 0:
+		latest_day_text = str(
+			life_record.latest_recorded_day
+		)
+
+	var credited_milestones := 0
+	var character_id := survivor.data.character_id
+	var civilization: CivilizationData = (
+		GameManager.current_civilization
+	)
+
+	if not character_id.is_empty() and civilization != null:
+		for entry: CivilizationHistoryEntry in (
+			civilization.history_entries
+		):
+			if (
+				entry != null
+				and not entry.contributor_id.is_empty()
+				and entry.contributor_id == character_id
+			):
+				credited_milestones += 1
+
+	legacy_preview_log.text = (
+		survivor.data.display_name
+		+ " — Life Record\n\n"
+		+ "First recorded day: "
+		+ first_day_text
+		+ "\nLatest recorded day: "
+		+ latest_day_text
+		+ "\n\nSearches completed: "
+		+ str(life_record.searches_completed)
+		+ "\nItem units gathered: "
+		+ str(life_record.item_units_gathered)
+		+ "\nCrafting actions completed: "
+		+ str(life_record.crafting_actions_completed)
+		+ "\nItem units crafted: "
+		+ str(life_record.item_units_crafted)
+		+ "\nDiscoveries contributed: "
+		+ str(life_record.discoveries_contributed)
+		+ "\nKnowledge earned: "
+		+ str(life_record.knowledge_earned)
+		+ "\nSkill levels gained: "
+		+ str(life_record.skill_levels_gained)
+		+ "\nHistorical milestones credited: "
+		+ str(credited_milestones)
+	)
 
 
 func update_locations_journal() -> void:

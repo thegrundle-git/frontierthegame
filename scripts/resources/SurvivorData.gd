@@ -2,7 +2,12 @@ extends Resource
 class_name SurvivorData
 
 
+@export var character_id: String = ""
 @export var display_name : String = "Unknown Survivor"
+
+@export var life_record: CharacterLifeRecord = (
+	CharacterLifeRecord.new()
+)
 
 @export var strength : int = 1
 

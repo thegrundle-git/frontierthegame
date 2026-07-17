@@ -2,6 +2,29 @@
 
 This document records every released version of Frontier.
 ---
+## v0.5.6-alpha1 — Character Life Record Foundation
+
+### Added
+
+* Typed character-owned `CharacterLifeRecord` resources.
+* Stable character IDs, beginning with `survivor.finnley`.
+* Lifetime contribution counters for searches, gathering, crafting, discoveries, knowledge, skill levels, and recorded days.
+* Dedicated Legacy Preview tab in the Journal.
+* Identity-safe civilization-history milestone attribution.
+* Save version 4 life-record serialization and migration.
+
+### Changed
+
+* Historical milestone credit is derived from stable contributor IDs instead of stored twice or matched by display name.
+* Versions 1 through 3 remain compatible and load with an empty life record.
+* Older saves do not reconstruct retroactive character statistics.
+
+### Verified
+
+* Manual gameplay and save/load testing passed for lifetime counters, recorded days, stable attribution, Legacy Preview, and migration behavior.
+
+---
+
 ## v0.5.5-alpha1 — Civilization History Ledger
 
 ### Added

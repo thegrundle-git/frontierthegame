@@ -31,6 +31,14 @@ func initialize(
 		return
 
 	data = survivor_data
+
+	if data.life_record == null:
+		data.life_record = CharacterLifeRecord.new()
+	else:
+		data.life_record = data.life_record.duplicate(
+			true
+		) as CharacterLifeRecord
+
 	inventory = FrontierInventory.new()
 
 	_initialize_skills()
@@ -95,6 +103,17 @@ func gain_skill_xp(
 	var levels_gained: int = (
 		skill.add_xp(amount)
 	)
+
+	if (
+		levels_gained > 0
+		and data != null
+		and data.life_record != null
+		and data.life_record.record_skill_levels_gained(
+			levels_gained,
+			TimeManager.day
+		)
+	):
+		_refresh_legacy_preview()
 
 	_add_event(
 		"+"
@@ -185,6 +204,16 @@ func gain_knowledge(
 		return
 
 	GameManager.current_civilization.knowledge += amount
+
+	if (
+		data != null
+		and data.life_record != null
+		and data.life_record.record_knowledge(
+			amount,
+			TimeManager.day
+		)
+	):
+		_refresh_legacy_preview()
 
 
 func equip_tool(
@@ -331,6 +360,11 @@ func get_equipped_tool() -> ItemData:
 	return ItemDatabase.get_item(
 		equipped_tool_id
 	)
+
+
+func _refresh_legacy_preview() -> void:
+	if GameManager.game_ui != null:
+		GameManager.game_ui.update_legacy_preview()
 
 
 func _add_event(

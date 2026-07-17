@@ -104,6 +104,19 @@ func unlock_discovery(
 		discovery.display_name
 	)
 
+	var survivor: Survivor = GameManager.current_survivor
+
+	if (
+		survivor != null
+		and survivor.data != null
+		and survivor.data.life_record != null
+		and survivor.data.life_record.record_discovery(
+			TimeManager.day
+		)
+		and GameManager.game_ui != null
+	):
+		GameManager.game_ui.update_legacy_preview()
+
 	_record_first_discovery(
 		civilization,
 		discovery
@@ -142,8 +155,10 @@ func _record_first_discovery(
 ) -> void:
 	var contributor_name := ""
 	var survivor: Survivor = GameManager.current_survivor
+	var contributor_id := ""
 
 	if survivor != null and survivor.data != null:
+		contributor_id = survivor.data.character_id
 		contributor_name = survivor.data.display_name
 
 	var description := (
@@ -165,7 +180,7 @@ func _record_first_discovery(
 		"First Discovery: " + discovery.display_name,
 		description,
 		"discovery",
-		"",
+		contributor_id,
 		contributor_name,
 		TimeManager.day,
 		TimeManager.hour,
