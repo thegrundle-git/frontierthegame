@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 2
+const SAVE_VERSION := 3
 
 
 func save_game() -> bool:
@@ -151,6 +151,9 @@ func _build_save_data() -> Dictionary:
 			"discovered_ids": civilization.discovered_ids.duplicate(),
 			"unlocked_recipe_ids": civilization.unlocked_recipe_ids.duplicate(),
 			"wilderness_search_count": civilization.wilderness_search_count,
+			"history_entries": _serialize_history_entries(
+				civilization.history_entries
+			),
 		},
 		"world_events": {
 			"completed_event_ids": WorldEventManager.completed_event_ids.duplicate()
@@ -183,6 +186,30 @@ func _serialize_skills(
 		}
 
 	return skill_data
+
+
+func _serialize_history_entries(
+	history_entries: Array[CivilizationHistoryEntry]
+) -> Array[Dictionary]:
+	var history_data: Array[Dictionary] = []
+
+	for entry: CivilizationHistoryEntry in history_entries:
+		if entry == null:
+			continue
+
+		history_data.append({
+			"event_id": entry.event_id,
+			"title": entry.title,
+			"description": entry.description,
+			"category": entry.category,
+			"contributor_id": entry.contributor_id,
+			"contributor_name": entry.contributor_name,
+			"day": entry.day,
+			"hour": entry.hour,
+			"minute": entry.minute,
+		})
+
+	return history_data
 
 
 func _apply_save_data(
@@ -512,7 +539,101 @@ func _apply_civilization_data(
 	)
 )
 
+	_apply_history_data(
+		civilization,
+		civilization_data.get(
+			"history_entries",
+			[]
+		)
+	)
+
 	civilization.synchronize_unlocked_recipes()
+
+
+func _apply_history_data(
+	civilization: CivilizationData,
+	history_data: Variant
+) -> void:
+	civilization.history_entries.clear()
+
+	if history_data is not Array:
+		push_warning(
+			"Skipped malformed civilization history data."
+		)
+		return
+
+	for entry_variant: Variant in history_data:
+		if entry_variant is not Dictionary:
+			push_warning(
+				"Skipped malformed civilization history entry."
+			)
+			continue
+
+		var entry_data: Dictionary = entry_variant
+		var entry := CivilizationHistoryEntry.new()
+		entry.event_id = str(
+			entry_data.get("event_id", "")
+		)
+		entry.title = str(
+			entry_data.get("title", "")
+		)
+		entry.description = str(
+			entry_data.get("description", "")
+		)
+		entry.category = str(
+			entry_data.get("category", "")
+		)
+		entry.contributor_id = str(
+			entry_data.get("contributor_id", "")
+		)
+		entry.contributor_name = str(
+			entry_data.get("contributor_name", "")
+		)
+		entry.day = max(
+			_history_int_from_variant(
+				entry_data.get("day", 1),
+				1
+			),
+			1
+		)
+		entry.hour = clamp(
+			_history_int_from_variant(
+				entry_data.get("hour", 0),
+				0
+			),
+			0,
+			23
+		)
+		entry.minute = clamp(
+			_history_int_from_variant(
+				entry_data.get("minute", 0),
+				0
+			),
+			0,
+			59
+		)
+
+		if not civilization.record_history_entry(entry):
+			push_warning(
+				"Skipped invalid or duplicate history event: "
+				+ entry.event_id
+			)
+
+
+func _history_int_from_variant(
+	value: Variant,
+	fallback: int
+) -> int:
+	if value is int or value is float:
+		return int(value)
+
+	if value is String:
+		var string_value := str(value)
+
+		if string_value.is_valid_int():
+			return string_value.to_int()
+
+	return fallback
 
 func _apply_world_event_data(
 	event_data: Dictionary

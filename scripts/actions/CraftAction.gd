@@ -65,6 +65,12 @@ func perform(
 		crafted_results
 	)
 
+	_record_first_crafted_tool(
+		survivor,
+		civilization,
+		crafted_results
+	)
+
 	_add_event(
 		survivor.data.display_name
 		+ " crafted "
@@ -81,6 +87,39 @@ func perform(
 	)
 
 	return true
+
+
+func _record_first_crafted_tool(
+	survivor: Survivor,
+	civilization: CivilizationData,
+	crafted_results: Array[IngredientData]
+) -> void:
+	for result: IngredientData in crafted_results:
+		if result == null or result.item == null:
+			continue
+
+		if "tool" not in result.item.tags:
+			continue
+
+		var recorded := civilization.record_history_event(
+			CivilizationData.HISTORY_FIRST_CRAFTED_TOOL,
+			"First Crafted Tool",
+			survivor.data.display_name
+			+ " crafted the civilization's first tool: "
+			+ result.item.display_name
+			+ ".",
+			"crafting",
+			"",
+			survivor.data.display_name,
+			TimeManager.day,
+			TimeManager.hour,
+			TimeManager.minute
+		)
+
+		if recorded and GameManager.game_ui != null:
+			GameManager.game_ui.update_history_journal()
+
+		return
 
 
 func _get_crafting_output_inventory(

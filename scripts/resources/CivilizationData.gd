@@ -2,6 +2,11 @@ extends Resource
 class_name CivilizationData
 
 
+const HISTORY_FIRST_SEARCH := "milestone.first_search"
+const HISTORY_FIRST_DISCOVERY := "milestone.first_discovery"
+const HISTORY_FIRST_CRAFTED_TOOL := "milestone.first_crafted_tool"
+
+
 @export var display_name: String = "Unnamed Civilization"
 @export var home_location_id: String = "forest"
 
@@ -17,6 +22,62 @@ var inventory: FrontierInventory = FrontierInventory.new()
 var observed_item_ids: Array[String] = []
 var discovered_ids: Array[String] = []
 var unlocked_recipe_ids: Array[String] = []
+var history_entries: Array[CivilizationHistoryEntry] = []
+
+
+func has_history_event(
+	event_id: String
+) -> bool:
+	if event_id.is_empty():
+		return false
+
+	for entry: CivilizationHistoryEntry in history_entries:
+		if entry != null and entry.event_id == event_id:
+			return true
+
+	return false
+
+
+func record_history_entry(
+	entry: CivilizationHistoryEntry
+) -> bool:
+	if entry == null:
+		return false
+
+	if entry.event_id.is_empty():
+		return false
+
+	if has_history_event(entry.event_id):
+		return false
+
+	history_entries.append(entry)
+
+	return true
+
+
+func record_history_event(
+	event_id: String,
+	title: String,
+	description: String,
+	category: String,
+	contributor_id: String,
+	contributor_name: String,
+	day: int,
+	hour: int,
+	minute: int
+) -> bool:
+	var entry := CivilizationHistoryEntry.new()
+	entry.event_id = event_id
+	entry.title = title
+	entry.description = description
+	entry.category = category
+	entry.contributor_id = contributor_id
+	entry.contributor_name = contributor_name
+	entry.day = day
+	entry.hour = hour
+	entry.minute = minute
+
+	return record_history_entry(entry)
 
 
 func observe_item(

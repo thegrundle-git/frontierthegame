@@ -53,6 +53,11 @@ func perform(
 		)
 
 		DiscoveryManager.check_discoveries()
+		_record_first_search(
+			survivor,
+			civilization,
+			location
+		)
 
 		return true
 
@@ -102,7 +107,42 @@ func perform(
 		+ str(amount)
 	)
 
+	_record_first_search(
+		survivor,
+		civilization,
+		location
+	)
+
 	return true
+
+
+func _record_first_search(
+	survivor: Survivor,
+	civilization: CivilizationData,
+	location: LocationData
+) -> void:
+	var location_name := "the wilderness"
+
+	if location != null:
+		location_name = location.display_name
+
+	var recorded := civilization.record_history_event(
+		CivilizationData.HISTORY_FIRST_SEARCH,
+		"First Wilderness Search",
+		survivor.data.display_name
+		+ " completed the civilization's first wilderness search at "
+		+ location_name
+		+ ".",
+		"exploration",
+		"",
+		survivor.data.display_name,
+		TimeManager.day,
+		TimeManager.hour,
+		TimeManager.minute
+	)
+
+	if recorded and GameManager.game_ui != null:
+		GameManager.game_ui.update_history_journal()
 
 
 func _choose_loot_entry(
