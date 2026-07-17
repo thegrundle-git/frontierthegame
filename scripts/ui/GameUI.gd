@@ -131,9 +131,14 @@ func refresh_all() -> void:
 
 
 func add_event(event_text: String) -> void:
-	event_log.append_text(
-		"\n" + event_text
-	)
+	if event_text.is_empty():
+		event_log.append_text(
+			"\n────────────────────────\n"
+		)
+	else:
+		event_log.append_text(
+			"\n" + event_text
+		)
 
 	var last_line: int = maxi(
 		event_log.get_line_count() - 1,
@@ -893,6 +898,7 @@ func _on_action_completed(
 	add_event(
 		action_name + " completed."
 	)
+	add_event("")
 
 	rebuild_location_controls()
 	refresh_all()
