@@ -447,6 +447,24 @@ Historical milestone credit is not stored a second time in the life record. Lega
 
 `GameUI.update_legacy_preview()` renders the current survivor's record in a dedicated Journal tab. UI refreshes are read-only and never mutate counters.
 
+### Legacy Summary Screen
+
+`LegacySummaryScreen` is a reusable full-viewport UI scene opened from the Journal's Legacy Preview. It receives the current `SurvivorData` and civilization history entries when opened; it does not own or persist gameplay state.
+
+The screen displays:
+
+* the character's historical display name;
+* first and latest recorded days;
+* a deterministic summary derived from confirmed contribution categories;
+* every tracked life-record statistic;
+* civilization milestones whose contributor ID matches the character's stable ID.
+
+Milestone order follows the existing civilization-history insertion order. Name matching is not used as an identity fallback.
+
+The summary screen is modal presentation layered over `GameUI`. It supports keyboard focus, the standard cancel action, internal scrolling, and explicit return to the game. Opening, closing, or refreshing it cannot mutate the life record or history ledger.
+
+No separate manager, autoload, save data, or scene transition is involved. A future death flow should reuse this screen and pass finalized life data into it rather than creating a parallel summary implementation.
+
 ---
 
 ## Save Compatibility
