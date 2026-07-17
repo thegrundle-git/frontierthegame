@@ -65,6 +65,11 @@ func perform(
 		crafted_results
 	)
 
+	_record_crafting_contribution(
+		survivor,
+		crafted_results
+	)
+
 	_record_first_crafted_tool(
 		survivor,
 		civilization,
@@ -89,6 +94,39 @@ func perform(
 	return true
 
 
+func _record_crafting_contribution(
+	survivor: Survivor,
+	crafted_results: Array[IngredientData]
+) -> void:
+	if survivor.data == null:
+		return
+
+	var life_record: CharacterLifeRecord = (
+		survivor.data.life_record
+	)
+
+	if life_record == null:
+		return
+
+	var output_units := 0
+
+	for result: IngredientData in crafted_results:
+		if (
+			result == null
+			or result.item == null
+			or result.amount <= 0
+		):
+			continue
+
+		output_units += result.amount
+
+	if life_record.record_crafting(
+		output_units,
+		TimeManager.day
+	) and GameManager.game_ui != null:
+		GameManager.game_ui.update_legacy_preview()
+
+
 func _record_first_crafted_tool(
 	survivor: Survivor,
 	civilization: CivilizationData,
@@ -109,7 +147,7 @@ func _record_first_crafted_tool(
 			+ result.item.display_name
 			+ ".",
 			"crafting",
-			"",
+			survivor.data.character_id,
 			survivor.data.display_name,
 			TimeManager.day,
 			TimeManager.hour,

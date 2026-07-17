@@ -132,6 +132,8 @@ Saved state currently includes:
 * day and time;
 * current location;
 * survivor name;
+* stable character ID;
+* character life record;
 * inventory;
 * equipped tool;
 * skill levels and XP;
@@ -190,6 +192,7 @@ Current major resource types include:
 * `WorldEventData`
 * `EventOptionData`
 * `SurvivorData`
+* `CharacterLifeRecord`
 * `CivilizationData`
 * `CivilizationHistoryEntry`
 * `SkillProgress`
@@ -367,6 +370,7 @@ RightColumn
 	│   └── JournalTabs
 	│       ├── Chronicle
 	│       ├── History
+	│       ├── Legacy Preview
 	│       ├── Locations
 	│       └── Discoveries
 	└── Crafting
@@ -379,6 +383,7 @@ This includes:
 * Inventory;
 * Chronicle;
 * History journal;
+* Legacy Preview;
 * Locations journal;
 * Discoveries journal;
 * future recipe lists.
@@ -411,11 +416,42 @@ The current milestones are:
 
 There is no separate history manager or history autoload. Routine gameplay messages do not enter durable history automatically.
 
+### Character Life Record
+
+`CharacterLifeRecord` is a typed Resource owned by `SurvivorData`. Each initialized survivor receives its own record rather than sharing mutable record state with another duplicated Resource.
+
+`SurvivorData.character_id` provides stable identity independently from the mutable display name. Finnley's configured ID is `survivor.finnley`.
+
+The life record owns focused mutation methods for:
+
+* completed searches;
+* gathered item units;
+* completed crafting actions and crafted item units;
+* contributed discoveries;
+* earned knowledge;
+* gained skill levels;
+* first and latest recorded days.
+
+Statistics update only at confirmed mutation points:
+
+* `SearchAction` records normally completed searches and confirmed search-loot inventory additions;
+* `ChopTreeAction` records confirmed wood yield added to inventory;
+* `CraftAction` records one successful action and the sum of valid positive outputs after output delivery;
+* `DiscoveryManager` records a contribution only after `CivilizationData.add_discovery()` accepts a new discovery;
+* `Survivor.gain_knowledge()` records knowledge after civilization knowledge increases;
+* `Survivor.gain_skill_xp()` records the exact level count returned by `SkillProgress.add_xp()`.
+
+Inventory transfers, deposits, world-event item rewards, equipment ownership changes, and restored save inventory do not count as gathered units.
+
+Historical milestone credit is not stored a second time in the life record. Legacy Preview derives it by counting `CivilizationHistoryEntry` records whose nonempty `contributor_id` matches the survivor's stable character ID. Display names remain historical presentation snapshots and are not used as an identity fallback.
+
+`GameUI.update_legacy_preview()` renders the current survivor's record in a dedicated Journal tab. UI refreshes are read-only and never mutate counters.
+
 ---
 
 ## Save Compatibility
 
-The current save version is 3.
+The current save version is 4.
 
 Save files store stable IDs rather than serialized resource objects.
 
@@ -436,9 +472,11 @@ Display names may change without invalidating saves.
 
 Stable IDs should only change alongside an intentional save migration.
 
-Save version 3 serializes civilization history entries as ordered JSON dictionaries. Loading reconstructs typed entries through `CivilizationData.record_history_entry()` so malformed, empty, or duplicate event IDs do not enter the ledger. Saved day, hour, and minute values are converted and clamped defensively.
+Save version 3 introduced civilization history entries as ordered JSON dictionaries. Loading reconstructs typed entries through `CivilizationData.record_history_entry()` so malformed, empty, or duplicate event IDs do not enter the ledger. Saved day, hour, and minute values are converted and clamped defensively.
 
-Version 1 and 2 saves remain supported. Because they contain no history-entry collection, they load with an empty ledger. The migration does not fabricate retroactive milestones from inventory, discoveries, search counts, or other current state.
+Save version 4 adds `character_id` and every `CharacterLifeRecord` field to survivor data. Life-record counters and days are restored directly, clamped to valid nonnegative values, and never restored through gameplay mutation methods.
+
+Versions 1 through 3 remain supported and load with a new empty life record. Earlier saves retain the configured starting survivor ID after normal new-game initialization. No character statistics are reconstructed from inventory, skills, knowledge, discoveries, search counts, or civilization history. Version 1 and 2 saves also continue to load with an empty civilization ledger.
 
 ---
 

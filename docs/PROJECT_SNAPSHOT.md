@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.5-alpha1
+v0.5.6-alpha1
 
 ## Project Health
 
-🟢 Stable — Core Windows export regression and Civilization History Ledger manual gameplay testing passed
+🟢 Stable — Core Windows export regression and Character Life Record gameplay and save/load testing passed
 
 ## Current Milestone
 
@@ -89,6 +89,10 @@ Sprint 3 — The Age of Discovery
 * Dedicated Journal History tab
 * Unique persistent civilization milestones
 * Save version 3 history serialization
+* Character Life Record foundation
+* Stable character identity
+* Dedicated Journal Legacy Preview
+* Save version 4 life-record serialization
 
 ## Civilization History
 
@@ -102,11 +106,31 @@ Current milestone types:
 
 Entries save and load in insertion order. `CivilizationData` rejects duplicate milestone IDs, while routine Chronicle narration remains transient.
 
-The current save version is 3. Version 1 and 2 saves remain compatible and begin with an empty ledger. Manual gameplay testing passed for milestone recording, duplicate prevention, Journal display, saving, and loading.
+Civilization history serialization was introduced in save version 3. Version 1 and 2 saves remain compatible and begin with an empty ledger. Manual gameplay testing passed for milestone recording, duplicate prevention, Journal display, saving, and loading.
+
+## Character Life Record
+
+The Character Life Record foundation is implemented and displayed through the Journal's Legacy Preview.
+
+Current tracked values:
+
+* Searches completed
+* Gathered item units
+* Crafting actions completed
+* Crafted item units
+* Discoveries contributed
+* Knowledge earned
+* Skill levels gained
+* First and latest recorded days
+* Historical milestone credit derived from civilization history
+
+Finnley's stable character ID is `survivor.finnley`. Identity-safe milestone attribution uses this ID rather than the mutable display name.
+
+The current save version is 4. Versions 1 through 3 remain compatible and receive an empty life record without retroactive reconstruction. Manual gameplay and save/load testing passed.
 
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.5-alpha1 civilization-history foundation, then build on material variants with unique equipment instances that preserve component history.
+Continue the vertical slice from the tested v0.5.6-alpha1 character-life foundation, then build on material variants with unique equipment instances that preserve component history.
 
 ## Next Goals
 

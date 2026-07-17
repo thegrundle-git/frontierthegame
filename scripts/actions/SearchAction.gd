@@ -58,6 +58,10 @@ func perform(
 			civilization,
 			location
 		)
+		_record_search_contribution(
+			survivor,
+			0
+		)
 
 		return true
 
@@ -75,10 +79,22 @@ func perform(
 	var item: ItemData = (
 		chosen_entry.item
 	)
+	var previous_item_amount := (
+		survivor.inventory.get_item_amount(
+			item.id
+		)
+	)
 
 	survivor.inventory.add_item(
 		item.id,
 		amount
+	)
+
+	var gathered_units := (
+		survivor.inventory.get_item_amount(
+			item.id
+		)
+		- previous_item_amount
 	)
 
 	DiscoveryManager.record_item_observation(
@@ -112,8 +128,40 @@ func perform(
 		civilization,
 		location
 	)
+	_record_search_contribution(
+		survivor,
+		gathered_units
+	)
 
 	return true
+
+
+func _record_search_contribution(
+	survivor: Survivor,
+	gathered_units: int
+) -> void:
+	if survivor.data == null:
+		return
+
+	var life_record: CharacterLifeRecord = (
+		survivor.data.life_record
+	)
+
+	if life_record == null:
+		return
+
+	var changed := life_record.record_search(
+		TimeManager.day
+	)
+
+	if life_record.record_gathered_units(
+		gathered_units,
+		TimeManager.day
+	):
+		changed = true
+
+	if changed and GameManager.game_ui != null:
+		GameManager.game_ui.update_legacy_preview()
 
 
 func _record_first_search(
@@ -134,7 +182,7 @@ func _record_first_search(
 		+ location_name
 		+ ".",
 		"exploration",
-		"",
+		survivor.data.character_id,
 		survivor.data.display_name,
 		TimeManager.day,
 		TimeManager.hour,

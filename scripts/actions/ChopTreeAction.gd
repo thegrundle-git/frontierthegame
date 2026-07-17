@@ -41,11 +41,34 @@ func perform(
 			equipped_axe
 		)
 	)
+	var previous_log_amount := (
+		survivor.inventory.get_item_amount(
+			WOOD_LOG_ITEM_ID
+		)
+	)
 
 	survivor.inventory.add_item(
 		WOOD_LOG_ITEM_ID,
 		amount
 	)
+
+	var gathered_units := (
+		survivor.inventory.get_item_amount(
+			WOOD_LOG_ITEM_ID
+		)
+		- previous_log_amount
+	)
+
+	if (
+		survivor.data != null
+		and survivor.data.life_record != null
+		and survivor.data.life_record.record_gathered_units(
+			gathered_units,
+			TimeManager.day
+		)
+		and GameManager.game_ui != null
+	):
+		GameManager.game_ui.update_legacy_preview()
 
 	survivor.gain_strength_xp(
 		STRENGTH_XP_REWARD
