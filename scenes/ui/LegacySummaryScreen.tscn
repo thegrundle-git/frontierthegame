@@ -1,0 +1,124 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/LegacySummaryScreen.gd" id="1_legacy"]
+
+[node name="LegacySummaryScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_legacy")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0.03, 0.03, 0.03, 0.92)
+
+[node name="ScreenMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="SummaryPanel" type="PanelContainer" parent="ScreenMargin"]
+layout_mode = 2
+
+[node name="ContentMargin" type="MarginContainer" parent="ScreenMargin/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 20
+
+[node name="SummaryLayout" type="VBoxContainer" parent="ScreenMargin/SummaryPanel/ContentMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "LEGACY SUMMARY"
+
+[node name="CharacterNameLabel" type="Label" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Finnley"
+
+[node name="LifespanLabel" type="Label" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No contributions have been recorded yet."
+
+[node name="SummaryLabel" type="Label" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "This character's story is only beginning."
+
+[node name="Divider" type="HSeparator" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout"]
+layout_mode = 2
+
+[node name="Details" type="HSplitContainer" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout"]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 430
+
+[node name="StatisticsSection" type="VBoxContainer" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout/Details"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="StatisticsTitle" type="Label" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout/Details/StatisticsSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Contributions"
+
+[node name="StatisticsLog" type="RichTextLabel" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout/Details/StatisticsSection"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+selection_enabled = true
+
+[node name="MilestonesSection" type="VBoxContainer" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout/Details"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="MilestonesTitle" type="Label" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout/Details/MilestonesSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Historical Milestones"
+
+[node name="MilestonesLog" type="RichTextLabel" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout/Details/MilestonesSection"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+selection_enabled = true
+
+[node name="CloseButton" type="Button" parent="ScreenMargin/SummaryPanel/ContentMargin/SummaryLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+focus_mode = 2
+tooltip_text = "Return to the game."
+text = "Return to Frontier"

@@ -11,6 +11,8 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var event_log: RichTextLabel = %EventLog
 @onready var history_log: RichTextLabel = %HistoryLog
 @onready var legacy_preview_log: RichTextLabel = %LegacyPreviewLog
+@onready var open_legacy_summary_button: Button = %OpenLegacySummaryButton
+@onready var legacy_summary_screen: LegacySummaryScreen = %LegacySummaryScreen
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
@@ -79,6 +81,10 @@ func _ready() -> void:
 
 	unequip_tool_button.pressed.connect(
 		_on_unequip_tool_pressed
+	)
+
+	open_legacy_summary_button.pressed.connect(
+		_on_open_legacy_summary_pressed
 	)
 
 	ActionManager.action_started.connect(
@@ -1122,6 +1128,30 @@ func update_legacy_preview() -> void:
 		+ str(life_record.skill_levels_gained)
 		+ "\nHistorical milestones credited: "
 		+ str(credited_milestones)
+	)
+
+	open_legacy_summary_button.disabled = false
+
+
+func _on_open_legacy_summary_pressed() -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	var civilization: CivilizationData = GameManager.current_civilization
+
+	if (
+		survivor == null
+		or survivor.data == null
+		or survivor.data.life_record == null
+	):
+		return
+
+	var history_entries: Array[CivilizationHistoryEntry] = []
+
+	if civilization != null:
+		history_entries = civilization.history_entries
+
+	legacy_summary_screen.show_summary(
+		survivor.data,
+		history_entries
 	)
 
 

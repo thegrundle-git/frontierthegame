@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.6-alpha1
+v0.5.7-alpha1
 
 ## Project Health
 
-🟢 Stable — Core Windows export regression and Character Life Record gameplay and save/load testing passed
+🟢 Stable — Character Life Record and Legacy Summary gameplay testing passed
 
 ## Current Milestone
 
@@ -93,6 +93,9 @@ Sprint 3 — The Age of Discovery
 * Stable character identity
 * Dedicated Journal Legacy Preview
 * Save version 4 life-record serialization
+* Reusable full-screen Legacy Summary preview
+* Deterministic contribution summary
+* Identity-safe credited-milestone presentation
 
 ## Civilization History
 
@@ -128,9 +131,17 @@ Finnley's stable character ID is `survivor.finnley`. Identity-safe milestone att
 
 The current save version is 4. Versions 1 through 3 remain compatible and receive an empty life record without retroactive reconstruction. Manual gameplay and save/load testing passed.
 
+## Legacy Summary
+
+The reusable Legacy Summary Screen is implemented and opens from the Journal's Legacy Preview.
+
+It displays the current survivor's recorded-day range, lifetime contribution counters, and civilization milestones credited through the stable character ID. A short deterministic reflection is derived from confirmed contribution categories without inventing history or assigning a legacy score.
+
+The summary is a read-only full-screen overlay with internal scrolling, keyboard cancel support, focus restoration, and an explicit return button. It does not change save data or add death and succession behavior. Manual gameplay testing passed.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.6-alpha1 character-life foundation, then build on material variants with unique equipment instances that preserve component history.
+Continue the vertical slice from the tested v0.5.7-alpha1 legacy-presentation foundation, then build on material variants with unique equipment instances that preserve component history.
 
 ## Next Goals
 

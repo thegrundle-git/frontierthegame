@@ -47,4 +47,6 @@ The implemented Character Life Record foundation tracks successful searches, gat
 
 Death should eventually complete and summarize a life rather than function only as conventional failure. That future summary should consume the existing civilization-history and character-life foundations instead of creating parallel tracking systems.
 
-Death, succession, descendants, biographies, relationship memories, and generated life stories are future systems. The current foundation records durable facts while the survivor is alive; it does not yet resolve or narrate a completed life.
+The implemented Legacy Summary preview turns those recorded facts into a readable reflection while the survivor is still alive. It presents contributions and credited milestones without assigning an arbitrary score or inventing unrecorded history. Its short summary is deterministic and grounded in confirmed actions.
+
+Death, succession, descendants, biographies, relationship memories, and generated life stories are future systems. The current foundations record and present durable facts while the survivor is alive; they do not yet finalize a life or transfer control to a successor.

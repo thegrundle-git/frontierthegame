@@ -1,7 +1,38 @@
 # Frontier Changelog
 
 This document records every released version of Frontier.
+
 ---
+
+## v0.5.7-alpha1 — Legacy Summary Screen
+
+### Added
+
+* Reusable full-screen Legacy Summary preview.
+* Legacy Preview action for opening the expanded summary.
+* Character contribution, recorded-day, and credited-milestone presentation.
+* Deterministic life-summary text grounded in confirmed recorded actions.
+* Keyboard cancel, focus restoration, and internally scrolling summary content.
+
+### Changed
+
+* Character legacy information can now be reviewed without waiting for a future death system.
+* Historical milestone presentation remains identity-safe through stable contributor IDs.
+* Legacy presentation reuses the existing Character Life Record and Civilization History Ledger without new saved state.
+
+### Verified
+
+* Manual gameplay testing passed for opening, displaying, and closing the Legacy Summary Screen.
+* The responsive interface remained stable during summary presentation.
+* Isolated Godot 4.7 validation registered the new `LegacySummaryScreen` class.
+* `git diff --check` passed.
+
+### Not Included
+
+* Death, succession, descendants, finalized biographies, generated prose, personality judgments, and legacy scores remain future work.
+
+---
+
 ## v0.5.6-alpha1 — Character Life Record Foundation
 
 ### Added
