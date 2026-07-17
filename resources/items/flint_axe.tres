@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://ct1vs6uxllyca"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_77w1q"]
+
+[resource]
+script = ExtResource("1_77w1q")
+id = "flint_axe"
+display_name = "Flint Axe"
+description = "A sharp flint head secured to a prepared wooden handle. Its keen edge bites deeper and wastes less effort than a common stone axe."
+category = "tool"
+weight = 2.0
+stack_size = 1
+tags = Array[String](["tool", "axe", "crafting", "flint"])
+tool_efficiency = 2
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

@@ -20,7 +20,9 @@ var description: String = ""
 @export_group("Modular Crafting")
 @export var component_slot: String = ""
 @export var material_id: String = ""
-
+@export var material_quality: int = 0
+@export_group("Tool Performance")
+@export var tool_efficiency: int = 0
 
 func is_tool_component() -> bool:
 	return not component_slot.is_empty()

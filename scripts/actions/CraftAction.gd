@@ -37,10 +37,19 @@ func perform(
 		)
 		return false
 
+	var consumed_components: Dictionary = {}
+
 	if not GameManager.consume_recipe_ingredients_from_accessible_inventories(
-		recipe
+		recipe,
+		consumed_components
 	):
 		return false
+
+	var crafted_results: Array[IngredientData] = (
+		recipe.get_results_for_components(
+			consumed_components
+		)
+	)
 
 	var output_inventory: FrontierInventory = (
 		_get_crafting_output_inventory(
@@ -52,20 +61,23 @@ func perform(
 	if output_inventory == null:
 		return false
 
-	output_inventory.add_recipe_results(
-		recipe
+	output_inventory.add_ingredient_results(
+		crafted_results
 	)
 
 	_add_event(
 		survivor.data.display_name
 		+ " crafted "
-		+ recipe.display_name
+		+ _get_crafted_display_name(
+			recipe,
+			crafted_results
+		)
 		+ "."
 	)
 
 	_auto_equip_first_tool(
 		survivor,
-		recipe
+		crafted_results
 	)
 
 	return true
@@ -81,14 +93,30 @@ func _get_crafting_output_inventory(
 	return survivor.inventory
 
 
+func _get_crafted_display_name(
+	recipe: RecipeData,
+	crafted_results: Array[IngredientData]
+) -> String:
+	for result: IngredientData in crafted_results:
+		if (
+			result == null
+			or result.item == null
+		):
+			continue
+
+		return result.item.display_name
+
+	return recipe.display_name
+
+
 func _auto_equip_first_tool(
 	survivor: Survivor,
-	recipe: RecipeData
+	crafted_results: Array[IngredientData]
 ) -> void:
 	if not survivor.equipped_tool_id.is_empty():
 		return
 
-	for result: IngredientData in recipe.results:
+	for result: IngredientData in crafted_results:
 		if (
 			result == null
 			or result.item == null

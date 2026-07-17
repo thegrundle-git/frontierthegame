@@ -30,6 +30,16 @@ Content should be created primarily through resources rather than gameplay code.
 
 ---
 
+## Material Choice Creates Identity
+
+Crafting materials should change how finished equipment performs, not merely rename or recolor it.
+
+A tool should reflect the components used to make it. Better materials may improve efficiency, durability, weight, handling, or other appropriate qualities.
+
+Equipment choices should create practical goals and personal stories. Players should be able to deliberately equip, preserve, replace, and eventually remember favored tools.
+
+---
+
 ## Persistent World
 
 The world remembers.

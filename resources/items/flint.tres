@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://c5qt1whddh485"]
+
+[ext_resource type="Script" uid="uid://b7c5v3pbowv1w" path="res://scripts/resources/ItemData.gd" id="1_qaecs"]
+
+[resource]
+script = ExtResource("1_qaecs")
+id = "flint"
+display_name = "Flint"
+description = "A hard, glassy stone that breaks along sharp, predictable edges. Scarcer than ordinary rock, but exceptionally suited to cutting tools and points."
+category = "Resource"
+weight = 0.5
+tags = Array[String](["stone", "flint", "gathering", "crafting"])
+metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

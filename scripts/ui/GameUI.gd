@@ -7,6 +7,9 @@ extends Control
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
+@onready var tool_selector: OptionButton = %ToolSelector
+@onready var equip_tool_button: Button = %EquipToolButton
+@onready var unequip_tool_button: Button = %UnequipToolButton
 @onready var location_label: Label = %LocationLabel
 @onready var locations_log: RichTextLabel = %LocationsLog
 @onready var landmarks_log: RichTextLabel = %LandmarksLog
@@ -43,6 +46,14 @@ var return_home_button: Button
 
 func _ready() -> void:
 	GameManager.game_ui = self
+
+	equip_tool_button.pressed.connect(
+		_on_equip_tool_pressed
+	)
+
+	unequip_tool_button.pressed.connect(
+		_on_unequip_tool_pressed
+	)
 
 	ActionManager.action_started.connect(
 		_on_action_started
@@ -324,15 +335,11 @@ func update_world_action_buttons() -> void:
 			button.disabled = true
 			continue
 
-		var requirements_met := true
-
-		if not action.required_tool_id.is_empty():
-			requirements_met = (
-				survivor != null
-				and survivor.has_equipped_tool(
-					action.required_tool_id
-				)
+		var requirements_met := (
+			action.is_tool_requirement_met(
+				survivor
 			)
+		)
 
 		button.disabled = (
 			ActionManager.is_busy
@@ -344,14 +351,36 @@ func update_world_action_buttons() -> void:
 			button.tooltip_text = action.description
 			continue
 
-		var tool: ItemData = ItemDatabase.get_item(
-			action.required_tool_id
-		)
+		if not action.required_tool_id.is_empty():
+			var tool: ItemData = (
+				ItemDatabase.get_item(
+					action.required_tool_id
+				)
+			)
 
-		if tool != null:
+			if tool != null:
+				button.tooltip_text = (
+					"Requires equipped "
+					+ tool.display_name
+				)
+			else:
+				button.tooltip_text = (
+					"Requires a suitable equipped tool."
+				)
+
+			continue
+
+		if not action.required_tool_tags.is_empty():
+			var tool_type: String = (
+				action.required_tool_tags[
+					action.required_tool_tags.size() - 1
+				].capitalize()
+			)
+
 			button.tooltip_text = (
 				"Requires equipped "
-				+ tool.display_name
+				+ tool_type
+				+ "."
 			)
 
 		if return_home_button != null:
@@ -453,6 +482,8 @@ func update_tool_display() -> void:
 
 	if survivor == null:
 		tool_label.text = "Equipped Tool: None"
+		_rebuild_tool_selector(null)
+		unequip_tool_button.disabled = true
 		return
 
 	var tool: ItemData = (
@@ -461,14 +492,161 @@ func update_tool_display() -> void:
 
 	if tool == null:
 		tool_label.text = "Equipped Tool: None"
-		return
+	else:
+		tool_label.text = (
+			"Equipped Tool: "
+			+ tool.display_name
+		)
 
-	tool_label.text = (
-		"Equipped Tool: "
-		+ tool.display_name
+	_rebuild_tool_selector(
+		survivor
+	)
+
+	unequip_tool_button.disabled = (
+		ActionManager.is_busy
+		or tool == null
 	)
 
 
+func _rebuild_tool_selector(
+	survivor: Survivor
+) -> void:
+	tool_selector.clear()
+
+	if survivor == null:
+		tool_selector.disabled = true
+		equip_tool_button.disabled = true
+		return
+
+	var available_tools: Array[ItemData] = []
+	var added_item_ids: Dictionary = {}
+	var inventories: Array[FrontierInventory] = (
+		GameManager.get_accessible_crafting_inventories()
+	)
+
+	for inventory: FrontierInventory in inventories:
+		for item_id_variant: Variant in inventory.items:
+			var item_id := str(
+				item_id_variant
+			)
+
+			if added_item_ids.has(item_id):
+				continue
+
+			var item: ItemData = (
+				ItemDatabase.get_item(
+					item_id
+				)
+			)
+
+			if (
+				item == null
+				or "tool" not in item.tags
+			):
+				continue
+
+			added_item_ids[item_id] = true
+			available_tools.append(item)
+
+	available_tools.sort_custom(
+		func(
+			first: ItemData,
+			second: ItemData
+		) -> bool:
+			return first.display_name < second.display_name
+	)
+
+	for item: ItemData in available_tools:
+		tool_selector.add_item(
+			item.display_name
+		)
+
+		var index := (
+			tool_selector.item_count - 1
+		)
+
+		tool_selector.set_item_metadata(
+			index,
+			item.id
+		)
+
+	var has_available_tool := (
+		tool_selector.item_count > 0
+	)
+
+	tool_selector.disabled = (
+		ActionManager.is_busy
+		or not has_available_tool
+	)
+
+	equip_tool_button.disabled = (
+		ActionManager.is_busy
+		or not has_available_tool
+	)
+
+
+func _on_equip_tool_pressed() -> void:
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
+
+	if (
+		survivor == null
+		or tool_selector.selected < 0
+	):
+		return
+
+	var item_id := str(
+		tool_selector.get_item_metadata(
+			tool_selector.selected
+		)
+	)
+
+	if not survivor.equip_tool(item_id):
+		return
+
+	var tool: ItemData = (
+		ItemDatabase.get_item(
+			item_id
+		)
+	)
+
+	if tool != null:
+		add_event(
+			survivor.data.display_name
+			+ " equipped "
+			+ tool.display_name
+			+ "."
+		)
+
+	refresh_all()
+
+
+func _on_unequip_tool_pressed() -> void:
+	var survivor: Survivor = (
+		GameManager.current_survivor
+	)
+
+	if survivor == null:
+		return
+
+	var tool: ItemData = (
+		survivor.get_equipped_tool()
+	)
+
+	if tool == null:
+		return
+
+	survivor.unequip_tool()
+
+	add_event(
+		survivor.data.display_name
+		+ " unequipped "
+		+ tool.display_name
+		+ "."
+	)
+
+	refresh_all()
 func update_crafting() -> void:
 	_ensure_recipe_selector()
 
@@ -535,18 +713,30 @@ func update_crafting() -> void:
 	for ingredient: IngredientData in recipe.ingredients:
 		if (
 			ingredient == null
-			or ingredient.item == null
+			or not ingredient.is_valid()
 		):
 			continue
 
 		var owned: int = (
-	GameManager.get_accessible_crafting_item_amount(
-		ingredient.item.id
-	)
-)
+			GameManager.get_accessible_crafting_ingredient_amount(
+				ingredient
+			)
+		)
+
+		var ingredient_name := ""
+
+		if ingredient.uses_component_slot():
+			ingredient_name = (
+				ingredient.component_slot.capitalize()
+				+ " (best available)"
+			)
+		else:
+			ingredient_name = (
+				ingredient.item.display_name
+			)
 
 		recipe_text += (
-			ingredient.item.display_name
+			ingredient_name
 			+ ": "
 			+ str(owned)
 			+ " / "

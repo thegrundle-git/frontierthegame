@@ -15,7 +15,8 @@ func load_recipes() -> void:
 		"res://resources/recipes/stone_axe_head_recipe.tres",
 		"res://resources/recipes/stick_handle_recipe.tres",
 		"res://resources/recipes/fiber_binding_recipe.tres",
-		"res://resources/recipes/stone_axe_recipe.tres"
+		"res://resources/recipes/stone_axe_recipe.tres",
+		"res://resources/recipes/flint_axe_head_recipe.tres",
 	]
 
 	for recipe_path: String in recipe_paths:

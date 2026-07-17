@@ -103,7 +103,7 @@ The project is under active development and is not yet feature complete.
 
 Current version:
 
-**v0.5.3-alpha1 — Modular Crafting Foundation**
+**v0.5.3-alpha2 — Tool Material Variants**
 
 ## License
 
