@@ -2,6 +2,14 @@
 
 This document records every released version of Frontier.
 ---
+## Unreleased
+
+### Fixed
+
+* Chronicle entries now use compact dividers between completed actions instead of unstructured blank space.
+
+---
+
 ## v0.5.3-alpha1 — Modular Crafting Foundation
 
 ### Added
