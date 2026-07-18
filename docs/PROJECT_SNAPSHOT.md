@@ -2,7 +2,7 @@
 
 ## Current Version
 
-v0.5.7-alpha1
+v0.5.8-alpha1
 
 ## Project Health
 
@@ -96,6 +96,13 @@ Sprint 3 — The Age of Discovery
 * Reusable full-screen Legacy Summary preview
 * Deterministic contribution summary
 * Identity-safe credited-milestone presentation
+* Durable alive and deceased survivor state
+* One-time Character Life Record finalization
+* Recorded death day, time, and cause
+* Automatic final Legacy Summary presentation
+* Deceased-character action blocking
+* Debug-only death testing trigger
+* Save version 5 death-state serialization
 
 ## Civilization History
 
@@ -129,7 +136,7 @@ Current tracked values:
 
 Finnley's stable character ID is `survivor.finnley`. Identity-safe milestone attribution uses this ID rather than the mutable display name.
 
-The current save version is 4. Versions 1 through 3 remain compatible and receive an empty life record without retroactive reconstruction. Manual gameplay and save/load testing passed.
+The current save version is 5. Versions 1 through 3 remain compatible and receive an empty life record without retroactive reconstruction. Version 4 remains compatible and loads its survivor alive with an unfinalized life record. Manual gameplay and save/load testing passed.
 
 ## Legacy Summary
 
@@ -137,7 +144,15 @@ The reusable Legacy Summary Screen is implemented and opens from the Journal's L
 
 It displays the current survivor's recorded-day range, lifetime contribution counters, and civilization milestones credited through the stable character ID. A short deterministic reflection is derived from confirmed contribution categories without inventing history or assigning a legacy score.
 
-The summary is a read-only full-screen overlay with internal scrolling, keyboard cancel support, focus restoration, and an explicit return button. It does not change save data or add death and succession behavior. Manual gameplay testing passed.
+While a survivor is alive, the summary remains a read-only preview with keyboard cancel support, focus restoration, and an explicit return button. After death it becomes a non-dismissible final record, displays the death timestamp and cause, and provides a save action. Loading a deceased save restores the final summary automatically.
+
+## Character Death Foundation
+
+`SurvivorData` now stores durable alive/deceased state. `CharacterLifeRecord` finalizes once with the death day, hour, minute, and cause, then rejects later contribution mutations.
+
+`Survivor.die()` is the authoritative death gateway. `GameManager` blocks deceased characters from starting world actions, travel, crafting, and home interaction, while direct equipment operations also reject deceased characters. A debug-build-only trigger exercises this same production path and is unavailable while an action or world event is active.
+
+Save version 5 persists the complete death state. Versions 1 through 4 load alive and unfinalized; malformed contradictory version 5 data is normalized safely. Manual testing passed for death, final summary presentation, action blocking, saving, and loading.
 
 ## Current Focus
 

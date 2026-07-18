@@ -463,13 +463,23 @@ Milestone order follows the existing civilization-history insertion order. Name 
 
 The summary screen is modal presentation layered over `GameUI`. It supports keyboard focus, the standard cancel action, internal scrolling, and explicit return to the game. Opening, closing, or refreshing it cannot mutate the life record or history ledger.
 
-No separate manager, autoload, save data, or scene transition is involved. A future death flow should reuse this screen and pass finalized life data into it rather than creating a parallel summary implementation.
+No separate legacy manager, autoload, or scene transition is involved. The Character Death Foundation reuses this screen in final mode rather than creating a parallel summary implementation.
+
+### Character Death Foundation
+
+`SurvivorData.is_alive` is the durable character lifecycle flag. `Survivor.die(cause)` is the sole gameplay gateway for death: it finalizes the owned `CharacterLifeRecord`, changes the survivor state, and emits the `died` signal.
+
+`CharacterLifeRecord.finalize_life()` records death day, hour, minute, and cause exactly once. Finalized records reject all later contribution mutations, preserving the completed life as an immutable gameplay record.
+
+`GameManager` receives the death signal, records immediate Chronicle narration, refreshes the UI, and opens `LegacySummaryScreen` in final mode. Its shared survivor-action gate rejects world actions, travel, and crafting for deceased characters. Equipment and home-entry paths also enforce the lifecycle state directly. The temporary debug death trigger is available only in debug builds and calls the same production death gateway.
+
+Final Legacy Summary mode cannot be dismissed or closed with keyboard cancel. It displays the death timestamp and cause and exposes a save action so the finalized state can be persisted. Loading a deceased save reopens the final summary after the UI refreshes.
 
 ---
 
 ## Save Compatibility
 
-The current save version is 4.
+The current save version is 5.
 
 Save files store stable IDs rather than serialized resource objects.
 
@@ -493,6 +503,10 @@ Stable IDs should only change alongside an intentional save migration.
 Save version 3 introduced civilization history entries as ordered JSON dictionaries. Loading reconstructs typed entries through `CivilizationData.record_history_entry()` so malformed, empty, or duplicate event IDs do not enter the ledger. Saved day, hour, and minute values are converted and clamped defensively.
 
 Save version 4 adds `character_id` and every `CharacterLifeRecord` field to survivor data. Life-record counters and days are restored directly, clamped to valid nonnegative values, and never restored through gameplay mutation methods.
+
+Save version 5 adds survivor alive/deceased state and Character Life Record finalization fields. Death timestamps are clamped defensively. A deceased save must contain a finalized record, a positive death day, and a nonempty cause; malformed contradictory state is normalized to a living, unfinalized survivor rather than blocking the rest of the save.
+
+Versions 1 through 4 load survivors alive and unfinalized. No prior save is interpreted as containing an unrecorded historical death.
 
 Versions 1 through 3 remain supported and load with a new empty life record. Earlier saves retain the configured starting survivor ID after normal new-game initialization. No character statistics are reconstructed from inventory, skills, knowledge, discoveries, search counts, or civilization history. Version 1 and 2 saves also continue to load with an empty civilization ledger.
 

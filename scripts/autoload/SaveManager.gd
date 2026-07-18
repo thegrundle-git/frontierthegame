@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 4
+const SAVE_VERSION := 5
 
 
 func save_game() -> bool:
@@ -84,6 +84,17 @@ func load_game() -> bool:
 		GameManager.game_ui.rebuild_location_controls()
 		GameManager.game_ui.refresh_all()
 
+		if (
+			GameManager.current_survivor != null
+			and not GameManager.current_survivor.can_act()
+			and GameManager.game_ui.has_method(
+				"show_final_legacy_summary"
+			)
+		):
+			GameManager.game_ui.call_deferred(
+				"show_final_legacy_summary"
+			)
+
 	print("Game loaded from: ", SAVE_PATH)
 
 	return true
@@ -129,6 +140,7 @@ func _build_save_data() -> Dictionary:
 		"survivor": {
 			"character_id": survivor.data.character_id,
 			"display_name": survivor.data.display_name,
+			"is_alive": survivor.data.is_alive,
 			"life_record": _serialize_life_record(
 				survivor.data.life_record
 			),
@@ -208,6 +220,11 @@ func _serialize_life_record(
 		"skill_levels_gained": life_record.skill_levels_gained,
 		"first_recorded_day": life_record.first_recorded_day,
 		"latest_recorded_day": life_record.latest_recorded_day,
+		"is_finalized": life_record.is_finalized,
+		"death_day": life_record.death_day,
+		"death_hour": life_record.death_hour,
+		"death_minute": life_record.death_minute,
+		"cause_of_death": life_record.cause_of_death,
 	}
 
 
@@ -353,6 +370,13 @@ func _apply_survivor_data(
 		)
 	)
 
+	survivor.data.is_alive = bool(
+		survivor_data.get(
+			"is_alive",
+			true
+		)
+	)
+
 	_apply_life_record_data(
 		survivor,
 		survivor_data.get(
@@ -415,6 +439,7 @@ func _apply_life_record_data(
 		push_warning(
 			"Skipped malformed character life-record data."
 		)
+		survivor.data.is_alive = true
 		return
 
 	var record_data: Dictionary = life_record_data
@@ -490,6 +515,49 @@ func _apply_life_record_data(
 			life_record.latest_recorded_day,
 			life_record.first_recorded_day
 		)
+
+	life_record.is_finalized = bool(
+		record_data.get("is_finalized", false)
+	)
+	life_record.death_day = clampi(
+		_history_int_from_variant(record_data.get("death_day", 0), 0),
+		0,
+		2147483647
+	)
+	life_record.death_hour = clampi(
+		_history_int_from_variant(record_data.get("death_hour", 0), 0),
+		0,
+		23
+	)
+	life_record.death_minute = clampi(
+		_history_int_from_variant(record_data.get("death_minute", 0), 0),
+		0,
+		59
+	)
+	life_record.cause_of_death = str(
+		record_data.get("cause_of_death", "")
+	).strip_edges()
+
+	if not survivor.data.is_alive:
+		if (
+			not life_record.is_finalized
+			or life_record.death_day <= 0
+			or life_record.cause_of_death.is_empty()
+		):
+			push_warning("Normalized malformed deceased survivor data to alive.")
+			survivor.data.is_alive = true
+			life_record.is_finalized = false
+			life_record.death_day = 0
+			life_record.death_hour = 0
+			life_record.death_minute = 0
+			life_record.cause_of_death = ""
+	elif life_record.is_finalized:
+		push_warning("Ignored finalized life record for a living survivor.")
+		life_record.is_finalized = false
+		life_record.death_day = 0
+		life_record.death_hour = 0
+		life_record.death_minute = 0
+		life_record.cause_of_death = ""
 
 
 func _apply_inventory_data(

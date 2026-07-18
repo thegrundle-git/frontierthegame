@@ -3,9 +3,11 @@ class_name LegacySummaryScreen
 
 
 signal closed
+signal save_requested
 
 
 @onready var character_name_label: Label = %CharacterNameLabel
+@onready var title_label: Label = %TitleLabel
 @onready var lifespan_label: Label = %LifespanLabel
 @onready var summary_label: Label = %SummaryLabel
 @onready var statistics_log: RichTextLabel = %StatisticsLog
@@ -13,35 +15,58 @@ signal closed
 @onready var close_button: Button = %CloseButton
 
 var _previous_focus: Control
+var _is_final: bool = false
 
 
 func _ready() -> void:
-	close_button.pressed.connect(hide_summary)
+	close_button.pressed.connect(_on_primary_button_pressed)
 	visible = false
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed("ui_cancel"):
+	if visible and not _is_final and event.is_action_pressed("ui_cancel"):
 		hide_summary()
 		get_viewport().set_input_as_handled()
 
 
 func show_summary(
 	survivor_data: SurvivorData,
-	history_entries: Array[CivilizationHistoryEntry]
+	history_entries: Array[CivilizationHistoryEntry],
+	is_final: bool = false
 ) -> void:
 	if survivor_data == null or survivor_data.life_record == null:
 		return
 
 	_previous_focus = get_viewport().gui_get_focus_owner()
+	_is_final = is_final
 	_populate_summary(survivor_data, history_entries)
+	title_label.text = (
+		"FINAL LEGACY SUMMARY"
+		if _is_final
+		else "LEGACY SUMMARY"
+	)
+	close_button.visible = true
+	close_button.disabled = false
+	close_button.text = (
+		"Save Final Record"
+		if _is_final
+		else "Return to Frontier"
+	)
 	visible = true
 	move_to_front()
 	close_button.grab_focus()
 
 
+func _on_primary_button_pressed() -> void:
+	if _is_final:
+		save_requested.emit()
+		return
+
+	hide_summary()
+
+
 func hide_summary() -> void:
-	if not visible:
+	if not visible or _is_final:
 		return
 
 	visible = false
@@ -83,6 +108,14 @@ func _populate_summary(
 
 
 func _build_lifespan_text(life_record: CharacterLifeRecord) -> String:
+	if life_record.is_finalized:
+		return (
+			"Died on Day " + str(life_record.death_day)
+			+ " at " + str(life_record.death_hour).pad_zeros(2)
+			+ ":" + str(life_record.death_minute).pad_zeros(2)
+			+ " — " + life_record.cause_of_death
+		)
+
 	if life_record.first_recorded_day <= 0:
 		return "No contributions have been recorded yet."
 

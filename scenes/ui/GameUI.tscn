@@ -468,6 +468,21 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
+[node name="DebugDeathButton" type="Button" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -190.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 50.0
+grow_horizontal = 0
+text = "Test Character Death"
+tooltip_text = "Debug only: finalize the current character's life."
+
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/LoadButton" to="." method="_on_load_button_pressed"]
 [connection signal="pressed" from="Crafting/CraftingCenter/CraftingPanel/CraftingLayout/CraftButton" to="." method="_on_craft_button_pressed"]

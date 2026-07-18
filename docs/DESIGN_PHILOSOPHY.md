@@ -49,4 +49,6 @@ Death should eventually complete and summarize a life rather than function only 
 
 The implemented Legacy Summary preview turns those recorded facts into a readable reflection while the survivor is still alive. It presents contributions and credited milestones without assigning an arbitrary score or inventing unrecorded history. Its short summary is deterministic and grounded in confirmed actions.
 
-Death, succession, descendants, biographies, relationship memories, and generated life stories are future systems. The current foundations record and present durable facts while the survivor is alive; they do not yet finalize a life or transfer control to a successor.
+The implemented Character Death Foundation now lets death complete a recorded life. Finalization is a durable, one-time transition grounded in the existing life record, and the final Legacy Summary reflects confirmed contributions rather than inventing a score or biography. A deceased character cannot continue accumulating accomplishments.
+
+Death is not yet a generational continuation system. Succession, inheritance, descendants, corpses, burial, aging, health-driven death, relationship memories, and generated life stories remain future work. Those systems should build on the finalized life record instead of replacing or duplicating it.

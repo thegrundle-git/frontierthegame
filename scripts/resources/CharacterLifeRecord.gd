@@ -11,9 +11,16 @@ class_name CharacterLifeRecord
 @export var skill_levels_gained: int = 0
 @export var first_recorded_day: int = 0
 @export var latest_recorded_day: int = 0
+@export var is_finalized: bool = false
+@export var death_day: int = 0
+@export var death_hour: int = 0
+@export var death_minute: int = 0
+@export var cause_of_death: String = ""
 
 
 func record_search(day: int) -> bool:
+	if is_finalized:
+		return false
 	searches_completed += 1
 	_record_day(day)
 
@@ -24,6 +31,8 @@ func record_gathered_units(
 	amount: int,
 	day: int
 ) -> bool:
+	if is_finalized:
+		return false
 	if amount <= 0:
 		return false
 
@@ -37,6 +46,8 @@ func record_crafting(
 	action_output_units: int,
 	day: int
 ) -> bool:
+	if is_finalized:
+		return false
 	if action_output_units <= 0:
 		return false
 
@@ -48,6 +59,8 @@ func record_crafting(
 
 
 func record_discovery(day: int) -> bool:
+	if is_finalized:
+		return false
 	discoveries_contributed += 1
 	_record_day(day)
 
@@ -58,6 +71,8 @@ func record_knowledge(
 	amount: int,
 	day: int
 ) -> bool:
+	if is_finalized:
+		return false
 	if amount <= 0:
 		return false
 
@@ -71,11 +86,32 @@ func record_skill_levels_gained(
 	amount: int,
 	day: int
 ) -> bool:
+	if is_finalized:
+		return false
 	if amount <= 0:
 		return false
 
 	skill_levels_gained += amount
 	_record_day(day)
+
+	return true
+
+
+func finalize_life(
+	cause: String,
+	day: int,
+	hour: int,
+	minute: int
+) -> bool:
+	if is_finalized or cause.strip_edges().is_empty():
+		return false
+
+	death_day = maxi(day, 1)
+	death_hour = clampi(hour, 0, 23)
+	death_minute = clampi(minute, 0, 59)
+	cause_of_death = cause.strip_edges()
+	is_finalized = true
+	_record_day(death_day)
 
 	return true
 
