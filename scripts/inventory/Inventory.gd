@@ -4,6 +4,55 @@ class_name FrontierInventory
 
 var items: Dictionary = {}
 var kept_item_ids: Array[String] = []
+var equipment_instances: Array[ItemInstance] = []
+
+
+func add_equipment_instance(instance: ItemInstance) -> bool:
+	if instance == null or not instance.is_valid():
+		return false
+	if get_equipment_instance(instance.instance_id) != null:
+		return false
+
+	equipment_instances.append(instance)
+	return true
+
+
+func get_equipment_instance(instance_id: String) -> ItemInstance:
+	if instance_id.is_empty():
+		return null
+
+	for instance: ItemInstance in equipment_instances:
+		if instance != null and instance.instance_id == instance_id:
+			return instance
+
+	return null
+
+
+func remove_equipment_instance(instance_id: String) -> ItemInstance:
+	for index: int in range(equipment_instances.size()):
+		var instance: ItemInstance = equipment_instances[index]
+		if instance != null and instance.instance_id == instance_id:
+			equipment_instances.remove_at(index)
+			return instance
+
+	return null
+
+
+func transfer_equipment_instance_to(
+	target: FrontierInventory,
+	instance_id: String
+) -> bool:
+	if target == null or target == self:
+		return false
+
+	var instance: ItemInstance = remove_equipment_instance(instance_id)
+	if instance == null:
+		return false
+	if target.add_equipment_instance(instance):
+		return true
+
+	add_equipment_instance(instance)
+	return false
 
 
 func add_item(

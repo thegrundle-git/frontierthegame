@@ -664,3 +664,24 @@ When a timed action completes:
 Action implementations should return a Boolean success value.
 
 Action scripts should not independently award the ActionData skill XP unless explicitly designed to provide an additional reward.
+
+---
+
+## Unique Equipment Instances
+
+`ItemInstance` is the durable identity layer for completed equipment. It stores a stable instance ID, its base `ItemData` ID, material ID, maker identity snapshot, and crafting timestamp. The base `ItemData` remains the authority for tags and tool performance.
+
+`FrontierInventory` uses a hybrid model:
+
+* `items` continues to store fungible resources and components as ID-to-count stacks;
+* `equipment_instances` stores completed tools as individual `ItemInstance` resources.
+
+An equipped tool is held by `Survivor.equipped_tool_instance` rather than duplicated inside an inventory. Equipping removes the selected instance from an accessible inventory, while unequipping returns that same object to the survivor's personal inventory. Tool requirements and actions resolve the instance's base `ItemData`, preserving existing tag-based behavior.
+
+`CivilizationData` owns the monotonic item-instance sequence and creates new crafted instances. `CraftAction` creates one instance per non-stackable tool output and records material, crafter, and time provenance. Stackable results continue through the existing count-based inventory path.
+
+Succession transfers the existing personal inventory and equipped instance to the successor. This is continuity of belongings, not a player-directed inheritance system.
+
+Save version 7 serializes personal and civilization equipment-instance collections, the equipped instance, and the next instance sequence. Versions 1 through 6 remain accepted. Generic legacy tool counts are converted into distinct instances, and a legacy equipped-tool ID becomes one separate equipped instance without duplicating an inventory item.
+
+The current instance foundation deliberately excludes durability, quality, custom naming, engraving, repairs, component replacement, disassembly, and complete component history.

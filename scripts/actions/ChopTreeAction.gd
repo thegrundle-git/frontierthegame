@@ -107,14 +107,7 @@ func perform(
 func _get_equipped_axe(
 	survivor: Survivor
 ) -> ItemData:
-	if survivor.equipped_tool_id.is_empty():
-		return null
-
-	var equipped_item: ItemData = (
-		ItemDatabase.get_item(
-			survivor.equipped_tool_id
-		)
-	)
+	var equipped_item: ItemData = survivor.get_equipped_tool()
 
 	if equipped_item == null:
 		return null

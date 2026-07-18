@@ -567,7 +567,7 @@ func update_inventory(
 ) -> void:
 	var inventory_text := "Inventory\n\n"
 
-	if inventory.items.is_empty():
+	if inventory.items.is_empty() and inventory.equipment_instances.is_empty():
 		inventory_text += "Empty"
 	else:
 		for item_id_variant: Variant in inventory.items:
@@ -602,6 +602,15 @@ func update_inventory(
 				+ str(amount)
 				+ "\n"
 			)
+
+		for instance: ItemInstance in inventory.equipment_instances:
+			if instance == null:
+				continue
+			var item_data: ItemData = instance.get_item_data()
+			var display_name := instance.item_id
+			if item_data != null:
+				display_name = item_data.display_name
+			inventory_text += display_name + " [" + instance.instance_id + "]\n"
 
 	inventory_label.text = inventory_text
 
@@ -650,9 +659,15 @@ func update_tool_display() -> void:
 	if tool == null:
 		tool_label.text = "Equipped Tool: None"
 	else:
+		var equipped_instance: ItemInstance = survivor.get_equipped_tool_instance()
 		tool_label.text = (
 			"Equipped Tool: "
 			+ tool.display_name
+			+ (
+				" [" + equipped_instance.instance_id + "]"
+				if equipped_instance != null
+				else ""
+			)
 		)
 
 	_rebuild_tool_selector(
@@ -677,47 +692,39 @@ func _rebuild_tool_selector(
 		equip_tool_button.disabled = true
 		return
 
-	var available_tools: Array[ItemData] = []
-	var added_item_ids: Dictionary = {}
+	var available_tools: Array[ItemInstance] = []
 	var inventories: Array[FrontierInventory] = (
 		GameManager.get_accessible_crafting_inventories()
 	)
 
 	for inventory: FrontierInventory in inventories:
-		for item_id_variant: Variant in inventory.items:
-			var item_id := str(
-				item_id_variant
-			)
-
-			if added_item_ids.has(item_id):
+		for instance: ItemInstance in inventory.equipment_instances:
+			if instance == null:
 				continue
-
-			var item: ItemData = (
-				ItemDatabase.get_item(
-					item_id
-				)
-			)
-
-			if (
-				item == null
-				or "tool" not in item.tags
-			):
-				continue
-
-			added_item_ids[item_id] = true
-			available_tools.append(item)
+			var item: ItemData = instance.get_item_data()
+			if item != null and "tool" in item.tags:
+				available_tools.append(instance)
 
 	available_tools.sort_custom(
 		func(
-			first: ItemData,
-			second: ItemData
+			first: ItemInstance,
+			second: ItemInstance
 		) -> bool:
-			return first.display_name < second.display_name
+			var first_item: ItemData = first.get_item_data()
+			var second_item: ItemData = second.get_item_data()
+			if first_item == null or second_item == null:
+				return first.instance_id < second.instance_id
+			if first_item.display_name == second_item.display_name:
+				return first.instance_id < second.instance_id
+			return first_item.display_name < second_item.display_name
 	)
 
-	for item: ItemData in available_tools:
+	for instance: ItemInstance in available_tools:
+		var item: ItemData = instance.get_item_data()
+		if item == null:
+			continue
 		tool_selector.add_item(
-			item.display_name
+			item.display_name + " [" + instance.instance_id + "]"
 		)
 
 		var index := (
@@ -726,7 +733,7 @@ func _rebuild_tool_selector(
 
 		tool_selector.set_item_metadata(
 			index,
-			item.id
+			instance.instance_id
 		)
 
 	var has_available_tool := (
@@ -759,20 +766,16 @@ func _on_equip_tool_pressed() -> void:
 	):
 		return
 
-	var item_id := str(
+	var instance_id := str(
 		tool_selector.get_item_metadata(
 			tool_selector.selected
 		)
 	)
 
-	if not survivor.equip_tool(item_id):
+	if not survivor.equip_tool(instance_id):
 		return
 
-	var tool: ItemData = (
-		ItemDatabase.get_item(
-			item_id
-		)
-	)
+	var tool: ItemData = survivor.get_equipped_tool()
 
 	if tool != null:
 		add_event(

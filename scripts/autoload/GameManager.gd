@@ -547,7 +547,7 @@ func continue_as_successor(
 	var previous_survivor: Survivor = current_survivor
 	var previous_name: String = previous_survivor.data.display_name
 	var preserved_inventory: FrontierInventory = previous_survivor.inventory
-	var preserved_tool_id: String = previous_survivor.equipped_tool_id
+	var preserved_tool_instance: ItemInstance = previous_survivor.equipped_tool_instance
 	var successor_data := SurvivorData.new()
 	successor_data.character_id = successor_id
 	successor_data.display_name = successor_name.strip_edges()
@@ -567,7 +567,7 @@ func continue_as_successor(
 		return false
 
 	successor.inventory = preserved_inventory
-	successor.equipped_tool_id = preserved_tool_id
+	successor.equipped_tool_instance = preserved_tool_instance
 	current_survivor = successor
 	survivor_data = successor_data
 	current_civilization.advance_character_sequence()

@@ -61,8 +61,13 @@ func perform(
 	if output_inventory == null:
 		return false
 
-	output_inventory.add_ingredient_results(
-		crafted_results
+	var crafted_instances: Array[ItemInstance] = (
+		_add_crafted_results(
+			output_inventory,
+			crafted_results,
+			survivor,
+			civilization
+		)
 	)
 
 	_record_crafting_contribution(
@@ -88,10 +93,38 @@ func perform(
 
 	_auto_equip_first_tool(
 		survivor,
-		crafted_results
+		crafted_instances
 	)
 
 	return true
+
+
+func _add_crafted_results(
+	output_inventory: FrontierInventory,
+	crafted_results: Array[IngredientData],
+	survivor: Survivor,
+	civilization: CivilizationData
+) -> Array[ItemInstance]:
+	var created_instances: Array[ItemInstance] = []
+
+	for result: IngredientData in crafted_results:
+		if result == null or result.item == null or result.amount <= 0:
+			continue
+
+		if not result.item.uses_unique_instances():
+			output_inventory.add_item(result.item.id, result.amount)
+			continue
+
+		for _unit: int in range(result.amount):
+			var instance: ItemInstance = civilization.create_item_instance(
+				result.item,
+				survivor.data.character_id,
+				survivor.data.display_name
+			)
+			if instance != null and output_inventory.add_equipment_instance(instance):
+				created_instances.append(instance)
+
+	return created_instances
 
 
 func _record_crafting_contribution(
@@ -188,23 +221,17 @@ func _get_crafted_display_name(
 
 func _auto_equip_first_tool(
 	survivor: Survivor,
-	crafted_results: Array[IngredientData]
+	crafted_instances: Array[ItemInstance]
 ) -> void:
-	if not survivor.equipped_tool_id.is_empty():
+	if survivor.equipped_tool_instance != null:
 		return
 
-	for result: IngredientData in crafted_results:
-		if (
-			result == null
-			or result.item == null
-		):
-			continue
-
-		if "tool" not in result.item.tags:
+	for instance: ItemInstance in crafted_instances:
+		if instance == null:
 			continue
 
 		survivor.equip_tool(
-			result.item.id
+			instance.instance_id
 		)
 
 		return

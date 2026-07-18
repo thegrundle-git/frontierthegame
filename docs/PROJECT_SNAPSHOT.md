@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.10-alpha1
+v0.5.11-alpha1
 
 ## Project Health
 
-🟢 Stable — Character Life Record and Legacy Summary gameplay testing passed
+🟢 Stable — Unique equipment instances passed gameplay and persistence testing
 
 ## Current Milestone
 
@@ -98,6 +98,12 @@ Sprint 3 — The Age of Discovery
 * Identity-safe credited-milestone presentation
 * Durable alive and deceased survivor state
 * One-time Character Life Record finalization
+* Unique persistent equipment instances
+* Stable per-instance equipment identity
+* Tool material and crafting provenance
+* Per-instance equipment selection and storage transfers
+* Exact equipped-tool continuity through succession
+* Save version 7 equipment-instance serialization and migration
 * Recorded death day, time, and cause
 * Automatic final Legacy Summary presentation
 * Deceased-character action blocking
@@ -179,13 +185,19 @@ Players can select an archived character and open a dismissible `COMPLETED LIFE`
 
 The feature is read-only and adds no duplicate persistence. Manual testing passed for empty, single-generation, multi-generation, and save/load scenarios.
 
+## Unique Equipment Instances
+
+Completed tools now exist as individual `ItemInstance` records rather than generic stack units. Each instance retains a stable ID, base item, material, maker, and crafting timestamp through equipment changes, camp storage, saving, loading, death, and succession.
+
+Ordinary materials and components remain stack-based. Save version 7 migrates older generic and equipped tools into distinct instances without retroactively inventing detailed component histories.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.10-alpha1 completed-lives foundation, then build on material variants with unique equipment instances that preserve component history.
+Continue the vertical slice from the tested v0.5.11-alpha1 unique-equipment foundation, then expand those instances with complete selected-component history and component-derived statistics.
 
 ## Next Goals
 
-* Unique equipment instances and component history
+* Complete selected-component history for equipment instances
 * Full component-derived equipment statistics
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates

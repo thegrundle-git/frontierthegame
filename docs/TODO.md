@@ -40,7 +40,8 @@
 * [x] Prevent variable UI content from resizing or shifting the root interface.
 * [ ] Expand basic equipment controls into a dedicated multi-slot equipment panel.
 * [x] Add the first modular Stone Axe component-crafting chain.
-* [ ] Add unique equipment instances that preserve their component history.
+* [x] Add unique equipment instances with stable identity and crafting provenance.
+* [ ] Preserve complete selected-component history on equipment instances.
 * [x] Add the first material-derived tool efficiency statistic.
 * [ ] Calculate full equipment statistics from every selected component.
 * [ ] Expose field crafting outside the home interface.
