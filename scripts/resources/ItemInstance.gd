@@ -10,6 +10,8 @@ class_name ItemInstance
 @export var crafted_day: int = 1
 @export var crafted_hour: int = 0
 @export var crafted_minute: int = 0
+@export var component_history_known: bool = false
+@export var components: Array[EquipmentComponentRecord] = []
 
 
 func is_valid() -> bool:

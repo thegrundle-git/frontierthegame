@@ -24,6 +24,8 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var tool_selector: OptionButton = %ToolSelector
 @onready var equip_tool_button: Button = %EquipToolButton
 @onready var unequip_tool_button: Button = %UnequipToolButton
+@onready var inspect_tool_button: Button = %InspectToolButton
+@onready var equipment_details_screen: EquipmentDetailsScreen = %EquipmentDetailsScreen
 @onready var location_label: Label = %LocationLabel
 @onready var locations_log: RichTextLabel = %LocationsLog
 @onready var landmarks_log: RichTextLabel = %LandmarksLog
@@ -87,6 +89,7 @@ func _ready() -> void:
 	unequip_tool_button.pressed.connect(
 		_on_unequip_tool_pressed
 	)
+	inspect_tool_button.pressed.connect(_on_inspect_tool_pressed)
 
 	open_legacy_summary_button.pressed.connect(
 		_on_open_legacy_summary_pressed
@@ -690,12 +693,15 @@ func _rebuild_tool_selector(
 	if survivor == null:
 		tool_selector.disabled = true
 		equip_tool_button.disabled = true
+		inspect_tool_button.disabled = true
 		return
 
 	var available_tools: Array[ItemInstance] = []
 	var inventories: Array[FrontierInventory] = (
 		GameManager.get_accessible_crafting_inventories()
 	)
+	if survivor.equipped_tool_instance != null:
+		available_tools.append(survivor.equipped_tool_instance)
 
 	for inventory: FrontierInventory in inventories:
 		for instance: ItemInstance in inventory.equipment_instances:
@@ -753,6 +759,21 @@ func _rebuild_tool_selector(
 		ActionManager.is_busy
 		or not has_available_tool
 	)
+	inspect_tool_button.disabled = not has_available_tool
+
+
+func _on_inspect_tool_pressed() -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	if survivor == null or tool_selector.selected < 0:
+		return
+	var instance_id: String = str(
+		tool_selector.get_item_metadata(tool_selector.selected)
+	)
+	var instance: ItemInstance = (
+		survivor.get_accessible_equipment_instance(instance_id)
+	)
+	if instance != null:
+		equipment_details_screen.show_instance(instance)
 
 
 func _on_equip_tool_pressed() -> void:

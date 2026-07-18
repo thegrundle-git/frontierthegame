@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://baqm7w2ms734e"]
+[gd_scene load_steps=7 format=3 uid="uid://baqm7w2ms734e"]
 
 [ext_resource type="Script" uid="uid://1bobkraw02vv" path="res://scripts/ui/GameUI.gd" id="1_r8hcy"]
 [ext_resource type="PackedScene" uid="uid://dgmcykvgvwvpm" path="res://scenes/ui/HomeUI.tscn" id="2_3pxe2"]
 [ext_resource type="PackedScene" uid="uid://c84ip6rn6xat4" path="res://scenes/ui/StorageUI.tscn" id="3_jwej7"]
 [ext_resource type="PackedScene" path="res://scenes/ui/LegacySummaryScreen.tscn" id="4_legacy"]
 [ext_resource type="PackedScene" path="res://scenes/ui/SuccessionScreen.tscn" id="5_successor"]
+[ext_resource type="PackedScene" path="res://scenes/ui/EquipmentDetailsScreen.tscn" id="6_details"]
 
 [node name="GameUI" type="Control" unique_id=1054040398]
 layout_mode = 3
@@ -146,6 +147,12 @@ custom_minimum_size = Vector2(96, 40)
 layout_mode = 2
 tooltip_text = "Return the equipped tool to the pack."
 text = "Unequip"
+
+[node name="InspectToolButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Inspect Selected Tool"
 
 [node name="InventoryPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn" unique_id=375295770]
 custom_minimum_size = Vector2(320, 150)
@@ -504,6 +511,11 @@ visible = false
 layout_mode = 1
 
 [node name="SuccessionScreen" parent="." instance=ExtResource("5_successor")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="EquipmentDetailsScreen" parent="." instance=ExtResource("6_details")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

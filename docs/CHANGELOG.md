@@ -4,6 +4,34 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.12-alpha1 — Equipment Component History
+
+### Added
+
+* Typed equipment component records for meaningful construction slots.
+* Exact head, handle, and binding snapshots on newly crafted tools.
+* Persistent component item, material, quality, and quantity data.
+* Read-only Equipment Details screen for equipped, carried, and stored tools.
+
+### Changed
+
+* Crafting now records both fixed and interchangeable components at the authoritative ingredient-removal point.
+* New equipment instances receive deep-copied component histories.
+* Save version 8 persists component records and explicit component-history availability.
+* Versions 1 through 7 remain compatible and report unavailable history instead of inventing components.
+
+### Verified
+
+* Manual gameplay testing passed for Stone and Flint Axe component records, equipment inspection, storage, save/load, and succession continuity.
+* Isolated Godot 4.7 validation registered `EquipmentComponentRecord` and `EquipmentDetailsScreen` without new implementation errors.
+* `git diff --check` passed.
+
+### Not Included
+
+* Component-derived stat recalculation, replacement parts, repairs, durability, disassembly, recovered components, custom names, and engraving remain future work.
+
+---
+
 ## v0.5.11-alpha1 — Unique Equipment Instance Foundation
 
 ### Added

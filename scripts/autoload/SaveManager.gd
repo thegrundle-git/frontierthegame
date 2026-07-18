@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 7
+const SAVE_VERSION := 8
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -217,7 +217,26 @@ func _serialize_item_instance(instance: ItemInstance) -> Dictionary:
 		"crafted_day": instance.crafted_day,
 		"crafted_hour": instance.crafted_hour,
 		"crafted_minute": instance.crafted_minute,
+		"component_history_known": instance.component_history_known,
+		"components": _serialize_equipment_components(instance.components),
 	}
+
+
+func _serialize_equipment_components(
+	components: Array[EquipmentComponentRecord]
+) -> Array[Dictionary]:
+	var serialized: Array[Dictionary] = []
+	for component: EquipmentComponentRecord in components:
+		if component == null or not component.is_valid():
+			continue
+		serialized.append({
+			"component_slot": component.component_slot,
+			"item_id": component.item_id,
+			"material_id": component.material_id,
+			"material_quality": component.material_quality,
+			"amount": component.amount,
+		})
+	return serialized
 
 
 func _serialize_item_instances(
@@ -690,7 +709,44 @@ func _item_instance_from_data(instance_data: Variant) -> ItemInstance:
 	instance.crafted_day = maxi(int(data.get("crafted_day", 1)), 1)
 	instance.crafted_hour = clampi(int(data.get("crafted_hour", 0)), 0, 23)
 	instance.crafted_minute = clampi(int(data.get("crafted_minute", 0)), 0, 59)
+	instance.component_history_known = bool(
+		data.get("component_history_known", false)
+	)
+	instance.components = _equipment_components_from_data(
+		data.get("components", [])
+	)
 	return instance
+
+
+func _equipment_components_from_data(
+	components_data: Variant
+) -> Array[EquipmentComponentRecord]:
+	var components: Array[EquipmentComponentRecord] = []
+	if components_data is not Array:
+		return components
+
+	for component_data_variant: Variant in components_data:
+		if component_data_variant is not Dictionary:
+			continue
+		var component_data: Dictionary = component_data_variant
+		var component: EquipmentComponentRecord = EquipmentComponentRecord.new()
+		component.component_slot = str(component_data.get("component_slot", ""))
+		component.item_id = str(component_data.get("item_id", ""))
+		var item: ItemData = ItemDatabase.get_item(component.item_id)
+		if item == null or not item.is_tool_component():
+			continue
+		component.material_id = str(
+			component_data.get("material_id", item.material_id)
+		)
+		component.material_quality = maxi(
+			int(component_data.get("material_quality", item.material_quality)),
+			0
+		)
+		component.amount = maxi(int(component_data.get("amount", 1)), 1)
+		if component.is_valid():
+			components.append(component)
+
+	return components
 
 
 func _create_migrated_item_instance(item_id: String) -> ItemInstance:

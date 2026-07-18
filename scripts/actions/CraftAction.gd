@@ -38,10 +38,12 @@ func perform(
 		return false
 
 	var consumed_components: Dictionary = {}
+	var component_records: Array[EquipmentComponentRecord] = []
 
 	if not GameManager.consume_recipe_ingredients_from_accessible_inventories(
 		recipe,
-		consumed_components
+		consumed_components,
+		component_records
 	):
 		return false
 
@@ -66,7 +68,8 @@ func perform(
 			output_inventory,
 			crafted_results,
 			survivor,
-			civilization
+			civilization,
+			component_records
 		)
 	)
 
@@ -103,7 +106,8 @@ func _add_crafted_results(
 	output_inventory: FrontierInventory,
 	crafted_results: Array[IngredientData],
 	survivor: Survivor,
-	civilization: CivilizationData
+	civilization: CivilizationData,
+	component_records: Array[EquipmentComponentRecord]
 ) -> Array[ItemInstance]:
 	var created_instances: Array[ItemInstance] = []
 
@@ -119,7 +123,9 @@ func _add_crafted_results(
 			var instance: ItemInstance = civilization.create_item_instance(
 				result.item,
 				survivor.data.character_id,
-				survivor.data.display_name
+				survivor.data.display_name,
+				component_records,
+				true
 			)
 			if instance != null and output_inventory.add_equipment_instance(instance):
 				created_instances.append(instance)

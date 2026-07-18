@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.11-alpha1
+v0.5.12-alpha1
 
 ## Project Health
 
-🟢 Stable — Unique equipment instances passed gameplay and persistence testing
+🟢 Stable — Equipment component history passed gameplay and persistence testing
 
 ## Current Milestone
 
@@ -104,6 +104,11 @@ Sprint 3 — The Age of Discovery
 * Per-instance equipment selection and storage transfers
 * Exact equipped-tool continuity through succession
 * Save version 7 equipment-instance serialization and migration
+* Typed equipment component records
+* Exact head, handle, and binding history on newly crafted tools
+* Read-only Equipment Details screen
+* Explicit unavailable-history state for migrated equipment
+* Save version 8 component-history serialization and migration
 * Recorded death day, time, and cause
 * Automatic final Legacy Summary presentation
 * Deceased-character action blocking
@@ -191,13 +196,18 @@ Completed tools now exist as individual `ItemInstance` records rather than gener
 
 Ordinary materials and components remain stack-based. Save version 7 migrates older generic and equipped tools into distinct instances without retroactively inventing detailed component histories.
 
+## Equipment Component History
+
+Newly crafted equipment records the exact meaningful components consumed during construction. Each component snapshot retains its slot, item, material, quality, and quantity independently of later inventory movement or character succession.
+
+The read-only Equipment Details screen exposes identity, provenance, current base-item efficiency, and component construction. Version 8 saves preserve these records. Equipment migrated from versions 1 through 7 explicitly reports unavailable history rather than receiving fabricated components.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.11-alpha1 unique-equipment foundation, then expand those instances with complete selected-component history and component-derived statistics.
+Continue the vertical slice from the tested v0.5.12-alpha1 component-history foundation, then calculate equipment statistics from those recorded components.
 
 ## Next Goals
 
-* Complete selected-component history for equipment instances
 * Full component-derived equipment statistics
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates
