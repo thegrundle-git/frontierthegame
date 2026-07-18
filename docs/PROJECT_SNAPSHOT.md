@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.12-alpha1
+v0.5.13-alpha1
 
 ## Project Health
 
-🟢 Stable — Equipment component history passed gameplay and persistence testing
+🟢 Stable — Component-derived tool efficiency passed gameplay testing
 
 ## Current Milestone
 
@@ -109,6 +109,10 @@ Sprint 3 — The Age of Discovery
 * Read-only Equipment Details screen
 * Explicit unavailable-history state for migrated equipment
 * Save version 8 component-history serialization and migration
+* Centralized component-derived equipment-stat calculation
+* Axe efficiency derived from recorded head quality
+* Explainable stat-source presentation in Equipment Details
+* Base-item efficiency fallback for equipment without usable history
 * Recorded death day, time, and cause
 * Automatic final Legacy Summary presentation
 * Deceased-character action blocking
@@ -200,15 +204,22 @@ Ordinary materials and components remain stack-based. Save version 7 migrates ol
 
 Newly crafted equipment records the exact meaningful components consumed during construction. Each component snapshot retains its slot, item, material, quality, and quantity independently of later inventory movement or character succession.
 
-The read-only Equipment Details screen exposes identity, provenance, current base-item efficiency, and component construction. Version 8 saves preserve these records. Equipment migrated from versions 1 through 7 explicitly reports unavailable history rather than receiving fabricated components.
+The read-only Equipment Details screen exposes identity, provenance, current derived efficiency, its calculation source, and component construction. Version 8 saves preserve these records. Equipment migrated from versions 1 through 7 explicitly reports unavailable history rather than receiving fabricated components.
+
+## Component-Derived Tool Efficiency
+
+`EquipmentStatCalculator` derives axe efficiency from the recorded head component's material quality. Stone remains efficiency 1 and Flint remains efficiency 2, preserving established balance while shifting authority from the finished item template to the specific instance's construction.
+
+Tree chopping consumes this derived value before applying the existing Gathering and Strength bonuses. Equipment Details identifies the contributing head. Tools without usable component history retain their base-item efficiency as a compatibility fallback.
 
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.12-alpha1 component-history foundation, then calculate equipment statistics from those recorded components.
+Continue the vertical slice from the tested v0.5.13-alpha1 derived-efficiency foundation, then establish equipment durability and additional component effects.
 
 ## Next Goals
 
-* Full component-derived equipment statistics
+* Equipment durability foundation
+* Additional handle- and binding-derived equipment statistics
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates
 * Meadow ambient event

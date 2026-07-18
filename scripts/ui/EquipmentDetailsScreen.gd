@@ -32,10 +32,12 @@ func show_instance(instance: ItemInstance) -> void:
 
 	_previous_focus = get_viewport().gui_get_focus_owner()
 	title_label.text = item.display_name
+	var efficiency: int = EquipmentStatCalculator.get_tool_efficiency(instance)
 	identity_label.text = (
 		"Instance: " + instance.instance_id
 		+ "\nMaterial: " + _display_value(instance.material_id)
-		+ "\nTool efficiency: " + str(item.tool_efficiency)
+		+ "\nTool efficiency: " + str(efficiency)
+		+ "\n" + _get_efficiency_source_text(instance)
 	)
 	var maker: String = instance.crafted_by_name
 	if maker.is_empty():
@@ -85,6 +87,25 @@ func _build_components_text(instance: ItemInstance) -> String:
 			component_text += "\nQuantity: " + str(component.amount)
 
 	return component_text
+
+
+func _get_efficiency_source_text(instance: ItemInstance) -> String:
+	var component: EquipmentComponentRecord = (
+		EquipmentStatCalculator.get_efficiency_component(instance)
+	)
+	if component == null:
+		if not instance.component_history_known:
+			return "Source: Base tool data — component history unavailable"
+		return "Source: Base tool data — no valid head component recorded"
+
+	var item: ItemData = component.get_item_data()
+	var component_name: String = component.item_id
+	if item != null:
+		component_name = item.display_name
+	return (
+		"Derived from: " + component_name
+		+ " — head quality " + str(component.material_quality)
+	)
 
 
 func _display_value(value: String) -> String:

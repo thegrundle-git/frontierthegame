@@ -15,7 +15,7 @@ func perform(
 	if survivor == null:
 		return false
 
-	var equipped_axe := _get_equipped_axe(
+	var equipped_axe: ItemInstance = _get_equipped_axe(
 		survivor
 	)
 
@@ -106,8 +106,12 @@ func perform(
 
 func _get_equipped_axe(
 	survivor: Survivor
-) -> ItemData:
-	var equipped_item: ItemData = survivor.get_equipped_tool()
+) -> ItemInstance:
+	var equipped_instance: ItemInstance = survivor.get_equipped_tool_instance()
+	if equipped_instance == null:
+		return null
+
+	var equipped_item: ItemData = equipped_instance.get_item_data()
 
 	if equipped_item == null:
 		return null
@@ -118,15 +122,15 @@ func _get_equipped_axe(
 	if "axe" not in equipped_item.tags:
 		return null
 
-	return equipped_item
+	return equipped_instance
 
 
 func _calculate_log_yield(
 	survivor: Survivor,
-	equipped_axe: ItemData
+	equipped_axe: ItemInstance
 ) -> int:
 	var amount := maxi(
-		equipped_axe.tool_efficiency,
+		EquipmentStatCalculator.get_tool_efficiency(equipped_axe),
 		1
 	)
 
