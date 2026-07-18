@@ -15,6 +15,9 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var legacy_summary_screen: LegacySummaryScreen = %LegacySummaryScreen
 @onready var succession_screen: SuccessionScreen = %SuccessionScreen
 @onready var debug_death_button: Button = %DebugDeathButton
+@onready var completed_lives_log: RichTextLabel = %CompletedLivesLog
+@onready var completed_life_selector: OptionButton = %CompletedLifeSelector
+@onready var open_completed_life_button: Button = %OpenCompletedLifeButton
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
@@ -102,6 +105,9 @@ func _ready() -> void:
 		_on_debug_death_pressed
 	)
 	debug_death_button.visible = OS.is_debug_build()
+	open_completed_life_button.pressed.connect(
+		_on_open_completed_life_pressed
+	)
 
 	ActionManager.action_started.connect(
 		_on_action_started
@@ -244,6 +250,7 @@ func refresh_all() -> void:
 	update_landmarks_journal()
 	update_history_journal()
 	update_legacy_preview()
+	update_completed_lives_journal()
 	update_journal_tab_visibility()
 	update_discoveries_journal()
 	_update_time()
@@ -1194,6 +1201,81 @@ func _on_open_legacy_summary_pressed() -> void:
 		history_entries,
 		not survivor.data.is_alive
 	)
+
+
+func update_completed_lives_journal() -> void:
+	var previous_character_id: String = ""
+	if completed_life_selector.selected >= 0:
+		previous_character_id = str(
+			completed_life_selector.get_item_metadata(
+				completed_life_selector.selected
+			)
+		)
+
+	completed_life_selector.clear()
+	var civilization: CivilizationData = GameManager.current_civilization
+
+	if civilization == null or civilization.archived_lives.is_empty():
+		completed_lives_log.text = "No completed lives have been recorded."
+		completed_life_selector.disabled = true
+		open_completed_life_button.disabled = true
+		return
+
+	var journal_text: String = ""
+	var restored_index: int = -1
+
+	for archived_life: ArchivedCharacterLife in civilization.archived_lives:
+		if archived_life == null or not archived_life.is_valid():
+			continue
+
+		if not journal_text.is_empty():
+			journal_text += "\n\n"
+
+		journal_text += (
+			archived_life.display_name
+			+ "\nDied on Day "
+			+ str(archived_life.life_record.death_day)
+			+ " — "
+			+ archived_life.life_record.cause_of_death
+		)
+
+		completed_life_selector.add_item(archived_life.display_name)
+		var index: int = completed_life_selector.item_count - 1
+		completed_life_selector.set_item_metadata(index, archived_life.character_id)
+		if archived_life.character_id == previous_character_id:
+			restored_index = index
+
+	completed_lives_log.text = journal_text
+	var has_entries: bool = completed_life_selector.item_count > 0
+	completed_life_selector.disabled = not has_entries
+	open_completed_life_button.disabled = not has_entries
+
+	if restored_index >= 0:
+		completed_life_selector.select(restored_index)
+
+
+func _on_open_completed_life_pressed() -> void:
+	if completed_life_selector.selected < 0:
+		return
+
+	var character_id: String = str(
+		completed_life_selector.get_item_metadata(
+			completed_life_selector.selected
+		)
+	)
+	var civilization: CivilizationData = GameManager.current_civilization
+	if civilization == null:
+		return
+
+	for archived_life: ArchivedCharacterLife in civilization.archived_lives:
+		if archived_life == null or archived_life.character_id != character_id:
+			continue
+
+		legacy_summary_screen.show_archived_summary(
+			archived_life,
+			civilization.history_entries
+		)
+		return
 
 
 func show_final_legacy_summary() -> void:

@@ -2,7 +2,7 @@
 
 ## Current Version
 
-v0.5.9-alpha1
+v0.5.10-alpha1
 
 ## Project Health
 
@@ -109,6 +109,9 @@ Sprint 3 — The Age of Discovery
 * Dedicated Succession screen
 * Continued play after character death
 * Save version 6 succession serialization
+* Completed Lives Journal
+* Chronological archived-life presentation
+* Dismissible archived Legacy Summaries
 
 ## Civilization History
 
@@ -168,9 +171,17 @@ The final Legacy Summary can open a dedicated Succession screen. The current imp
 
 Successful succession replaces only the active survivor. Skills and the new Life Record begin fresh, while civilization knowledge, discoveries, history, location, time, personal inventory, kept-item settings, and the equipped tool remain. Save version 6 persists archived lives and the next successor sequence. Manual multi-generation and save/load testing passed.
 
+## Completed Lives Journal
+
+The Journal now exposes the civilization's completed-life archive in chronological order. Each entry shows the character's historical name, death day, and cause of death.
+
+Players can select an archived character and open a dismissible `COMPLETED LIFE` summary containing the existing Life Record statistics and identity-safe credited milestones. The tab remains visible before the first succession and presents a clear empty state.
+
+The feature is read-only and adds no duplicate persistence. Manual testing passed for empty, single-generation, multi-generation, and save/load scenarios.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.9-alpha1 succession foundation, then build on material variants with unique equipment instances that preserve component history.
+Continue the vertical slice from the tested v0.5.10-alpha1 completed-lives foundation, then build on material variants with unique equipment instances that preserve component history.
 
 ## Next Goals
 

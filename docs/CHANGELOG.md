@@ -4,6 +4,34 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.10-alpha1 — Completed Lives Journal
+
+### Added
+
+* Always-visible Completed Lives Journal tab.
+* Chronological presentation of archived characters with death day and cause.
+* Archived-character selection and expanded completed-life summaries.
+* Clear empty-state presentation before the first succession.
+
+### Changed
+
+* `LegacySummaryScreen` now supports a dismissible archived-life presentation mode.
+* Completed-life milestone attribution continues to use stable character IDs.
+* Archived-life browsing reuses civilization-owned archive data without adding duplicate save state.
+
+### Verified
+
+* Manual gameplay testing passed for empty state, single- and multi-generation lists, archived summaries, and save/load persistence.
+* Archived-summary viewing remained read-only and did not alter counters or history.
+* Isolated Godot 4.7 validation found no new errors from the Completed Lives Journal.
+* `git diff --check` passed.
+
+### Not Included
+
+* Family trees, relationships, heirs, portraits, graves, memorial buildings, generated biographies, and legacy scores remain future work.
+
+---
+
 ## v0.5.9-alpha1 — Succession Foundation
 
 ### Added
