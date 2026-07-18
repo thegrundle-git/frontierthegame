@@ -43,6 +43,7 @@
 * [x] Add unique equipment instances with stable identity and crafting provenance.
 * [x] Preserve complete selected-component history on equipment instances.
 * [x] Add the first material-derived tool efficiency statistic.
+* [x] Calculate axe efficiency from the recorded head component.
 * [ ] Calculate full equipment statistics from every selected component.
 * [ ] Expose field crafting outside the home interface.
 

@@ -71,4 +71,6 @@ The implemented Unique Equipment Instance foundation gives crafted tools individ
 
 The implemented Equipment Component History foundation records the exact meaningful parts consumed when a tool is assembled. Head, handle, and binding records retain their item, material, quality, and quantity as durable facts. Migrated tools acknowledge when that history is unavailable rather than receiving a plausible but fictional past.
 
-Component history is evidence, not yet behavior. Durability, calculated overall quality, naming, engraving, repair history, replacement components, and disassembly remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.
+Component history is now both evidence and a source of behavior. Axe efficiency is derived from the recorded head's material quality, and the interface explains that cause rather than presenting an unexplained number. Migrated tools retain their base performance when truthful construction evidence is unavailable.
+
+This first derived statistic does not imply that every component already affects performance. Durability, handle and binding effects, calculated overall quality, naming, engraving, repair history, replacement components, and disassembly remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.

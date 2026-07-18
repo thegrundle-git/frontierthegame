@@ -700,4 +700,16 @@ The current instance foundation deliberately excludes durability, quality, custo
 
 Save version 8 serializes component-history availability and each validated component record. Versions 1 through 7 remain accepted with `component_history_known` set to false. Migration does not infer components from a finished tool's material or recipe because doing so would create fictional history.
 
-Current tool efficiency still comes from the instance's base `ItemData`. Component-derived statistics, durability, repairs, replacement, and disassembly are intentionally outside this milestone.
+---
+
+## Component-Derived Tool Efficiency
+
+`EquipmentStatCalculator` is a stateless authority for equipment values derived from an `ItemInstance`. It does not cache or persist results.
+
+For current axes, the calculator locates the valid `head` component and returns at least 1 efficiency from its recorded `material_quality`. Stone quality 1 therefore remains efficiency 1, while Flint quality 2 remains efficiency 2.
+
+If component history is unavailable or no valid head record exists, the calculator falls back to the base `ItemData.tool_efficiency`. This preserves migrated equipment behavior without inventing components.
+
+`ChopTreeAction` supplies the equipped instance to the calculator, then applies the existing Gathering and Strength bonuses after the derived base yield. `EquipmentDetailsScreen` uses the same calculator and identifies the source component, ensuring gameplay and presentation cannot disagree.
+
+Because the value is derived exclusively from already-persisted version 8 data, this milestone does not change the save format. Durability, handle and binding effects, repairs, replacement, and disassembly remain outside its scope.

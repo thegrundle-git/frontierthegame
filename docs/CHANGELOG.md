@@ -4,6 +4,33 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.13-alpha1 — Component-Derived Tool Efficiency
+
+### Added
+
+* Centralized, stateless equipment-stat calculation.
+* Head-component quality as the authoritative source of axe efficiency.
+* Equipment Details explanations identifying the component behind a derived value.
+
+### Changed
+
+* Tree-chopping yield now uses the equipped instance's derived efficiency.
+* Stone and Flint Axe balance remains unchanged at efficiency 1 and 2 respectively.
+* Equipment without usable component history falls back to its base `ItemData` efficiency.
+
+### Verified
+
+* Manual gameplay testing passed for Stone and Flint Axe inspection, chopping yield, save/load, and succession continuity.
+* Existing Gathering and Strength bonuses continue to apply after derived base efficiency.
+* Isolated Godot 4.7 validation registered `EquipmentStatCalculator` without new implementation errors.
+* `git diff --check` passed.
+
+### Not Included
+
+* Durability, handle or binding effects, overall quality, random craftsmanship, repairs, replacement, and disassembly remain future work.
+
+---
+
 ## v0.5.12-alpha1 — Equipment Component History
 
 ### Added
