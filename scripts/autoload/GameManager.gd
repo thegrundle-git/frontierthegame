@@ -861,7 +861,8 @@ func can_afford_recipe_from_accessible_inventories(
 
 func consume_recipe_ingredients_from_accessible_inventories(
 	recipe: RecipeData,
-	consumed_components: Dictionary = {}
+	consumed_components: Dictionary = {},
+	component_records: Array[EquipmentComponentRecord] = []
 ) -> bool:
 	if not can_afford_recipe_from_accessible_inventories(
 		recipe
@@ -912,6 +913,13 @@ func consume_recipe_ingredients_from_accessible_inventories(
 							ingredient.component_slot
 						] = component
 
+					_record_consumed_component(
+						component_records,
+						component,
+						ingredient.component_slot,
+						amount_to_remove
+					)
+
 					remaining -= amount_to_remove
 
 			continue
@@ -935,9 +943,44 @@ func consume_recipe_ingredients_from_accessible_inventories(
 				amount_to_remove
 			)
 
+			if ingredient.item.is_tool_component():
+				_record_consumed_component(
+					component_records,
+					ingredient.item,
+					ingredient.item.component_slot,
+					amount_to_remove
+				)
+
 			remaining -= amount_to_remove
 
 	return true
+
+
+func _record_consumed_component(
+	records: Array[EquipmentComponentRecord],
+	item: ItemData,
+	component_slot: String,
+	amount: int
+) -> void:
+	if item == null or component_slot.is_empty() or amount <= 0:
+		return
+
+	for record: EquipmentComponentRecord in records:
+		if (
+			record != null
+			and record.component_slot == component_slot
+			and record.item_id == item.id
+		):
+			record.amount += amount
+			return
+
+	var record: EquipmentComponentRecord = EquipmentComponentRecord.new()
+	record.component_slot = component_slot
+	record.item_id = item.id
+	record.material_id = item.material_id
+	record.material_quality = maxi(item.material_quality, 0)
+	record.amount = amount
+	records.append(record)
 
 func get_accessible_crafting_ingredient_amount(
 	ingredient: IngredientData

@@ -685,3 +685,19 @@ Succession transfers the existing personal inventory and equipped instance to th
 Save version 7 serializes personal and civilization equipment-instance collections, the equipped instance, and the next instance sequence. Versions 1 through 6 remain accepted. Generic legacy tool counts are converted into distinct instances, and a legacy equipped-tool ID becomes one separate equipped instance without duplicating an inventory item.
 
 The current instance foundation deliberately excludes durability, quality, custom naming, engraving, repairs, component replacement, disassembly, and complete component history.
+
+---
+
+## Equipment Component History
+
+`EquipmentComponentRecord` is an immutable construction snapshot stored by `ItemInstance`. Each record contains the component slot, source item ID, material ID, material quality, and consumed quantity. `ItemInstance.component_history_known` distinguishes a known empty history from unavailable legacy data.
+
+`GameManager.consume_recipe_ingredients_from_accessible_inventories()` remains the authoritative ingredient-removal path. Alongside the existing material-variant selection dictionary, it records every meaningful component actually removed. This includes fixed recipe ingredients such as handles and bindings as well as interchangeable slot ingredients such as axe heads.
+
+`CraftAction` passes the completed record collection into `CivilizationData.create_item_instance()`. Each output instance receives deep-copied records, preventing one tool's future mutations from changing another tool assembled in the same crafting action.
+
+`EquipmentDetailsScreen` is a read-only presentation layer. `GameUI` resolves the selected accessible instance through `Survivor`, allowing equipped, personally carried, and locally stored equipment to be inspected without transferring or mutating it.
+
+Save version 8 serializes component-history availability and each validated component record. Versions 1 through 7 remain accepted with `component_history_known` set to false. Migration does not infer components from a finished tool's material or recipe because doing so would create fictional history.
+
+Current tool efficiency still comes from the instance's base `ItemData`. Component-derived statistics, durability, repairs, replacement, and disassembly are intentionally outside this milestone.

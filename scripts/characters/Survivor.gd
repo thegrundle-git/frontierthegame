@@ -351,6 +351,25 @@ func get_equipped_tool_instance() -> ItemInstance:
 	return equipped_tool_instance
 
 
+func get_accessible_equipment_instance(instance_id: String) -> ItemInstance:
+	if instance_id.is_empty():
+		return null
+	if (
+		equipped_tool_instance != null
+		and equipped_tool_instance.instance_id == instance_id
+	):
+		return equipped_tool_instance
+	for accessible_inventory: FrontierInventory in (
+		GameManager.get_accessible_crafting_inventories()
+	):
+		var instance: ItemInstance = (
+			accessible_inventory.get_equipment_instance(instance_id)
+		)
+		if instance != null:
+			return instance
+	return null
+
+
 func _refresh_legacy_preview() -> void:
 	if GameManager.game_ui != null:
 		GameManager.game_ui.update_legacy_preview()

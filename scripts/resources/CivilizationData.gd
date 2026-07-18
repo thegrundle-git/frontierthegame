@@ -31,7 +31,9 @@ var next_item_instance_sequence: int = 1
 func create_item_instance(
 	item: ItemData,
 	crafted_by_id: String = "",
-	crafted_by_name: String = ""
+	crafted_by_name: String = "",
+	components: Array[EquipmentComponentRecord] = [],
+	component_history_known: bool = false
 ) -> ItemInstance:
 	if item == null or not item.uses_unique_instances():
 		return null
@@ -46,6 +48,12 @@ func create_item_instance(
 	instance.crafted_day = maxi(TimeManager.day, 1)
 	instance.crafted_hour = clampi(TimeManager.hour, 0, 23)
 	instance.crafted_minute = clampi(TimeManager.minute, 0, 59)
+	instance.component_history_known = component_history_known
+	for component: EquipmentComponentRecord in components:
+		if component != null and component.is_valid():
+			instance.components.append(
+				component.duplicate(true) as EquipmentComponentRecord
+			)
 	return instance
 
 
