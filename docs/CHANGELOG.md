@@ -4,6 +4,36 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.9-alpha1 — Succession Foundation
+
+### Added
+
+* Typed civilization-owned archives for finalized character lives.
+* Deterministic successor candidates with stable sequence-based character IDs.
+* A focused Succession screen for continuing the civilization.
+* A Choose Successor action on the final Legacy Summary.
+* Save version 6 serialization for archived lives and successor sequencing.
+
+### Changed
+
+* Succession replaces the deceased active survivor while preserving civilization state and existing belongings.
+* Successors begin with fresh skills and a new empty Character Life Record.
+* Completed lives are archived exactly once and remain owned by the civilization.
+* Save versions 1 through 5 remain compatible and load with an empty completed-life archive.
+
+### Verified
+
+* Manual gameplay testing passed for death, successor selection, continued play, and save/load persistence.
+* Repeated succession produced deterministic successor names and unique stable IDs.
+* Isolated Godot 4.7 validation registered `ArchivedCharacterLife` and `SuccessionScreen`.
+* `git diff --check` passed.
+
+### Not Included
+
+* Children, heirs, families, relationships, inheritance choices, corpses, aging, multiple living settlers, and procedural biographies remain future work.
+
+---
+
 ## v0.5.8-alpha1 — Character Death Foundation
 
 ### Added

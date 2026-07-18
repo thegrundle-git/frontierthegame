@@ -2,7 +2,8 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 5
+const SAVE_VERSION := 6
+const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
 func save_game() -> bool:
@@ -170,6 +171,10 @@ func _build_save_data() -> Dictionary:
 			"history_entries": _serialize_history_entries(
 				civilization.history_entries
 			),
+			"archived_lives": _serialize_archived_lives(
+				civilization.archived_lives
+			),
+			"next_character_sequence": civilization.next_character_sequence,
 		},
 		"world_events": {
 			"completed_event_ids": WorldEventManager.completed_event_ids.duplicate()
@@ -250,6 +255,24 @@ func _serialize_history_entries(
 		})
 
 	return history_data
+
+
+func _serialize_archived_lives(
+	archived_lives: Array[ArchivedCharacterLife]
+) -> Array[Dictionary]:
+	var archive_data: Array[Dictionary] = []
+
+	for archived_life: ArchivedCharacterLife in archived_lives:
+		if archived_life == null or not archived_life.is_valid():
+			continue
+
+		archive_data.append({
+			"character_id": archived_life.character_id,
+			"display_name": archived_life.display_name,
+			"life_record": _serialize_life_record(archived_life.life_record)
+		})
+
+	return archive_data
 
 
 func _apply_save_data(
@@ -749,7 +772,118 @@ func _apply_civilization_data(
 		)
 	)
 
+	_apply_archived_lives_data(
+		civilization,
+		civilization_data.get("archived_lives", []),
+		civilization_data.get("next_character_sequence", 1)
+	)
+
 	civilization.synchronize_unlocked_recipes()
+
+
+func _apply_archived_lives_data(
+	civilization: CivilizationData,
+	archived_data: Variant,
+	next_sequence_data: Variant
+) -> void:
+	civilization.archived_lives.clear()
+	civilization.next_character_sequence = maxi(
+		_history_int_from_variant(next_sequence_data, 1),
+		1
+	)
+
+	if archived_data is not Array:
+		push_warning("Skipped malformed archived character-life data.")
+		return
+
+	for entry_variant: Variant in archived_data:
+		if entry_variant is not Dictionary:
+			continue
+
+		var entry: Dictionary = entry_variant
+		var character_id: String = str(entry.get("character_id", ""))
+		var display_name: String = str(entry.get("display_name", ""))
+		var record_variant: Variant = entry.get("life_record", {})
+
+		if record_variant is not Dictionary:
+			continue
+
+		var life_record: CharacterLifeRecord = _deserialize_archived_life_record(record_variant)
+		if life_record == null:
+			continue
+
+		civilization.archive_completed_life(
+			character_id,
+			display_name,
+			life_record
+		)
+
+		if character_id.begins_with(SUCCESSOR_ID_PREFIX):
+			var sequence: int = character_id.trim_prefix(SUCCESSOR_ID_PREFIX).to_int()
+			civilization.next_character_sequence = maxi(
+				civilization.next_character_sequence,
+				sequence + 1
+			)
+
+
+func _deserialize_archived_life_record(
+	record_data: Dictionary
+) -> CharacterLifeRecord:
+	var life_record: CharacterLifeRecord = CharacterLifeRecord.new()
+	life_record.searches_completed = maxi(
+		_history_int_from_variant(record_data.get("searches_completed", 0), 0), 0
+	)
+	life_record.item_units_gathered = maxi(
+		_history_int_from_variant(record_data.get("item_units_gathered", 0), 0), 0
+	)
+	life_record.crafting_actions_completed = maxi(
+		_history_int_from_variant(record_data.get("crafting_actions_completed", 0), 0), 0
+	)
+	life_record.item_units_crafted = maxi(
+		_history_int_from_variant(record_data.get("item_units_crafted", 0), 0), 0
+	)
+	life_record.discoveries_contributed = maxi(
+		_history_int_from_variant(record_data.get("discoveries_contributed", 0), 0), 0
+	)
+	life_record.knowledge_earned = maxi(
+		_history_int_from_variant(record_data.get("knowledge_earned", 0), 0), 0
+	)
+	life_record.skill_levels_gained = maxi(
+		_history_int_from_variant(record_data.get("skill_levels_gained", 0), 0), 0
+	)
+	life_record.first_recorded_day = maxi(
+		_history_int_from_variant(record_data.get("first_recorded_day", 0), 0), 0
+	)
+	life_record.latest_recorded_day = maxi(
+		_history_int_from_variant(record_data.get("latest_recorded_day", 0), 0), 0
+	)
+	life_record.is_finalized = bool(record_data.get("is_finalized", false))
+	life_record.death_day = maxi(
+		_history_int_from_variant(record_data.get("death_day", 0), 0), 0
+	)
+	life_record.death_hour = clampi(
+		_history_int_from_variant(record_data.get("death_hour", 0), 0), 0, 23
+	)
+	life_record.death_minute = clampi(
+		_history_int_from_variant(record_data.get("death_minute", 0), 0), 0, 59
+	)
+	life_record.cause_of_death = str(
+		record_data.get("cause_of_death", "")
+	).strip_edges()
+
+	if (
+		not life_record.is_finalized
+		or life_record.death_day <= 0
+		or life_record.cause_of_death.is_empty()
+	):
+		return null
+
+	life_record.latest_recorded_day = maxi(
+		life_record.latest_recorded_day,
+		life_record.death_day
+	)
+
+	return life_record
 
 
 func _apply_history_data(

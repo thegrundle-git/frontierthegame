@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://baqm7w2ms734e"]
+[gd_scene load_steps=6 format=3 uid="uid://baqm7w2ms734e"]
 
 [ext_resource type="Script" uid="uid://1bobkraw02vv" path="res://scripts/ui/GameUI.gd" id="1_r8hcy"]
 [ext_resource type="PackedScene" uid="uid://dgmcykvgvwvpm" path="res://scenes/ui/HomeUI.tscn" id="2_3pxe2"]
 [ext_resource type="PackedScene" uid="uid://c84ip6rn6xat4" path="res://scenes/ui/StorageUI.tscn" id="3_jwej7"]
 [ext_resource type="PackedScene" path="res://scenes/ui/LegacySummaryScreen.tscn" id="4_legacy"]
+[ext_resource type="PackedScene" path="res://scenes/ui/SuccessionScreen.tscn" id="5_successor"]
 
 [node name="GameUI" type="Control" unique_id=1054040398]
 layout_mode = 3
@@ -464,6 +465,11 @@ visible = false
 layout_mode = 1
 
 [node name="LegacySummaryScreen" parent="." instance=ExtResource("4_legacy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="SuccessionScreen" parent="." instance=ExtResource("5_successor")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

@@ -23,6 +23,50 @@ var observed_item_ids: Array[String] = []
 var discovered_ids: Array[String] = []
 var unlocked_recipe_ids: Array[String] = []
 var history_entries: Array[CivilizationHistoryEntry] = []
+var archived_lives: Array[ArchivedCharacterLife] = []
+var next_character_sequence: int = 1
+
+
+func has_archived_character(character_id: String) -> bool:
+	if character_id.is_empty():
+		return false
+
+	for archived_life: ArchivedCharacterLife in archived_lives:
+		if archived_life != null and archived_life.character_id == character_id:
+			return true
+
+	return false
+
+
+func archive_completed_life(
+	character_id: String,
+	display_name: String,
+	life_record: CharacterLifeRecord
+) -> bool:
+	if (
+		character_id.is_empty()
+		or display_name.is_empty()
+		or life_record == null
+		or not life_record.is_finalized
+		or has_archived_character(character_id)
+	):
+		return false
+
+	var archived_life: ArchivedCharacterLife = ArchivedCharacterLife.new()
+	archived_life.character_id = character_id
+	archived_life.display_name = display_name
+	archived_life.life_record = life_record.duplicate(true) as CharacterLifeRecord
+	archived_lives.append(archived_life)
+
+	return true
+
+
+func get_next_successor_id() -> String:
+	return "survivor.successor." + str(maxi(next_character_sequence, 1))
+
+
+func advance_character_sequence() -> void:
+	next_character_sequence = maxi(next_character_sequence, 1) + 1
 
 
 func has_history_event(

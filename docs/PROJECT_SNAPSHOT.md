@@ -2,7 +2,7 @@
 
 ## Current Version
 
-v0.5.8-alpha1
+v0.5.9-alpha1
 
 ## Project Health
 
@@ -103,6 +103,12 @@ Sprint 3 — The Age of Discovery
 * Deceased-character action blocking
 * Debug-only death testing trigger
 * Save version 5 death-state serialization
+* Civilization-owned completed-life archive
+* Deterministic successor generation
+* Stable sequence-based successor IDs
+* Dedicated Succession screen
+* Continued play after character death
+* Save version 6 succession serialization
 
 ## Civilization History
 
@@ -136,7 +142,7 @@ Current tracked values:
 
 Finnley's stable character ID is `survivor.finnley`. Identity-safe milestone attribution uses this ID rather than the mutable display name.
 
-The current save version is 5. Versions 1 through 3 remain compatible and receive an empty life record without retroactive reconstruction. Version 4 remains compatible and loads its survivor alive with an unfinalized life record. Manual gameplay and save/load testing passed.
+The current save version is 6. Versions 1 through 3 remain compatible and receive an empty life record without retroactive reconstruction. Versions 4 and 5 remain compatible and load with an empty completed-life archive. Manual gameplay and save/load testing passed.
 
 ## Legacy Summary
 
@@ -154,9 +160,17 @@ While a survivor is alive, the summary remains a read-only preview with keyboard
 
 Save version 5 persists the complete death state. Versions 1 through 4 load alive and unfinalized; malformed contradictory version 5 data is normalized safely. Manual testing passed for death, final summary presentation, action blocking, saving, and loading.
 
+## Succession Foundation
+
+Finalized character lives are archived as typed `ArchivedCharacterLife` resources owned by `CivilizationData`. Stable character IDs prevent duplicate archival, and each archived Life Record is deep-duplicated so active-character changes cannot alter completed history.
+
+The final Legacy Summary can open a dedicated Succession screen. The current implementation offers one deterministic newcomer at a time: Rowan, Mara, Elias, and Tamsin cycle through stable sequence-based IDs such as `survivor.successor.1`.
+
+Successful succession replaces only the active survivor. Skills and the new Life Record begin fresh, while civilization knowledge, discoveries, history, location, time, personal inventory, kept-item settings, and the equipped tool remain. Save version 6 persists archived lives and the next successor sequence. Manual multi-generation and save/load testing passed.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.7-alpha1 legacy-presentation foundation, then build on material variants with unique equipment instances that preserve component history.
+Continue the vertical slice from the tested v0.5.9-alpha1 succession foundation, then build on material variants with unique equipment instances that preserve component history.
 
 ## Next Goals
 

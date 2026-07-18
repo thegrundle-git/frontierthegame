@@ -475,11 +475,23 @@ No separate legacy manager, autoload, or scene transition is involved. The Chara
 
 Final Legacy Summary mode cannot be dismissed or closed with keyboard cancel. It displays the death timestamp and cause and exposes a save action so the finalized state can be persisted. Loading a deceased save reopens the final summary after the UI refreshes.
 
+### Succession Foundation
+
+`ArchivedCharacterLife` is a typed Resource containing a stable character ID, historical display name, and deep-duplicated finalized `CharacterLifeRecord`. `CivilizationData` owns the ordered `archived_lives` collection and rejects empty, unfinalized, or duplicate character entries.
+
+`CivilizationData.next_character_sequence` produces stable IDs such as `survivor.successor.1`. `GameManager.get_successor_candidate()` uses that sequence to choose one deterministic authored name. Reopening the screen before succession therefore cannot reroll the candidate.
+
+`GameManager.continue_as_successor()` is the authoritative transition gateway. It requires a deceased current survivor with a finalized Life Record, archives that life exactly once, creates a living successor with a new identity and empty Life Record, resets runtime skills, and advances the successor sequence.
+
+The active survivor's personal inventory object, kept-item settings, and equipped-tool ID are preserved during replacement. Civilization state, current location, time, history, discoveries, knowledge, and completed world events remain untouched. This is continuity of existing belongings, not an inheritance-choice system.
+
+`SuccessionScreen` is a modal presentation layer containing one candidate and one confirmation action. It does not own or persist the candidate. The final Legacy Summary remains open beneath it until `GameManager` confirms a successful transition; both overlays then close and the refreshed UI resumes normal play.
+
 ---
 
 ## Save Compatibility
 
-The current save version is 5.
+The current save version is 6.
 
 Save files store stable IDs rather than serialized resource objects.
 
@@ -507,6 +519,10 @@ Save version 4 adds `character_id` and every `CharacterLifeRecord` field to surv
 Save version 5 adds survivor alive/deceased state and Character Life Record finalization fields. Death timestamps are clamped defensively. A deceased save must contain a finalized record, a positive death day, and a nonempty cause; malformed contradictory state is normalized to a living, unfinalized survivor rather than blocking the rest of the save.
 
 Versions 1 through 4 load survivors alive and unfinalized. No prior save is interpreted as containing an unrecorded historical death.
+
+Save version 6 adds civilization-owned archived lives and `next_character_sequence`. Archived entries are reconstructed only when they contain a stable ID, display name, and valid finalized Life Record. Malformed and duplicate entries are skipped without blocking the rest of the save. Sequence restoration is clamped above zero and advanced beyond accepted sequence-based archived IDs.
+
+Versions 1 through 5 load with an empty completed-life archive and sequence 1. No completed life is fabricated from the currently active or deceased survivor during migration.
 
 Versions 1 through 3 remain supported and load with a new empty life record. Earlier saves retain the configured starting survivor ID after normal new-game initialization. No character statistics are reconstructed from inventory, skills, knowledge, discoveries, search counts, or civilization history. Version 1 and 2 saves also continue to load with an empty civilization ledger.
 

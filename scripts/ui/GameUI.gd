@@ -13,6 +13,7 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var legacy_preview_log: RichTextLabel = %LegacyPreviewLog
 @onready var open_legacy_summary_button: Button = %OpenLegacySummaryButton
 @onready var legacy_summary_screen: LegacySummaryScreen = %LegacySummaryScreen
+@onready var succession_screen: SuccessionScreen = %SuccessionScreen
 @onready var debug_death_button: Button = %DebugDeathButton
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
@@ -89,6 +90,12 @@ func _ready() -> void:
 	)
 	legacy_summary_screen.save_requested.connect(
 		_on_save_button_pressed
+	)
+	legacy_summary_screen.successor_requested.connect(
+		_on_successor_requested
+	)
+	succession_screen.successor_selected.connect(
+		_on_successor_selected
 	)
 
 	debug_death_button.pressed.connect(
@@ -1198,6 +1205,30 @@ func show_final_legacy_summary() -> void:
 
 func _on_debug_death_pressed() -> void:
 	GameManager.debug_kill_current_survivor()
+
+
+func _on_successor_requested() -> void:
+	var candidate: Dictionary = GameManager.get_successor_candidate()
+	if candidate.is_empty():
+		return
+
+	succession_screen.show_candidate(candidate)
+
+
+func _on_successor_selected(
+	display_name: String,
+	character_id: String
+) -> void:
+	if not GameManager.continue_as_successor(
+		display_name,
+		character_id
+	):
+		return
+
+	succession_screen.hide_screen()
+	legacy_summary_screen.complete_final_summary()
+	rebuild_location_controls()
+	refresh_all()
 
 
 func update_locations_journal() -> void:
