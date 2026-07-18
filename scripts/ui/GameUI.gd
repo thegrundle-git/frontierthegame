@@ -13,6 +13,7 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var legacy_preview_log: RichTextLabel = %LegacyPreviewLog
 @onready var open_legacy_summary_button: Button = %OpenLegacySummaryButton
 @onready var legacy_summary_screen: LegacySummaryScreen = %LegacySummaryScreen
+@onready var debug_death_button: Button = %DebugDeathButton
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
@@ -86,6 +87,14 @@ func _ready() -> void:
 	open_legacy_summary_button.pressed.connect(
 		_on_open_legacy_summary_pressed
 	)
+	legacy_summary_screen.save_requested.connect(
+		_on_save_button_pressed
+	)
+
+	debug_death_button.pressed.connect(
+		_on_debug_death_pressed
+	)
+	debug_death_button.visible = OS.is_debug_build()
 
 	ActionManager.action_started.connect(
 		_on_action_started
@@ -234,6 +243,13 @@ func refresh_all() -> void:
 	
 	var survivor: Survivor = (
 		GameManager.current_survivor
+	)
+
+	debug_death_button.disabled = (
+		survivor == null
+		or not survivor.can_act()
+		or ActionManager.is_busy
+		or WorldEventManager.has_pending_event()
 	)
 
 	if survivor != null:
@@ -432,6 +448,7 @@ func update_world_action_buttons() -> void:
 	var event_pending: bool = (
 		WorldEventManager.has_pending_event()
 	)
+	var survivor_can_act: bool = survivor != null and survivor.can_act()
 
 
 	for action_id_variant: Variant in world_action_buttons:
@@ -460,6 +477,8 @@ func update_world_action_buttons() -> void:
 		)
 
 		button.disabled = (
+			not survivor_can_act
+			or
 			ActionManager.is_busy
 			or event_pending
 			or not requirements_met
@@ -503,6 +522,8 @@ func update_world_action_buttons() -> void:
 
 		if return_home_button != null:
 			return_home_button.disabled = (
+				not survivor_can_act
+				or
 				ActionManager.is_busy
 				or event_pending
 		)
@@ -511,6 +532,8 @@ func update_travel_buttons() -> void:
 	var event_pending: bool = (
 		WorldEventManager.has_pending_event()
 	)
+	var survivor: Survivor = GameManager.current_survivor
+	var survivor_can_act: bool = survivor != null and survivor.can_act()
 
 	for destination_id_variant: Variant in travel_buttons:
 		var button: Button = (
@@ -518,6 +541,8 @@ func update_travel_buttons() -> void:
 		)
 
 		button.disabled = (
+			not survivor_can_act
+			or
 			ActionManager.is_busy
 			or event_pending
 		)
@@ -621,6 +646,8 @@ func update_tool_display() -> void:
 	)
 
 	unequip_tool_button.disabled = (
+		not survivor.can_act()
+		or
 		ActionManager.is_busy
 		or tool == null
 	)
@@ -693,11 +720,15 @@ func _rebuild_tool_selector(
 	)
 
 	tool_selector.disabled = (
+		not survivor.can_act()
+		or
 		ActionManager.is_busy
 		or not has_available_tool
 	)
 
 	equip_tool_button.disabled = (
+		not survivor.can_act()
+		or
 		ActionManager.is_busy
 		or not has_available_tool
 	)
@@ -865,6 +896,8 @@ func update_crafting() -> void:
 	recipe_label.text = recipe_text
 
 	craft_button.disabled = (
+		not survivor.can_act()
+		or
 		ActionManager.is_busy
 		or WorldEventManager.has_pending_event()
 		or not GameManager.can_afford_recipe_from_accessible_inventories(
@@ -1151,8 +1184,20 @@ func _on_open_legacy_summary_pressed() -> void:
 
 	legacy_summary_screen.show_summary(
 		survivor.data,
-		history_entries
+		history_entries,
+		not survivor.data.is_alive
 	)
+
+
+func show_final_legacy_summary() -> void:
+	home_ui.visible = false
+	storage_ui.visible = false
+	crafting_panel.visible = false
+	_on_open_legacy_summary_pressed()
+
+
+func _on_debug_death_pressed() -> void:
+	GameManager.debug_kill_current_survivor()
 
 
 func update_locations_journal() -> void:

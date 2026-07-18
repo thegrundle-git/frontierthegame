@@ -4,6 +4,36 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.8-alpha1 — Character Death Foundation
+
+### Added
+
+* Durable alive and deceased character state.
+* One-time Character Life Record finalization with death day, time, and cause.
+* Automatic final Legacy Summary presentation when a character dies.
+* Final-record saving and automatic summary restoration after loading a deceased save.
+* Debug-build-only character death trigger for testing the production death pipeline.
+* Save version 5 death-state serialization and defensive migration.
+
+### Changed
+
+* Deceased characters can no longer begin actions, travel, craft, equip tools, or enter home interactions.
+* Finalized life records reject later contribution mutations.
+* The Legacy Summary now supports living preview and non-dismissible final modes.
+* Save versions 1 through 4 remain compatible and load characters as alive with unfinalized life records.
+
+### Verified
+
+* Manual gameplay testing passed for death triggering, action blocking, final summary presentation, saving, and loading.
+* Isolated Godot 4.7 validation found no new errors from the death foundation.
+* `git diff --check` passed.
+
+### Not Included
+
+* Succession, inheritance, corpses, burial, aging, health depletion, and combat death remain future work.
+
+---
+
 ## v0.5.7-alpha1 — Legacy Summary Screen
 
 ### Added

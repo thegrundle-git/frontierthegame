@@ -106,6 +106,9 @@ func start_new_game() -> void:
 	current_survivor.initialize(
 		survivor_data
 	)
+	current_survivor.died.connect(
+		_on_survivor_died
+	)
 
 func start_world_action(
 	action_id: String
@@ -494,6 +497,13 @@ func _can_start_survivor_action() -> bool:
 	if current_survivor == null:
 		return false
 
+	if not current_survivor.can_act():
+		_add_event(
+			current_survivor.data.display_name
+			+ " can no longer perform actions."
+		)
+		return false
+
 	if ActionManager.is_busy:
 		return false
 
@@ -501,6 +511,38 @@ func _can_start_survivor_action() -> bool:
 		return false
 
 	return true
+
+
+func debug_kill_current_survivor() -> bool:
+	if not OS.is_debug_build():
+		return false
+
+	if not _can_start_survivor_action():
+		return false
+
+	return current_survivor.die("Debug test")
+
+
+func _on_survivor_died(
+	survivor: Survivor,
+	cause: String
+) -> void:
+	_add_event(
+		survivor.data.display_name
+		+ " died: "
+		+ cause
+		+ "."
+	)
+
+	survivor_is_at_home = false
+	_refresh_ui()
+
+	if game_ui != null and game_ui.has_method(
+		"show_final_legacy_summary"
+	):
+		game_ui.call_deferred(
+			"show_final_legacy_summary"
+		)
 
 
 func _add_event(message: String) -> void:
@@ -651,6 +693,9 @@ func is_at_home_location() -> bool:
 
 
 func enter_home() -> bool:
+	if current_survivor == null or not current_survivor.can_act():
+		return false
+
 	if not is_at_home_location():
 		return false
 

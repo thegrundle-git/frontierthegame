@@ -2,6 +2,9 @@ extends Node
 class_name Survivor
 
 
+signal died(survivor: Survivor, cause: String)
+
+
 const BASE_CARRY_WEIGHT := 20.0
 const CARRY_WEIGHT_PER_STRENGTH_LEVEL := 2.0
 
@@ -86,6 +89,8 @@ func gain_skill_xp(
 	skill_id: String,
 	amount: int
 ) -> void:
+	if not can_act():
+		return
 	if amount <= 0:
 		return
 
@@ -197,6 +202,8 @@ func get_carry_weight_capacity() -> float:
 func gain_knowledge(
 	amount: int
 ) -> void:
+	if not can_act():
+		return
 	if amount <= 0:
 		return
 
@@ -219,6 +226,8 @@ func gain_knowledge(
 func equip_tool(
 	item_id: String
 ) -> bool:
+	if not can_act():
+		return false
 	if item_id.is_empty():
 		return false
 
@@ -268,6 +277,8 @@ func equip_tool(
 
 
 func unequip_tool() -> bool:
+	if not can_act():
+		return false
 	if equipped_tool_id.is_empty():
 		return false
 
@@ -296,6 +307,28 @@ func unequip_tool() -> bool:
 			+ item_data.display_name
 			+ "."
 		)
+
+	return true
+
+
+func can_act() -> bool:
+	return data != null and data.is_alive
+
+
+func die(cause: String) -> bool:
+	if not can_act() or data.life_record == null:
+		return false
+
+	if not data.life_record.finalize_life(
+		cause,
+		TimeManager.day,
+		TimeManager.hour,
+		TimeManager.minute
+	):
+		return false
+
+	data.is_alive = false
+	died.emit(self, data.life_record.cause_of_death)
 
 	return true
 
