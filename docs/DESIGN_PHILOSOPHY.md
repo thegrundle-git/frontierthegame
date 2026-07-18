@@ -60,3 +60,13 @@ Children, heirs, families, relationships, inheritance choices, descendants, corp
 The Completed Lives Journal makes the civilization's memory visible after succession. A completed character remains readable as a distinct life with confirmed contributions and credited milestones rather than disappearing when control changes.
 
 Remembering completed lives is not yet genealogy or memorial culture. The archive records who lived and what they contributed without inventing family connections, social meaning, reverence, or historical judgment that the simulation has not earned.
+
+---
+
+## Objects, Identity, and Continuity
+
+Meaningful equipment should be capable of becoming part of the civilization's history. A finished tool is therefore not merely another interchangeable unit in a stack: it has a stable identity that can survive storage, use, saving, loading, death, and succession.
+
+The implemented Unique Equipment Instance foundation gives crafted tools individual IDs and records their base item, material, maker, and creation time. Stackable materials and components remain fungible resources, while completed tools become distinct objects. Equipping, storing, and continuing across generations all preserve the exact instance rather than silently substituting an equivalent tool.
+
+This foundation does not yet claim that a tool has a complete biography. Durability, quality, naming, engraving, repair history, replacement components, disassembly, and full component provenance remain future systems. Those features should enrich the existing instance rather than replacing it with parallel item representations.

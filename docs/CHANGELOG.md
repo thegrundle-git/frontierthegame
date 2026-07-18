@@ -4,6 +4,35 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.11-alpha1 — Unique Equipment Instance Foundation
+
+### Added
+
+* Typed, individually persistent equipment instances with stable IDs.
+* Crafting provenance containing the base item, material, crafter identity, and crafting timestamp.
+* Separate inventory storage for stackable resources and unique equipment.
+* Per-instance equipment selection and camp-storage transfers.
+
+### Changed
+
+* Crafted tools now create one unique instance per output unit instead of entering a generic item stack.
+* Equipping and unequipping move the exact selected tool instance.
+* Tool performance continues to resolve through the instance's base `ItemData`.
+* Succession preserves the exact equipped instance across generations.
+* Save version 7 persists personal, stored, and equipped instances with defensive migration from versions 1 through 6.
+
+### Verified
+
+* Manual gameplay testing passed for crafting, distinct instance IDs, equipment selection, storage transfers, save/load persistence, and succession continuity.
+* Isolated Godot 4.7 validation registered `ItemInstance` and found no new errors from the equipment-instance implementation.
+* `git diff --check` passed.
+
+### Not Included
+
+* Durability, quality, custom names, engraving, repairs, replacement components, disassembly, and complete component provenance remain future work.
+
+---
+
 ## v0.5.10-alpha1 — Completed Lives Journal
 
 ### Added

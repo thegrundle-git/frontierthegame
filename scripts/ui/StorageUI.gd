@@ -266,6 +266,7 @@ func refresh_storage() -> void:
 
 	deposit_all_button.disabled = (
 		survivor.inventory.items.is_empty()
+		and survivor.inventory.equipment_instances.is_empty()
 	)
 
 	amount_spinner.min_value = 1
@@ -336,6 +337,18 @@ func _populate_item_list(
 			item_id
 		)
 
+	for instance: ItemInstance in inventory.equipment_instances:
+		if instance == null:
+			continue
+		var item_data: ItemData = instance.get_item_data()
+		var display_name: String = instance.item_id
+		if item_data != null:
+			display_name = item_data.display_name
+		var index: int = item_list.add_item(
+			display_name + " [" + instance.instance_id + "]"
+		)
+		item_list.set_item_metadata(index, "instance:" + instance.instance_id)
+
 
 func _on_carried_item_selected(
 	index: int
@@ -352,6 +365,16 @@ func _on_carried_item_selected(
 			index
 		)
 	)
+	if item_id.begins_with("instance:"):
+		var instance_id: String = item_id.trim_prefix("instance:")
+		var instance: ItemInstance = survivor.inventory.get_equipment_instance(instance_id)
+		amount_spinner.max_value = 1
+		amount_spinner.value = 1
+		deposit_button.disabled = instance == null
+		take_button.disabled = true
+		keep_checkbox.disabled = true
+		keep_checkbox.button_pressed = false
+		return
 
 	var amount: int = (
 		survivor.inventory.get_item_amount(
@@ -395,6 +418,16 @@ func _on_storage_item_selected(
 			index
 		)
 	)
+	if item_id.begins_with("instance:"):
+		var instance_id: String = item_id.trim_prefix("instance:")
+		var instance: ItemInstance = civilization.inventory.get_equipment_instance(instance_id)
+		amount_spinner.max_value = 1
+		amount_spinner.value = 1
+		take_button.disabled = instance == null
+		deposit_button.disabled = true
+		keep_checkbox.disabled = true
+		keep_checkbox.button_pressed = false
+		return
 
 	var amount: int = (
 		civilization.inventory.get_item_amount(
@@ -438,6 +471,13 @@ func _on_deposit_pressed() -> void:
 
 	if item_id.is_empty():
 		return
+	if item_id.begins_with("instance:"):
+		survivor.inventory.transfer_equipment_instance_to(
+			civilization.inventory,
+			item_id.trim_prefix("instance:")
+		)
+		_refresh_after_transfer()
+		return
 
 	survivor.inventory.transfer_item_to(
 		civilization.inventory,
@@ -469,6 +509,13 @@ func _on_take_pressed() -> void:
 
 	if item_id.is_empty():
 		return
+	if item_id.begins_with("instance:"):
+		civilization.inventory.transfer_equipment_instance_to(
+			survivor.inventory,
+			item_id.trim_prefix("instance:")
+		)
+		_refresh_after_transfer()
+		return
 
 	civilization.inventory.transfer_item_to(
 		survivor.inventory,
@@ -498,6 +545,15 @@ func _on_deposit_all_pressed() -> void:
 		civilization.inventory,
 		true
 	)
+	var carried_instances: Array[ItemInstance] = (
+		survivor.inventory.equipment_instances.duplicate()
+	)
+	for instance: ItemInstance in carried_instances:
+		if instance != null:
+			survivor.inventory.transfer_equipment_instance_to(
+				civilization.inventory,
+				instance.instance_id
+			)
 
 	_refresh_after_transfer()
 
@@ -520,6 +576,8 @@ func _on_keep_toggled(
 	)
 
 	if item_id.is_empty():
+		return
+	if item_id.begins_with("instance:"):
 		return
 
 	survivor.inventory.set_item_kept(

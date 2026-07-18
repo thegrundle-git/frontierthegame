@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 6
+const SAVE_VERSION := 7
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -145,9 +145,14 @@ func _build_save_data() -> Dictionary:
 			"life_record": _serialize_life_record(
 				survivor.data.life_record
 			),
-			"equipped_tool_id": survivor.equipped_tool_id,
+			"equipped_tool_instance": _serialize_item_instance(
+				survivor.equipped_tool_instance
+			),
 			"inventory": _serialize_inventory(
 				survivor.inventory
+			),
+			"equipment_instances": _serialize_item_instances(
+				survivor.inventory.equipment_instances
 			),
 			"kept_item_ids": (
 				survivor.inventory.kept_item_ids.duplicate()
@@ -160,6 +165,9 @@ func _build_save_data() -> Dictionary:
 			"display_name": civilization.display_name,
 			"inventory": _serialize_inventory(
 				civilization.inventory
+			),
+			"equipment_instances": _serialize_item_instances(
+				civilization.inventory.equipment_instances
 			),
 			"discovered_landmark_ids": civilization.discovered_landmark_ids.duplicate(),
 			"knowledge": civilization.knowledge,
@@ -175,6 +183,7 @@ func _build_save_data() -> Dictionary:
 				civilization.archived_lives
 			),
 			"next_character_sequence": civilization.next_character_sequence,
+			"next_item_instance_sequence": civilization.next_item_instance_sequence,
 		},
 		"world_events": {
 			"completed_event_ids": WorldEventManager.completed_event_ids.duplicate()
@@ -193,6 +202,33 @@ func _serialize_inventory(
 		)
 
 	return inventory_data
+
+
+func _serialize_item_instance(instance: ItemInstance) -> Dictionary:
+	if instance == null or not instance.is_valid():
+		return {}
+
+	return {
+		"instance_id": instance.instance_id,
+		"item_id": instance.item_id,
+		"material_id": instance.material_id,
+		"crafted_by_id": instance.crafted_by_id,
+		"crafted_by_name": instance.crafted_by_name,
+		"crafted_day": instance.crafted_day,
+		"crafted_hour": instance.crafted_hour,
+		"crafted_minute": instance.crafted_minute,
+	}
+
+
+func _serialize_item_instances(
+	instances: Array[ItemInstance]
+) -> Array[Dictionary]:
+	var serialized: Array[Dictionary] = []
+	for instance: ItemInstance in instances:
+		var instance_data := _serialize_item_instance(instance)
+		if not instance_data.is_empty():
+			serialized.append(instance_data)
+	return serialized
 
 
 func _serialize_skills(
@@ -308,9 +344,6 @@ func _apply_save_data(
 		)
 	)
 
-	if GameManager.current_survivor != null:
-		GameManager.current_survivor.normalize_equipped_tool_ownership()
-
 	_apply_world_event_data(
 		save_data.get(
 			"world_events",
@@ -408,13 +441,6 @@ func _apply_survivor_data(
 		)
 	)
 
-	survivor.equipped_tool_id = str(
-		survivor_data.get(
-			"equipped_tool_id",
-			""
-		)
-	)
-
 	_apply_inventory_data(
 		survivor.inventory,
 		survivor_data.get(
@@ -422,6 +448,25 @@ func _apply_survivor_data(
 			{}
 		)
 	)
+	if survivor_data.has("equipment_instances"):
+		_apply_item_instances_data(
+			survivor.inventory,
+			survivor_data.get("equipment_instances", [])
+		)
+
+	var equipped_instance_data: Variant = survivor_data.get(
+		"equipped_tool_instance",
+		{}
+	)
+	survivor.equipped_tool_instance = _item_instance_from_data(
+		equipped_instance_data
+	)
+	if survivor.equipped_tool_instance == null:
+		var legacy_tool_id := str(survivor_data.get("equipped_tool_id", ""))
+		if not legacy_tool_id.is_empty():
+			survivor.equipped_tool_instance = _create_migrated_item_instance(
+				legacy_tool_id
+			)
 
 	var saved_kept_item_ids: Array[String] = (
 		_string_array_from_variant(
@@ -605,7 +650,55 @@ func _apply_inventory_data(
 			)
 			continue
 
+		var item: ItemData = ItemDatabase.get_item(item_id)
+		if item != null and item.uses_unique_instances():
+			for _unit: int in range(amount):
+				var migrated: ItemInstance = _create_migrated_item_instance(item_id)
+				if migrated != null:
+					inventory.add_equipment_instance(migrated)
+			continue
+
 		inventory.items[item_id] = amount
+
+
+func _apply_item_instances_data(
+	inventory: FrontierInventory,
+	instances_data: Variant
+) -> void:
+	inventory.equipment_instances.clear()
+	if instances_data is not Array:
+		return
+	for instance_data: Variant in instances_data:
+		var instance: ItemInstance = _item_instance_from_data(instance_data)
+		if instance != null:
+			inventory.add_equipment_instance(instance)
+
+
+func _item_instance_from_data(instance_data: Variant) -> ItemInstance:
+	if instance_data is not Dictionary:
+		return null
+	var data: Dictionary = instance_data
+	var instance: ItemInstance = ItemInstance.new()
+	instance.instance_id = str(data.get("instance_id", ""))
+	instance.item_id = str(data.get("item_id", ""))
+	var item: ItemData = ItemDatabase.get_item(instance.item_id)
+	if item == null or not item.uses_unique_instances() or instance.instance_id.is_empty():
+		return null
+	instance.material_id = str(data.get("material_id", item.material_id))
+	instance.crafted_by_id = str(data.get("crafted_by_id", ""))
+	instance.crafted_by_name = str(data.get("crafted_by_name", ""))
+	instance.crafted_day = maxi(int(data.get("crafted_day", 1)), 1)
+	instance.crafted_hour = clampi(int(data.get("crafted_hour", 0)), 0, 23)
+	instance.crafted_minute = clampi(int(data.get("crafted_minute", 0)), 0, 59)
+	return instance
+
+
+func _create_migrated_item_instance(item_id: String) -> ItemInstance:
+	var civilization: CivilizationData = GameManager.current_civilization
+	var item: ItemData = ItemDatabase.get_item(item_id)
+	if civilization == null or item == null or not item.uses_unique_instances():
+		return null
+	return civilization.create_item_instance(item)
 
 
 func _apply_skill_data(
@@ -679,6 +772,11 @@ func _apply_civilization_data(
 				civilization.inventory,
 				saved_inventory
 			)
+			if civilization_data.has("equipment_instances"):
+				_apply_item_instances_data(
+					civilization.inventory,
+					civilization_data.get("equipment_instances", [])
+				)
 	else:
 		var survivor: Survivor = (
 			GameManager.current_survivor
@@ -693,14 +791,25 @@ func _apply_civilization_data(
 					true
 				)
 			)
+			civilization.inventory.equipment_instances = (
+				survivor.inventory.equipment_instances.duplicate()
+			)
 
 			survivor.inventory.items.clear()
+			survivor.inventory.equipment_instances.clear()
 
 	civilization.display_name = str(
 		civilization_data.get(
 			"display_name",
 			civilization.display_name
 		)
+	)
+	civilization.next_item_instance_sequence = maxi(
+		maxi(
+			int(civilization_data.get("next_item_instance_sequence", 1)),
+			civilization.next_item_instance_sequence
+		),
+		1
 	)
 	
 	civilization.visited_location_ids = (

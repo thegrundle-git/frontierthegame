@@ -11,5 +11,6 @@ category = "tool"
 weight = 2.0
 stack_size = 1
 tags = Array[String](["tool", "axe", "crafting", "flint"])
+material_id = "flint"
 tool_efficiency = 2
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

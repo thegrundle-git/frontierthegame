@@ -19,7 +19,7 @@ const SKILL_ORDER: Array[String] = [
 var data: SurvivorData
 var inventory: FrontierInventory
 
-var equipped_tool_id: String = ""
+var equipped_tool_instance: ItemInstance
 
 var skills: Dictionary = {}
 
@@ -224,47 +224,41 @@ func gain_knowledge(
 
 
 func equip_tool(
-	item_id: String
+	instance_id: String
 ) -> bool:
 	if not can_act():
 		return false
-	if item_id.is_empty():
+	if instance_id.is_empty():
 		return false
 
-	if equipped_tool_id == item_id:
+	if (
+		equipped_tool_instance != null
+		and equipped_tool_instance.instance_id == instance_id
+	):
 		return true
 
-	var item_data: ItemData = (
-		ItemDatabase.get_item(
-			item_id
-		)
-	)
-
-	if item_data == null:
-		return false
-
-	if "tool" not in item_data.tags:
-		return false
-
 	var source_inventory: FrontierInventory = (
-		_find_accessible_inventory_with_item(
-			item_id
-		)
+		_find_accessible_inventory_with_instance(instance_id)
 	)
-
 	if source_inventory == null:
 		return false
 
-	if not equipped_tool_id.is_empty():
-		unequip_tool()
-
-	if not source_inventory.remove_item(
-		item_id,
-		1
-	):
+	var instance: ItemInstance = source_inventory.get_equipment_instance(instance_id)
+	if instance == null:
 		return false
 
-	equipped_tool_id = item_id
+	var item_data: ItemData = instance.get_item_data()
+	if item_data == null or "tool" not in item_data.tags:
+		return false
+
+	if equipped_tool_instance != null:
+		unequip_tool()
+
+	instance = source_inventory.remove_equipment_instance(instance_id)
+	if instance == null:
+		return false
+
+	equipped_tool_instance = instance
 
 	_add_event(
 		data.display_name
@@ -279,26 +273,18 @@ func equip_tool(
 func unequip_tool() -> bool:
 	if not can_act():
 		return false
-	if equipped_tool_id.is_empty():
+	if equipped_tool_instance == null:
 		return false
 
 	if inventory == null:
 		return false
 
-	var previous_tool_id := equipped_tool_id
+	var previous_instance: ItemInstance = equipped_tool_instance
+	var item_data: ItemData = previous_instance.get_item_data()
+	if not inventory.add_equipment_instance(previous_instance):
+		return false
 
-	inventory.add_item(
-		previous_tool_id,
-		1
-	)
-
-	equipped_tool_id = ""
-
-	var item_data: ItemData = (
-		ItemDatabase.get_item(
-			previous_tool_id
-		)
-	)
+	equipped_tool_instance = null
 
 	if item_data != null:
 		_add_event(
@@ -333,48 +319,13 @@ func die(cause: String) -> bool:
 	return true
 
 
-func normalize_equipped_tool_ownership() -> void:
-	if equipped_tool_id.is_empty():
-		return
-
-	if (
-		inventory != null
-		and inventory.has_item(
-			equipped_tool_id
-		)
-	):
-		inventory.remove_item(
-			equipped_tool_id,
-			1
-		)
-		return
-
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		civilization != null
-		and civilization.inventory != null
-		and civilization.inventory.has_item(
-			equipped_tool_id
-		)
-	):
-		civilization.inventory.remove_item(
-			equipped_tool_id,
-			1
-		)
-
-
-func _find_accessible_inventory_with_item(
-	item_id: String
+func _find_accessible_inventory_with_instance(
+	instance_id: String
 ) -> FrontierInventory:
 	for accessible_inventory: FrontierInventory in (
 		GameManager.get_accessible_crafting_inventories()
 	):
-		if accessible_inventory.has_item(
-			item_id
-		):
+		if accessible_inventory.get_equipment_instance(instance_id) != null:
 			return accessible_inventory
 
 	return null
@@ -383,16 +334,21 @@ func _find_accessible_inventory_with_item(
 func has_equipped_tool(
 	item_id: String
 ) -> bool:
-	return equipped_tool_id == item_id
+	return (
+		equipped_tool_instance != null
+		and equipped_tool_instance.item_id == item_id
+	)
 
 
 func get_equipped_tool() -> ItemData:
-	if equipped_tool_id.is_empty():
+	if equipped_tool_instance == null:
 		return null
 
-	return ItemDatabase.get_item(
-		equipped_tool_id
-	)
+	return equipped_tool_instance.get_item_data()
+
+
+func get_equipped_tool_instance() -> ItemInstance:
+	return equipped_tool_instance
 
 
 func _refresh_legacy_preview() -> void:

@@ -26,3 +26,7 @@ var description: String = ""
 
 func is_tool_component() -> bool:
 	return not component_slot.is_empty()
+
+
+func uses_unique_instances() -> bool:
+	return stack_size == 1 and "tool" in tags

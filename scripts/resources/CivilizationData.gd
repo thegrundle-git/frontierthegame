@@ -25,6 +25,28 @@ var unlocked_recipe_ids: Array[String] = []
 var history_entries: Array[CivilizationHistoryEntry] = []
 var archived_lives: Array[ArchivedCharacterLife] = []
 var next_character_sequence: int = 1
+var next_item_instance_sequence: int = 1
+
+
+func create_item_instance(
+	item: ItemData,
+	crafted_by_id: String = "",
+	crafted_by_name: String = ""
+) -> ItemInstance:
+	if item == null or not item.uses_unique_instances():
+		return null
+
+	var instance: ItemInstance = ItemInstance.new()
+	instance.instance_id = "item.instance." + str(maxi(next_item_instance_sequence, 1))
+	next_item_instance_sequence = maxi(next_item_instance_sequence, 1) + 1
+	instance.item_id = item.id
+	instance.material_id = item.material_id
+	instance.crafted_by_id = crafted_by_id
+	instance.crafted_by_name = crafted_by_name
+	instance.crafted_day = maxi(TimeManager.day, 1)
+	instance.crafted_hour = clampi(TimeManager.hour, 0, 23)
+	instance.crafted_minute = clampi(TimeManager.minute, 0, 59)
+	return instance
 
 
 func has_archived_character(character_id: String) -> bool:
