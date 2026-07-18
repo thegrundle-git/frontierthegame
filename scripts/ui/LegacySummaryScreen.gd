@@ -64,6 +64,23 @@ func show_summary(
 	close_button.grab_focus()
 
 
+func show_archived_summary(
+	archived_life: ArchivedCharacterLife,
+	history_entries: Array[CivilizationHistoryEntry]
+) -> void:
+	if archived_life == null or not archived_life.is_valid():
+		return
+
+	var archived_data: SurvivorData = SurvivorData.new()
+	archived_data.character_id = archived_life.character_id
+	archived_data.display_name = archived_life.display_name
+	archived_data.is_alive = false
+	archived_data.life_record = archived_life.life_record
+
+	show_summary(archived_data, history_entries, false)
+	title_label.text = "COMPLETED LIFE"
+
+
 func _on_primary_button_pressed() -> void:
 	if _is_final:
 		save_requested.emit()

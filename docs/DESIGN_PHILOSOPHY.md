@@ -56,3 +56,7 @@ The implemented Succession Foundation allows the civilization to continue after 
 Current succession deliberately preserves existing belongings without asking the player to divide them. This continuity is not yet an inheritance system and should not imply family, heirship, or ownership law.
 
 Children, heirs, families, relationships, inheritance choices, descendants, corpses, burial, aging, health-driven death, relationship memories, and generated life stories remain future work. Those systems should build on finalized and archived lives instead of replacing or duplicating them.
+
+The Completed Lives Journal makes the civilization's memory visible after succession. A completed character remains readable as a distinct life with confirmed contributions and credited milestones rather than disappearing when control changes.
+
+Remembering completed lives is not yet genealogy or memorial culture. The archive records who lived and what they contributed without inventing family connections, social meaning, reverence, or historical judgment that the simulation has not earned.

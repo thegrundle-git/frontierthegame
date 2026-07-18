@@ -487,6 +487,16 @@ The active survivor's personal inventory object, kept-item settings, and equippe
 
 `SuccessionScreen` is a modal presentation layer containing one candidate and one confirmation action. It does not own or persist the candidate. The final Legacy Summary remains open beneath it until `GameManager` confirms a successful transition; both overlays then close and the refreshed UI resumes normal play.
 
+### Completed Lives Journal
+
+`GameUI.update_completed_lives_journal()` reads `CivilizationData.archived_lives` in insertion order and rebuilds a chronological, read-only Journal view. The tab remains visible when the archive is empty so the player can understand that completed lives will eventually appear there.
+
+The selector stores stable character IDs as item metadata. Opening an entry resolves that ID against the civilization-owned archive and passes the matching `ArchivedCharacterLife` to `LegacySummaryScreen.show_archived_summary()`.
+
+Archived-summary mode adapts the existing Legacy Summary presentation without creating a second statistics or milestone renderer. It is dismissible, does not expose succession controls, and derives credited milestones from the selected archived character's stable ID. Viewing or refreshing completed lives cannot mutate the archive, Life Records, or civilization history.
+
+The Completed Lives Journal adds no save fields. It is a presentation consumer of the save-version-6 succession archive.
+
 ---
 
 ## Save Compatibility
