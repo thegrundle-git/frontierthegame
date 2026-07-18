@@ -51,4 +51,8 @@ The implemented Legacy Summary preview turns those recorded facts into a readabl
 
 The implemented Character Death Foundation now lets death complete a recorded life. Finalization is a durable, one-time transition grounded in the existing life record, and the final Legacy Summary reflects confirmed contributions rather than inventing a score or biography. A deceased character cannot continue accumulating accomplishments.
 
-Death is not yet a generational continuation system. Succession, inheritance, descendants, corpses, burial, aging, health-driven death, relationship memories, and generated life stories remain future work. Those systems should build on the finalized life record instead of replacing or duplicating it.
+The implemented Succession Foundation allows the civilization to continue after a completed life. The deceased character becomes durable civilization memory, while the successor begins a distinct identity, fresh skills, and an empty Life Record. The world and its accumulated history remain the continuous protagonist.
+
+Current succession deliberately preserves existing belongings without asking the player to divide them. This continuity is not yet an inheritance system and should not imply family, heirship, or ownership law.
+
+Children, heirs, families, relationships, inheritance choices, descendants, corpses, burial, aging, health-driven death, relationship memories, and generated life stories remain future work. Those systems should build on finalized and archived lives instead of replacing or duplicating them.

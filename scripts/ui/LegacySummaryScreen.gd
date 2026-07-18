@@ -4,6 +4,7 @@ class_name LegacySummaryScreen
 
 signal closed
 signal save_requested
+signal successor_requested
 
 
 @onready var character_name_label: Label = %CharacterNameLabel
@@ -13,6 +14,7 @@ signal save_requested
 @onready var statistics_log: RichTextLabel = %StatisticsLog
 @onready var milestones_log: RichTextLabel = %MilestonesLog
 @onready var close_button: Button = %CloseButton
+@onready var successor_button: Button = %SuccessorButton
 
 var _previous_focus: Control
 var _is_final: bool = false
@@ -20,6 +22,9 @@ var _is_final: bool = false
 
 func _ready() -> void:
 	close_button.pressed.connect(_on_primary_button_pressed)
+	successor_button.pressed.connect(
+		func() -> void: successor_requested.emit()
+	)
 	visible = false
 
 
@@ -52,6 +57,8 @@ func show_summary(
 		if _is_final
 		else "Return to Frontier"
 	)
+	successor_button.visible = _is_final
+	successor_button.disabled = not _is_final
 	visible = true
 	move_to_front()
 	close_button.grab_focus()
@@ -75,6 +82,11 @@ func hide_summary() -> void:
 		_previous_focus.grab_focus()
 
 	closed.emit()
+
+
+func complete_final_summary() -> void:
+	_is_final = false
+	hide_summary()
 
 
 func _populate_summary(

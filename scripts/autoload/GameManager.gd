@@ -5,6 +5,12 @@ const STARTING_LOCATION_ID := "forest"
 
 const CRAFT_DURATION_SECONDS := 4.0
 const CRAFT_GAME_MINUTES := 45
+const SUCCESSOR_NAMES: Array[String] = [
+	"Rowan",
+	"Mara",
+	"Elias",
+	"Tamsin"
+]
 
 
 var current_survivor: Survivor
@@ -91,24 +97,7 @@ func start_new_game() -> void:
 		)
 		return
 
-	var survivor_scene: PackedScene = load(
-		"res://scenes/characters/Survivor.tscn"
-	)
-
-	if survivor_scene == null:
-		push_error(
-			"Failed to load Survivor.tscn."
-		)
-		return
-
-	current_survivor = survivor_scene.instantiate()
-
-	current_survivor.initialize(
-		survivor_data
-	)
-	current_survivor.died.connect(
-		_on_survivor_died
-	)
+	current_survivor = _instantiate_survivor(survivor_data)
 
 func start_world_action(
 	action_id: String
@@ -521,6 +510,99 @@ func debug_kill_current_survivor() -> bool:
 		return false
 
 	return current_survivor.die("Debug test")
+
+
+func get_successor_candidate() -> Dictionary:
+	if current_civilization == null:
+		return {}
+
+	var sequence: int = maxi(current_civilization.next_character_sequence, 1)
+	var name_index: int = (sequence - 1) % SUCCESSOR_NAMES.size()
+
+	return {
+		"character_id": current_civilization.get_next_successor_id(),
+		"display_name": SUCCESSOR_NAMES[name_index]
+	}
+
+
+func continue_as_successor(
+	successor_name: String,
+	successor_id: String
+) -> bool:
+	if (
+		current_survivor == null
+		or current_civilization == null
+		or current_survivor.can_act()
+		or current_survivor.data.life_record == null
+		or not current_survivor.data.life_record.is_finalized
+		or ActionManager.is_busy
+		or WorldEventManager.has_pending_event()
+		or successor_name.strip_edges().is_empty()
+		or successor_id.is_empty()
+		or successor_id != current_civilization.get_next_successor_id()
+		or current_civilization.has_archived_character(successor_id)
+	):
+		return false
+
+	var previous_survivor: Survivor = current_survivor
+	var previous_name: String = previous_survivor.data.display_name
+	var preserved_inventory: FrontierInventory = previous_survivor.inventory
+	var preserved_tool_id: String = previous_survivor.equipped_tool_id
+	var successor_data := SurvivorData.new()
+	successor_data.character_id = successor_id
+	successor_data.display_name = successor_name.strip_edges()
+	successor_data.is_alive = true
+	successor_data.life_record = CharacterLifeRecord.new()
+
+	var successor: Survivor = _instantiate_survivor(successor_data)
+	if successor == null:
+		return false
+
+	if not current_civilization.archive_completed_life(
+		previous_survivor.data.character_id,
+		previous_name,
+		previous_survivor.data.life_record
+	):
+		successor.free()
+		return false
+
+	successor.inventory = preserved_inventory
+	successor.equipped_tool_id = preserved_tool_id
+	current_survivor = successor
+	survivor_data = successor_data
+	current_civilization.advance_character_sequence()
+	survivor_is_at_home = false
+
+	previous_survivor.free()
+
+	_add_event(
+		successor_data.display_name
+		+ " arrived to continue what "
+		+ previous_name
+		+ " began."
+	)
+	_refresh_ui()
+
+	return true
+
+
+func _instantiate_survivor(data: SurvivorData) -> Survivor:
+	if data == null:
+		return null
+
+	var survivor_scene: PackedScene = load(
+		"res://scenes/characters/Survivor.tscn"
+	)
+
+	if survivor_scene == null:
+		push_error("Failed to load Survivor.tscn.")
+		return null
+
+	var survivor: Survivor = survivor_scene.instantiate()
+	survivor.initialize(data)
+	survivor.died.connect(_on_survivor_died)
+
+	return survivor
 
 
 func _on_survivor_died(
