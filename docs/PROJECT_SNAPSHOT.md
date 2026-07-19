@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.13-alpha1
+v0.5.14-alpha1
 
 ## Project Health
 
-🟢 Stable — Component-derived tool efficiency passed gameplay testing
+🟢 Stable — Equipment durability passed gameplay and persistence testing
 
 ## Current Milestone
 
@@ -113,6 +113,12 @@ Sprint 3 — The Age of Discovery
 * Axe efficiency derived from recorded head quality
 * Explainable stat-source presentation in Equipment Details
 * Base-item efficiency fallback for equipment without usable history
+* Independent component condition and failure state
+* Centralized equipment durability calculations
+* Head and binding wear from successful tree chopping
+* Critical-component action gating
+* Equipment condition and usability inspection
+* Save version 9 durability serialization and migration
 * Recorded death day, time, and cause
 * Automatic final Legacy Summary presentation
 * Deceased-character action blocking
@@ -160,7 +166,7 @@ Current tracked values:
 
 Finnley's stable character ID is `survivor.finnley`. Identity-safe milestone attribution uses this ID rather than the mutable display name.
 
-The current save version is 6. Versions 1 through 3 remain compatible and receive an empty life record without retroactive reconstruction. Versions 4 and 5 remain compatible and load with an empty completed-life archive. Manual gameplay and save/load testing passed.
+The current save version is 9. Versions 1 through 8 remain compatible through explicit migrations, without retroactively inventing history or components. Manual gameplay and save/load testing passed.
 
 ## Legacy Summary
 
@@ -212,14 +218,22 @@ The read-only Equipment Details screen exposes identity, provenance, current der
 
 Tree chopping consumes this derived value before applying the existing Gathering and Strength bonuses. Equipment Details identifies the contributing head. Tools without usable component history retain their base-item efficiency as a compatibility fallback.
 
+## Equipment Durability
+
+Component-aware tools now keep mutable condition separately from their immutable construction records. Maximum condition is centralized by slot and material quality: current Stone and Flint heads begin at 30 and 40, the Stick Handle at 30, and Fiber Binding at 10.
+
+Successful tree chopping wears the head and binding after granting the action's results. The final valid use succeeds, then a failed critical component blocks later actions. Equipment Details exposes per-component and overall condition without adding repair controls.
+
+Save version 9 preserves exact wear. Version 8 tools initialize known components at full condition, while older unknown-history tools receive only an overall fallback condition and no invented parts.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.13-alpha1 derived-efficiency foundation, then establish equipment durability and additional component effects.
+Continue the vertical slice from the tested v0.5.14-alpha1 durability foundation, then add deliberate maintenance and component replacement.
 
 ## Next Goals
 
-* Equipment durability foundation
-* Additional handle- and binding-derived equipment statistics
+* Component replacement and maintenance
+* Disassembly and component recovery
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates
 * Meadow ambient event

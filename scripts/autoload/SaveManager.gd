@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 8
+const SAVE_VERSION := 9
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -219,7 +219,27 @@ func _serialize_item_instance(instance: ItemInstance) -> Dictionary:
 		"crafted_minute": instance.crafted_minute,
 		"component_history_known": instance.component_history_known,
 		"components": _serialize_equipment_components(instance.components),
+		"component_conditions": _serialize_component_conditions(
+			instance.component_conditions
+		),
+		"legacy_current_condition": instance.legacy_current_condition,
+		"legacy_maximum_condition": instance.legacy_maximum_condition,
 	}
+
+
+func _serialize_component_conditions(
+	conditions: Array[EquipmentComponentCondition]
+) -> Array[Dictionary]:
+	var serialized: Array[Dictionary] = []
+	for condition: EquipmentComponentCondition in conditions:
+		if condition == null or not condition.is_valid():
+			continue
+		serialized.append({
+			"component_record_id": condition.component_record_id,
+			"current_condition": condition.current_condition,
+			"maximum_condition": condition.maximum_condition,
+		})
+	return serialized
 
 
 func _serialize_equipment_components(
@@ -230,6 +250,7 @@ func _serialize_equipment_components(
 		if component == null or not component.is_valid():
 			continue
 		serialized.append({
+			"record_id": component.record_id,
 			"component_slot": component.component_slot,
 			"item_id": component.item_id,
 			"material_id": component.material_id,
@@ -715,7 +736,68 @@ func _item_instance_from_data(instance_data: Variant) -> ItemInstance:
 	instance.components = _equipment_components_from_data(
 		data.get("components", [])
 	)
+	if data.has("component_conditions"):
+		instance.component_conditions = _component_conditions_from_data(
+			data.get("component_conditions", []),
+			instance
+		)
+		instance.legacy_current_condition = maxi(
+			int(data.get(
+				"legacy_current_condition",
+				instance.legacy_current_condition
+			)),
+			0
+		)
+		instance.legacy_maximum_condition = maxi(
+			int(data.get(
+				"legacy_maximum_condition",
+				instance.legacy_maximum_condition
+			)),
+			0
+		)
+	else:
+		EquipmentDurabilityCalculator.initialize_condition(instance)
 	return instance
+
+
+func _component_conditions_from_data(
+	conditions_data: Variant,
+	instance: ItemInstance
+) -> Array[EquipmentComponentCondition]:
+	var conditions: Array[EquipmentComponentCondition] = []
+	if conditions_data is not Array:
+		EquipmentDurabilityCalculator.initialize_condition(instance)
+		return instance.component_conditions
+
+	for condition_data_variant: Variant in conditions_data:
+		if condition_data_variant is not Dictionary:
+			continue
+		var condition_data: Dictionary = condition_data_variant
+		var condition := EquipmentComponentCondition.new()
+		condition.component_record_id = str(
+			condition_data.get("component_record_id", "")
+		)
+		condition.maximum_condition = maxi(
+			int(condition_data.get("maximum_condition", 0)),
+			0
+		)
+		condition.current_condition = clampi(
+			int(condition_data.get("current_condition", 0)),
+			0,
+			condition.maximum_condition
+		)
+		var duplicate: bool = false
+		for existing: EquipmentComponentCondition in conditions:
+			if existing.component_record_id == condition.component_record_id:
+				duplicate = true
+				break
+		if condition.is_valid() and not duplicate:
+			conditions.append(condition)
+
+	if instance.component_history_known and conditions.is_empty():
+		EquipmentDurabilityCalculator.initialize_condition(instance)
+		return instance.component_conditions
+	return conditions
 
 
 func _equipment_components_from_data(
@@ -730,6 +812,12 @@ func _equipment_components_from_data(
 			continue
 		var component_data: Dictionary = component_data_variant
 		var component: EquipmentComponentRecord = EquipmentComponentRecord.new()
+		component.record_id = str(
+			component_data.get(
+				"record_id",
+				"component." + str(components.size() + 1)
+			)
+		)
 		component.component_slot = str(component_data.get("component_slot", ""))
 		component.item_id = str(component_data.get("item_id", ""))
 		var item: ItemData = ItemDatabase.get_item(component.item_id)

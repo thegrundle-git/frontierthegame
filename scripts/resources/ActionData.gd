@@ -46,6 +46,10 @@ func is_tool_requirement_met(
 	if equipped_tool == null:
 		return false
 
+	var equipped_instance: ItemInstance = survivor.get_equipped_tool_instance()
+	if not EquipmentDurabilityCalculator.is_usable(equipped_instance):
+		return false
+
 	if (
 		not required_tool_id.is_empty()
 		and equipped_tool.id != required_tool_id

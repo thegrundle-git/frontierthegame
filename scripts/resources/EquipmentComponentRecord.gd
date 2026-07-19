@@ -3,6 +3,7 @@ class_name EquipmentComponentRecord
 
 
 @export var component_slot: String = ""
+@export var record_id: String = ""
 @export var item_id: String = ""
 @export var material_id: String = ""
 @export var material_quality: int = 0

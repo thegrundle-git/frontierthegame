@@ -73,4 +73,6 @@ The implemented Equipment Component History foundation records the exact meaning
 
 Component history is now both evidence and a source of behavior. Axe efficiency is derived from the recorded head's material quality, and the interface explains that cause rather than presenting an unexplained number. Migrated tools retain their base performance when truthful construction evidence is unavailable.
 
-This first derived statistic does not imply that every component already affects performance. Durability, handle and binding effects, calculated overall quality, naming, engraving, repair history, replacement components, and disassembly remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.
+Components can now change through use without rewriting what the tool was originally made from. Construction records remain durable facts, while separate condition records describe the present state. Wear occurs only after a confirmed successful action, and failure creates a comprehensible mechanical cause rather than an arbitrary disappearance.
+
+This durability foundation does not imply that maintenance is already available. Repair history, component replacement, disassembly, material recovery, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.

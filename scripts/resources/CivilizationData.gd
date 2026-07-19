@@ -51,9 +51,10 @@ func create_item_instance(
 	instance.component_history_known = component_history_known
 	for component: EquipmentComponentRecord in components:
 		if component != null and component.is_valid():
-			instance.components.append(
-				component.duplicate(true) as EquipmentComponentRecord
-			)
+			var stored_component := component.duplicate(true) as EquipmentComponentRecord
+			stored_component.record_id = "component." + str(instance.components.size() + 1)
+			instance.components.append(stored_component)
+	EquipmentDurabilityCalculator.initialize_condition(instance)
 	return instance
 
 

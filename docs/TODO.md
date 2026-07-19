@@ -44,6 +44,9 @@
 * [x] Preserve complete selected-component history on equipment instances.
 * [x] Add the first material-derived tool efficiency statistic.
 * [x] Calculate axe efficiency from the recorded head component.
+* [x] Add independent equipment-component condition and failure.
+* [ ] Add component repair and replacement at the Tool Bench.
+* [ ] Add disassembly and component recovery.
 * [ ] Calculate full equipment statistics from every selected component.
 * [ ] Expose field crafting outside the home interface.
 
