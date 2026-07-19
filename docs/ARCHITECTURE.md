@@ -501,7 +501,7 @@ The Completed Lives Journal adds no save fields. It is a presentation consumer o
 
 ## Save Compatibility
 
-The current save version is 11.
+The current save version is 12.
 
 Save files store stable IDs rather than serialized resource objects.
 
@@ -761,3 +761,19 @@ Replacement consumes one compatible component through the existing atomic access
 Save version 11 serializes replacement records and the next component sequence. Versions 1 through 10 load with an empty replacement history and derive the next safe sequence from active component IDs. No earlier replacements are fabricated.
 
 General disassembly, damaged-component recovery, partial recovery, removal failure, replacement time, skill outcomes, NPC replacement, and a dedicated Tool Bench remain outside this foundation.
+
+---
+
+## Equipment Disassembly
+
+`EquipmentDisassemblyService` builds a complete immutable snapshot before any inventory mutation. The typed `EquipmentDisassemblyRecord` preserves the instance identity, final result, origin, active components and conditions, replacement history, maintenance count, recovered item IDs, time, and responsible character.
+
+`CivilizationData` owns the ordered disassembly archive and rejects invalid or duplicate instance IDs. `GameManager.disassemble_equipment()` is the atomic orchestration boundary: it verifies Camp access, rejects the equipped instance, locates the exact owning inventory, builds the record, removes the instance, records the archive, grants truthful recovery to Camp Storage, and writes a unique civilization History entry.
+
+If archive insertion fails, the removed instance returns to its original inventory before any recovery is granted. All remaining additions are non-failing in-memory operations after complete validation.
+
+`EquipmentDetailsScreen` presents recovery and loss before opening a confirmation dialog. Successful disassembly closes the now-invalid details view, returns focus to Camp Storage, and signals `GameUI` to refresh storage and the Journal.
+
+Save version 12 serializes civilization-owned disassembly records in insertion order, including their nested component, condition, and replacement snapshots. Versions 1 through 11 remain accepted with an empty archive. Malformed and duplicate records are skipped without fabricating history or recovery.
+
+Partial recovery, salvage percentages, damaged-component instances, disassembly time, skill checks, NPC automation, building disassembly, and a dedicated Tool Bench remain outside this foundation.

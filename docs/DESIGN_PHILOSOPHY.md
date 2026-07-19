@@ -83,4 +83,8 @@ Component replacement makes the distinction between identity and composition exp
 
 Replacement must preserve both sides of that change. The active component record explains what the tool contains now, while the replacement record remembers what was removed, what was installed, who performed the work, and whether anything was recovered. A damaged part is not silently converted into a pristine fungible item merely because the inventory system cannot represent its damage.
 
-Disassembly, broader material recovery, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.
+Disassembly completes an object's active lifecycle without erasing its existence. The usable instance can disappear while the civilization retains a structured record of what it was, how it had changed, who dismantled it, and what could truthfully be recovered.
+
+Recovery must respect the representations the game actually supports. A full-condition component can return to a fungible inventory stack; a damaged component cannot become pristine merely because the current inventory lacks unique component condition. Unknown history likewise produces no fictional parts.
+
+Broader material recovery, damaged-component instances, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.

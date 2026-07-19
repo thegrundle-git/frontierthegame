@@ -3,6 +3,7 @@ class_name EquipmentDetailsScreen
 
 signal equipment_repaired(instance: ItemInstance)
 signal equipment_component_replaced(instance: ItemInstance)
+signal equipment_disassembled(instance_id: String)
 
 
 @onready var title_label: Label = %TitleLabel
@@ -16,6 +17,9 @@ signal equipment_component_replaced(instance: ItemInstance)
 @onready var replacement_item_selector: OptionButton = %ReplacementItemSelector
 @onready var replacement_status: Label = %ReplacementStatus
 @onready var replace_button: Button = %ReplaceButton
+@onready var disassembly_status: Label = %DisassemblyStatus
+@onready var disassemble_button: Button = %DisassembleButton
+@onready var disassembly_confirmation: ConfirmationDialog = %DisassemblyConfirmation
 @onready var close_button: Button = %CloseButton
 
 var _previous_focus: Control
@@ -29,6 +33,8 @@ func _ready() -> void:
 	replacement_slot_selector.item_selected.connect(_on_replacement_slot_changed)
 	replacement_item_selector.item_selected.connect(_on_replacement_item_changed)
 	replace_button.pressed.connect(_on_replace_pressed)
+	disassemble_button.pressed.connect(_on_disassemble_pressed)
+	disassembly_confirmation.confirmed.connect(_on_disassembly_confirmed)
 	visible = false
 
 
@@ -77,6 +83,7 @@ func show_instance(instance: ItemInstance) -> void:
 	components_log.text = _build_components_text(instance)
 	_refresh_repair_controls()
 	_refresh_replacement_controls()
+	_refresh_disassembly_controls()
 	visible = true
 	move_to_front()
 	close_button.grab_focus()
@@ -330,6 +337,54 @@ func _on_replace_pressed() -> void:
 		)
 	equipment_component_replaced.emit(_instance)
 	show_instance(_instance)
+
+
+func _refresh_disassembly_controls() -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	var equipped: ItemInstance
+	if survivor != null:
+		equipped = survivor.get_equipped_tool_instance()
+	var is_equipped: bool = (
+		equipped != null
+		and _instance != null
+		and equipped.instance_id == _instance.instance_id
+	)
+	if _instance == null:
+		disassembly_status.text = "No equipment selected."
+	elif is_equipped:
+		disassembly_status.text = "Equipped tools must be unequipped before disassembly."
+	else:
+		disassembly_status.text = EquipmentDisassemblyService.get_recovery_preview(_instance)
+	disassemble_button.disabled = (
+		_instance == null
+		or survivor == null
+		or not survivor.can_act()
+		or ActionManager.is_busy
+		or not GameManager.is_survivor_at_home()
+		or is_equipped
+	)
+
+
+func _on_disassemble_pressed() -> void:
+	if _instance == null or disassemble_button.disabled:
+		return
+	disassembly_confirmation.dialog_text = (
+		"Permanently disassemble " + title_label.text + "?\n\n"
+		+ EquipmentDisassemblyService.get_recovery_preview(_instance)
+	)
+	disassembly_confirmation.popup_centered()
+
+
+func _on_disassembly_confirmed() -> void:
+	if _instance == null:
+		return
+	var instance_id: String = _instance.instance_id
+	if not GameManager.disassemble_equipment(_instance):
+		_refresh_disassembly_controls()
+		return
+	hide_details()
+	_instance = null
+	equipment_disassembled.emit(instance_id)
 
 
 func _build_components_text(instance: ItemInstance) -> String:

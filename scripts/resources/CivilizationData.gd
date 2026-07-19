@@ -24,8 +24,19 @@ var discovered_ids: Array[String] = []
 var unlocked_recipe_ids: Array[String] = []
 var history_entries: Array[CivilizationHistoryEntry] = []
 var archived_lives: Array[ArchivedCharacterLife] = []
+var equipment_disassembly_records: Array[EquipmentDisassemblyRecord] = []
 var next_character_sequence: int = 1
 var next_item_instance_sequence: int = 1
+
+
+func record_equipment_disassembly(record: EquipmentDisassemblyRecord) -> bool:
+	if record == null or not record.is_valid():
+		return false
+	for existing: EquipmentDisassemblyRecord in equipment_disassembly_records:
+		if existing != null and existing.instance_id == record.instance_id:
+			return false
+	equipment_disassembly_records.append(record)
+	return true
 
 
 func create_item_instance(
