@@ -4,6 +4,38 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.19-alpha1 — UI Navigation and Layout Foundation
+
+### Added
+
+* A reusable `UIRouter` for stable workspace screen IDs, navigation history, and focus entry points.
+* Persistent Camp navigation for Overview, Storage, Crafting, and leaving Camp.
+* Standard keyboard-cancel behavior for routed Camp sub-screens.
+* A dedicated UI architecture document defining workspace and modal boundaries.
+
+### Changed
+
+* Camp screen visibility is now coordinated through one routing authority instead of scattered `visible` assignments.
+* Camp Overview, Storage, and Crafting share consistent navigation and content bounds.
+* Storage and Crafting refresh only when their routed workspace is opened.
+* Final legacy presentation closes the Camp workspace through the same routing boundary.
+
+### Verified
+
+* Manual gameplay testing passed for Camp entry, direct workspace switching, Back/Escape behavior, equipment inspection, leaving and re-entering Camp, and responsive layout.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because UI routing does not add or change persistent gameplay data.
+
+### Not Included
+
+* HUD restructuring, Journal migration, Crafting scene extraction, equipment workspace conversion, shared theme tokens, responsive breakpoints, and focused data-refresh signals remain future work.
+
+---
+
 ## v0.5.18-alpha1 — Complete Component-Derived Equipment Stats
 
 ### Added

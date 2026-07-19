@@ -26,6 +26,10 @@ var _is_refreshing := false
 var _selected_equipment: ItemInstance
 
 
+func get_default_focus_target() -> Control:
+	return back_button
+
+
 func _ready() -> void:
 	back_button.pressed.connect(
 		_on_back_pressed

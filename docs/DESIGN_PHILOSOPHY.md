@@ -27,6 +27,16 @@ These principles describe the direction of Frontier. They do not imply that ever
 
 ---
 
+## Interface as a Stable Way Into the Simulation
+
+Frontier's interface should make interconnected systems easier to understand rather than exposing the structure of the codebase. Players should be able to predict where an activity belongs, how to return from it, and whether they are changing their current workspace or opening a temporary modal decision.
+
+Workspace navigation is therefore a shared rule rather than a behavior each feature invents independently. The implemented Camp navigation foundation gives Overview, Storage, and Crafting stable destinations with consistent Back, keyboard-cancel, and focus behavior. Equipment inspection and irreversible confirmations remain modal layers because they temporarily require attention without replacing the player's underlying workspace.
+
+Future menus should extend the shared navigation, layout, focus, scrolling, and modal conventions instead of adding isolated full-screen visibility logic. This foundation does not yet imply a final visual style, responsive breakpoint system, reorganized HUD, or completed menu hierarchy.
+
+---
+
 ## Memory and Moment-to-Moment Narration
 
 Not every action belongs in permanent history.
