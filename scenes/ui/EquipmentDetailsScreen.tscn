@@ -139,8 +139,31 @@ custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 text = "Replace Component"
 
+[node name="DisassemblyTitle" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Disassembly"
+
+[node name="DisassemblyStatus" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
+text = "Disassembly is available at Camp."
+
+[node name="DisassembleButton" type="Button" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Disassemble Equipment"
+
 [node name="CloseButton" type="Button" parent="Center/Panel/Margin/OuterLayout"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 text = "Return to Frontier"
+
+[node name="DisassemblyConfirmation" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+title = "Confirm Disassembly"
+dialog_text = "This equipment will be permanently disassembled."
+ok_button_text = "Disassemble"

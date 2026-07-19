@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.16-alpha1
+v0.5.17-alpha1
 
 ## Project Health
 
-🟢 Stable — Equipment component replacement passed gameplay and persistence testing
+🟢 Stable — Equipment disassembly passed gameplay and persistence testing
 
 ## Current Milestone
 
@@ -166,7 +166,7 @@ Current tracked values:
 
 Finnley's stable character ID is `survivor.finnley`. Identity-safe milestone attribution uses this ID rather than the mutable display name.
 
-The current save version is 11. Versions 1 through 10 remain compatible through explicit migrations, without retroactively inventing history, components, maintenance, or replacements. Manual gameplay and save/load testing passed.
+The current save version is 12. Versions 1 through 11 remain compatible through explicit migrations, without retroactively inventing history, components, maintenance, replacements, disassembly, or recovery. Manual gameplay and save/load testing passed.
 
 ## Legacy Summary
 
@@ -242,13 +242,21 @@ Every replacement records removed and installed component snapshots, condition a
 
 Stone and Flint head replacement reuses the assembly recipe's material-variant rules, allowing the same persistent tool to become a Stone Axe or Flint Axe without hardcoded UI mapping. Save version 11 preserves the active state, monotonic component sequence, and replacement history.
 
+## Equipment Disassembly
+
+At Camp, an unequipped carried or stored tool can be deliberately dismantled after a recovery preview and confirmation. Full-condition components return to Camp Storage; damaged or failed components remain historical facts but do not become pristine stackable items.
+
+Before the runtime instance disappears, the civilization records its identity, origin, active components, final condition, replacement history, maintenance count, recovery, time, and responsible character. A readable durable History event keeps the loss visible after the tool is gone.
+
+Save version 12 preserves the ordered disassembly archive. Versions 1 through 11 remain compatible and do not fabricate missing disassembly events or recovered parts.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.16-alpha1 replacement foundation, then add deliberate disassembly and component recovery.
+Continue the vertical slice from the tested v0.5.17-alpha1 equipment lifecycle, then expand statistics across every installed component.
 
 ## Next Goals
 
-* Disassembly and component recovery
+* Full equipment statistics from every installed component
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates
 * Meadow ambient event

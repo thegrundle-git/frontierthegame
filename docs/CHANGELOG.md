@@ -4,6 +4,35 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.17-alpha1 — Equipment Disassembly Foundation
+
+### Added
+
+* Typed civilization-owned disassembly records preserving a removed tool's final state and history.
+* Camp-only disassembly previews and explicit confirmation.
+* Durable civilization History entries for successfully disassembled equipment.
+* Truthful recovery of full-condition components into Camp Storage.
+
+### Changed
+
+* Unequipped carried or stored tools can be permanently disassembled after confirmation.
+* Equipped tools are protected until unequipped.
+* Damaged and failed components are recorded but are not converted into pristine stackable items.
+* Legacy tools with unknown construction history can be removed without fabricated recovery.
+* Save version 12 persists disassembly records while versions 1 through 11 load with an empty archive.
+
+### Verified
+
+* Manual gameplay testing passed for confirmation cancellation, equipped-tool protection, removal, recovery, History updates, UI refresh, and save/load persistence.
+* Godot 4.7 registered the disassembly service, record, and changed Equipment Details class without new implementation errors.
+* `git diff --check` passed.
+
+### Not Included
+
+* Partial recovery, salvage percentages, damaged-component instances, disassembly time, skill checks, NPC automation, building disassembly, and a dedicated Tool Bench remain future work.
+
+---
+
 ## v0.5.16-alpha1 — Equipment Component Replacement Foundation
 
 ### Added

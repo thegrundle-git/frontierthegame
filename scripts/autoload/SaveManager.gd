@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 11
+const SAVE_VERSION := 12
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -181,6 +181,9 @@ func _build_save_data() -> Dictionary:
 			),
 			"archived_lives": _serialize_archived_lives(
 				civilization.archived_lives
+			),
+			"equipment_disassembly_records": _serialize_disassembly_records(
+				civilization.equipment_disassembly_records
 			),
 			"next_character_sequence": civilization.next_character_sequence,
 			"next_item_instance_sequence": civilization.next_item_instance_sequence,
@@ -389,6 +392,37 @@ func _serialize_archived_lives(
 		})
 
 	return archive_data
+
+
+func _serialize_disassembly_records(
+	records: Array[EquipmentDisassemblyRecord]
+) -> Array[Dictionary]:
+	var data: Array[Dictionary] = []
+	for record: EquipmentDisassemblyRecord in records:
+		if record == null or not record.is_valid():
+			continue
+		data.append({
+			"instance_id": record.instance_id,
+			"item_id": record.item_id,
+			"material_id": record.material_id,
+			"crafted_by_id": record.crafted_by_id,
+			"crafted_by_name": record.crafted_by_name,
+			"crafted_day": record.crafted_day,
+			"crafted_hour": record.crafted_hour,
+			"crafted_minute": record.crafted_minute,
+			"component_history_known": record.component_history_known,
+			"components": _serialize_equipment_components(record.components),
+			"component_conditions": _serialize_component_conditions(record.component_conditions),
+			"component_replacements": _serialize_component_replacements(record.component_replacements),
+			"maintenance_count": record.maintenance_count,
+			"recovered_component_item_ids": record.recovered_component_item_ids.duplicate(),
+			"disassembled_day": record.disassembled_day,
+			"disassembled_hour": record.disassembled_hour,
+			"disassembled_minute": record.disassembled_minute,
+			"disassembled_by_id": record.disassembled_by_id,
+			"disassembled_by_name": record.disassembled_by_name,
+		})
+	return data
 
 
 func _apply_save_data(
@@ -1133,7 +1167,75 @@ func _apply_civilization_data(
 		civilization_data.get("next_character_sequence", 1)
 	)
 
+	_apply_equipment_disassembly_data(
+		civilization,
+		civilization_data.get("equipment_disassembly_records", [])
+	)
+
 	civilization.synchronize_unlocked_recipes()
+
+
+func _apply_equipment_disassembly_data(
+	civilization: CivilizationData,
+	records_data: Variant
+) -> void:
+	civilization.equipment_disassembly_records.clear()
+	if records_data is not Array:
+		return
+	for value: Variant in records_data:
+		if value is not Dictionary:
+			continue
+		var data: Dictionary = value
+		var record := EquipmentDisassemblyRecord.new()
+		record.instance_id = str(data.get("instance_id", ""))
+		record.item_id = str(data.get("item_id", ""))
+		record.material_id = str(data.get("material_id", ""))
+		record.crafted_by_id = str(data.get("crafted_by_id", ""))
+		record.crafted_by_name = str(data.get("crafted_by_name", ""))
+		record.crafted_day = maxi(int(data.get("crafted_day", 1)), 1)
+		record.crafted_hour = clampi(int(data.get("crafted_hour", 0)), 0, 23)
+		record.crafted_minute = clampi(int(data.get("crafted_minute", 0)), 0, 59)
+		record.component_history_known = bool(data.get("component_history_known", false))
+		record.components = _equipment_components_from_data(data.get("components", []))
+		record.component_conditions = _disassembly_conditions_from_data(
+			data.get("component_conditions", [])
+		)
+		record.component_replacements = _component_replacements_from_data(
+			data.get("component_replacements", [])
+		)
+		record.maintenance_count = maxi(int(data.get("maintenance_count", 0)), 0)
+		record.recovered_component_item_ids = _string_array_from_variant(
+			data.get("recovered_component_item_ids", [])
+		)
+		record.disassembled_day = maxi(int(data.get("disassembled_day", 1)), 1)
+		record.disassembled_hour = clampi(int(data.get("disassembled_hour", 0)), 0, 23)
+		record.disassembled_minute = clampi(int(data.get("disassembled_minute", 0)), 0, 59)
+		record.disassembled_by_id = str(data.get("disassembled_by_id", ""))
+		record.disassembled_by_name = str(data.get("disassembled_by_name", ""))
+		civilization.record_equipment_disassembly(record)
+
+
+func _disassembly_conditions_from_data(
+	conditions_data: Variant
+) -> Array[EquipmentComponentCondition]:
+	var conditions: Array[EquipmentComponentCondition] = []
+	if conditions_data is not Array:
+		return conditions
+	for value: Variant in conditions_data:
+		if value is not Dictionary:
+			continue
+		var data: Dictionary = value
+		var condition := EquipmentComponentCondition.new()
+		condition.component_record_id = str(data.get("component_record_id", ""))
+		condition.maximum_condition = maxi(int(data.get("maximum_condition", 0)), 0)
+		condition.current_condition = clampi(
+			int(data.get("current_condition", 0)),
+			0,
+			condition.maximum_condition
+		)
+		if condition.is_valid():
+			conditions.append(condition)
+	return conditions
 
 
 func _apply_archived_lives_data(

@@ -857,6 +857,66 @@ func consume_accessible_item(item_id: String, amount: int = 1) -> bool:
 	return remaining == 0
 
 
+func disassemble_equipment(instance: ItemInstance) -> bool:
+	if (
+		instance == null
+		or not instance.is_valid()
+		or current_survivor == null
+		or current_civilization == null
+		or not current_survivor.can_act()
+		or not is_survivor_at_home()
+	):
+		return false
+	var equipped: ItemInstance = current_survivor.get_equipped_tool_instance()
+	if equipped != null and equipped.instance_id == instance.instance_id:
+		return false
+	var owner: FrontierInventory
+	for inventory: FrontierInventory in get_accessible_crafting_inventories():
+		if inventory.get_equipment_instance(instance.instance_id) != null:
+			owner = inventory
+			break
+	if owner == null:
+		return false
+
+	var record: EquipmentDisassemblyRecord = EquipmentDisassemblyService.build_record(
+		instance,
+		current_survivor.data.character_id,
+		current_survivor.data.display_name
+	)
+	if record == null:
+		return false
+	var removed: ItemInstance = owner.remove_equipment_instance(instance.instance_id)
+	if removed == null:
+		return false
+	if not current_civilization.record_equipment_disassembly(record):
+		owner.add_equipment_instance(removed)
+		return false
+
+	for recovered_item_id: String in record.recovered_component_item_ids:
+		current_civilization.inventory.add_item(recovered_item_id, 1)
+
+	var item: ItemData = ItemDatabase.get_item(record.item_id)
+	var item_name: String = record.item_id
+	if item != null:
+		item_name = item.display_name
+	current_civilization.record_history_event(
+		"equipment.disassembled." + record.instance_id,
+		"Equipment Disassembled",
+		current_survivor.data.display_name + " disassembled " + item_name + ".",
+		"crafting",
+		current_survivor.data.character_id,
+		current_survivor.data.display_name,
+		record.disassembled_day,
+		record.disassembled_hour,
+		record.disassembled_minute
+	)
+	if game_ui != null:
+		game_ui.add_event(
+			current_survivor.data.display_name + " disassembled " + item_name + "."
+		)
+	return true
+
+
 func can_afford_recipe_from_accessible_inventories(
 	recipe: RecipeData
 ) -> bool:
