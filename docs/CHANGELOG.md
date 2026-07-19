@@ -4,6 +4,37 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.20-alpha1 — Crafting Workspace Extraction
+
+### Added
+
+* A dedicated `CraftingUI` scene and controller for the routed Camp Crafting workspace.
+* Permanent recipe-selection controls and bounded scrolling for recipe details.
+* Focused craft and back navigation signals between Crafting and `GameUI`.
+
+### Changed
+
+* Recipe selection, ingredient presentation, affordability state, and workspace focus behavior moved out of `GameUI`.
+* `GameUI` now forwards craft intent to the existing `GameManager.craft_recipe()` gameplay gateway.
+* The dynamically constructed recipe selector and embedded Crafting node hierarchy were removed.
+* `GameUI.gd` was reduced by 246 lines without changing crafting rules.
+
+### Verified
+
+* Manual gameplay testing passed for recipe selection, material counts, disabled states, component and axe crafting, material variants, output placement, auto-equipping, timing, navigation, empty state, and responsive scrolling.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because this extraction changes presentation ownership only.
+
+### Not Included
+
+* New recipes, crafting rules, component-slot redesign, final visual styling, shared theme tokens, and equipment workspace conversion remain future work.
+
+---
+
 ## v0.5.19-alpha1 — UI Navigation and Layout Foundation
 
 ### Added

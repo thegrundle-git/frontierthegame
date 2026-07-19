@@ -35,6 +35,8 @@ Workspace navigation is therefore a shared rule rather than a behavior each feat
 
 Future menus should extend the shared navigation, layout, focus, scrolling, and modal conventions instead of adding isolated full-screen visibility logic. This foundation does not yet imply a final visual style, responsive breakpoint system, reorganized HUD, or completed menu hierarchy.
 
+The extracted Crafting workspace is the first completed replacement built on that foundation. It owns its presentation and emits player intent without taking authority over crafting rules, inventory consumption, time, skill rewards, or item creation. Future workspace migrations should preserve the same separation between interface responsibility and simulation authority.
+
 ---
 
 ## Memory and Moment-to-Moment Narration
