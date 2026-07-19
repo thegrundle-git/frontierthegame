@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.18-alpha1 — Complete Component-Derived Equipment Stats
+
+### Added
+
+* Handle-derived handling and real-time action duration.
+* Binding-derived stability and weakest-component overall quality.
+* Component-source explanations for every derived equipment statistic.
+* Complete resulting-stat previews during component replacement.
+
+### Changed
+
+* Axe-required world actions receive their real duration from the equipped instance's handle.
+* The current Stick Handle reduces Chop Tree from 5.0 to 4.5 real seconds.
+* Chop Tree continues advancing exactly 120 in-game minutes.
+* Repair and replacement immediately recalculate all statistics from active components.
+* Unknown-history tools retain base duration and efficiency without invented component ratings.
+
+### Verified
+
+* Manual gameplay testing passed for displayed ratings, actual progress duration, unchanged simulated time, replacement previews, recalculation, and save/load behavior.
+* Godot 4.7 registered the updated stat calculator and Equipment Details class without new implementation errors.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because every new statistic is derived from existing component records.
+
+### Not Included
+
+* Simulated-time reduction, random craftsmanship, wear probability, persistent use counters, maker bonuses, combat statistics, and new component materials remain future work.
+
+---
+
 ## v0.5.17-alpha1 — Equipment Disassembly Foundation
 
 ### Added

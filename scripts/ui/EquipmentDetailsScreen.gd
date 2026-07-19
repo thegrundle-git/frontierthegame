@@ -68,6 +68,7 @@ func show_instance(instance: ItemInstance) -> void:
 		+ "\nUsable: "
 		+ ("Yes" if EquipmentDurabilityCalculator.is_usable(instance) else "No")
 	)
+	identity_label.text += "\n" + _build_derived_stats_text(instance)
 	var maker: String = instance.crafted_by_name
 	if maker.is_empty():
 		maker = "Unknown"
@@ -280,7 +281,38 @@ func _update_replacement_status() -> void:
 	var preview := "Consumes: 1 " + replacement.display_name
 	if result != null:
 		preview += "\nResult: " + result.display_name
-	preview += "\nEfficiency: " + str(replacement.material_quality if component_slot == "head" else EquipmentStatCalculator.get_tool_efficiency(_instance))
+	var efficiency: int = EquipmentStatCalculator.get_tool_efficiency(_instance)
+	if component_slot == "head":
+		efficiency = maxi(replacement.material_quality, 1)
+	var handling_override: ItemData = replacement if component_slot == "handle" else null
+	var binding_override: ItemData = replacement if component_slot == "binding" else null
+	var handling: int = EquipmentStatCalculator.get_handling_rating(
+		_instance,
+		handling_override
+	)
+	var stability: int = EquipmentStatCalculator.get_stability_rating(
+		_instance,
+		binding_override
+	)
+	var overall_quality: int = EquipmentStatCalculator.get_overall_quality(
+		_instance,
+		component_slot,
+		replacement
+	)
+	var chop_action: ActionData = ActionDatabase.get_action("chop_tree")
+	var chop_duration := 0.0
+	if chop_action != null:
+		chop_duration = EquipmentStatCalculator.get_action_duration_seconds(
+			_instance,
+			chop_action.duration_seconds,
+			handling_override
+		)
+	preview += "\nEfficiency: " + str(efficiency)
+	preview += "\nHandling: " + str(handling)
+	preview += "\nStability: " + str(stability)
+	preview += "\nOverall quality: " + str(overall_quality)
+	if chop_duration > 0.0:
+		preview += "\nChop Tree duration: %.2f seconds" % chop_duration
 	preview += "\nRemoved component: " + ("Recovered" if recovered else "Not recovered because it is damaged")
 	replacement_status.text = preview
 	replace_button.disabled = (
@@ -466,6 +498,47 @@ func _get_efficiency_source_text(instance: ItemInstance) -> String:
 		"Derived from: " + component_name
 		+ " — head quality " + str(component.material_quality)
 	)
+
+
+func _build_derived_stats_text(instance: ItemInstance) -> String:
+	if instance == null or not instance.component_history_known:
+		return "Handling: Base\nStability: Unavailable\nOverall quality: Unavailable"
+	var handling: int = EquipmentStatCalculator.get_handling_rating(instance)
+	var stability: int = EquipmentStatCalculator.get_stability_rating(instance)
+	var overall_quality: int = EquipmentStatCalculator.get_overall_quality(instance)
+	var handle: EquipmentComponentRecord = (
+		EquipmentStatCalculator.get_component_for_slot(instance, "handle")
+	)
+	var binding: EquipmentComponentRecord = (
+		EquipmentStatCalculator.get_component_for_slot(instance, "binding")
+	)
+	var weakest: EquipmentComponentRecord = (
+		EquipmentStatCalculator.get_weakest_component(instance)
+	)
+	var text := (
+		"Handling: " + str(handling) + " — " + _component_display_name(handle)
+		+ "\nStability: " + str(stability) + " — " + _component_display_name(binding)
+		+ "\nOverall quality: " + str(overall_quality)
+		+ " — limited by " + _component_display_name(weakest)
+	)
+	var chop_action: ActionData = ActionDatabase.get_action("chop_tree")
+	if chop_action != null:
+		var duration: float = EquipmentStatCalculator.get_action_duration_seconds(
+			instance,
+			chop_action.duration_seconds
+		)
+		text += (
+			"\nChop Tree duration: %.2f seconds" % duration
+			+ " (base %.2f; simulated time unchanged)" % chop_action.duration_seconds
+		)
+	return text
+
+
+func _component_display_name(component: EquipmentComponentRecord) -> String:
+	if component == null:
+		return "Unavailable"
+	var item: ItemData = component.get_item_data()
+	return item.display_name if item != null else component.item_id
 
 
 func _display_value(value: String) -> String:

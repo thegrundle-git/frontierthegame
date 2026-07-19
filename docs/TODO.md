@@ -48,7 +48,7 @@
 * [x] Add component repair and maintenance history at Camp.
 * [x] Add component replacement and persistent replacement history at Camp.
 * [x] Add equipment disassembly with truthful component recovery.
-* [ ] Calculate full equipment statistics from every selected component.
+* [x] Calculate complete equipment statistics from every installed component.
 * [ ] Expose field crafting outside the home interface.
 
 ## Low

@@ -87,4 +87,8 @@ Disassembly completes an object's active lifecycle without erasing its existence
 
 Recovery must respect the representations the game actually supports. A full-condition component can return to a fungible inventory stack; a damaged component cannot become pristine merely because the current inventory lacks unique component condition. Unknown history likewise produces no fictional parts.
 
-Broader material recovery, damaged-component instances, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.
+Every installed component should matter in a way the player can understand. The head determines productive efficiency, the handle changes how quickly the tool can be used, the binding expresses stability, and the weakest component limits overall quality. Presentation and gameplay consume the same calculation authority so an explanation never disagrees with the result.
+
+Real-time responsiveness and simulated labor time are deliberately separate. Better handling can make an action finish sooner for the player without silently accelerating days, hunger, seasons, events, or settlement economics. Simulated-time changes require their own later design decision.
+
+Broader material recovery, damaged-component instances, handle wear, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.

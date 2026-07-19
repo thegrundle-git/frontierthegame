@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.17-alpha1
+v0.5.18-alpha1
 
 ## Project Health
 
-🟢 Stable — Equipment disassembly passed gameplay and persistence testing
+🟢 Stable — Complete component-derived equipment stats passed gameplay testing
 
 ## Current Milestone
 
@@ -250,13 +250,20 @@ Before the runtime instance disappears, the civilization records its identity, o
 
 Save version 12 preserves the ordered disassembly archive. Versions 1 through 11 remain compatible and do not fabricate missing disassembly events or recovered parts.
 
+## Complete Component-Derived Stats
+
+Every meaningful axe component now contributes a readable derived statistic. The head controls efficiency, the handle controls handling and real action duration, the binding supplies stability, and the weakest installed component limits overall quality.
+
+The current Stick Handle reduces Chop Tree from 5.0 to 4.5 real seconds while the action still advances exactly 120 simulated minutes. This makes handling immediately tangible without accelerating hunger, seasons, events, or the broader economy.
+
+Equipment Details and replacement previews use the same stateless calculator as gameplay. Repair and replacement recalculate immediately, unknown-history tools retain safe base behavior, and save version remains 12 because no derived value is persisted.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.17-alpha1 equipment lifecycle, then expand statistics across every installed component.
+Stabilize the completed equipment vertical slice with the deferred Windows export and interface regression pass.
 
 ## Next Goals
 
-* Full equipment statistics from every installed component
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates
 * Meadow ambient event
