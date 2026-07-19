@@ -25,6 +25,17 @@ func perform(
 		)
 		return false
 
+	var failed_slot: String = EquipmentDurabilityCalculator.get_failed_critical_slot(
+		equipped_axe
+	)
+	if not failed_slot.is_empty():
+		_add_event(
+			"The axe cannot be used because its "
+			+ failed_slot.replace("_", " ")
+			+ " has failed."
+		)
+		return false
+
 	var civilization: CivilizationData = (
 		GameManager.current_civilization
 	)
@@ -99,6 +110,17 @@ func perform(
 			+ wood_log.display_name
 			+ " x"
 			+ str(amount)
+		)
+
+	EquipmentDurabilityCalculator.apply_axe_wear(equipped_axe)
+	var newly_failed_slot: String = (
+		EquipmentDurabilityCalculator.get_failed_critical_slot(equipped_axe)
+	)
+	if not newly_failed_slot.is_empty():
+		_add_event(
+			"The axe's "
+			+ newly_failed_slot.replace("_", " ")
+			+ " failed after use."
 		)
 
 	return true

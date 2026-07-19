@@ -38,6 +38,11 @@ func show_instance(instance: ItemInstance) -> void:
 		+ "\nMaterial: " + _display_value(instance.material_id)
 		+ "\nTool efficiency: " + str(efficiency)
 		+ "\n" + _get_efficiency_source_text(instance)
+		+ "\nOverall condition: "
+		+ str(EquipmentDurabilityCalculator.get_overall_condition_percent(instance))
+		+ "%"
+		+ "\nUsable: "
+		+ ("Yes" if EquipmentDurabilityCalculator.is_usable(instance) else "No")
 	)
 	var maker: String = instance.crafted_by_name
 	if maker.is_empty():
@@ -83,6 +88,21 @@ func _build_components_text(instance: ItemInstance) -> String:
 			+ "\nMaterial: " + _display_value(component.material_id)
 			+ "\nQuality: " + str(component.material_quality)
 		)
+		var condition: EquipmentComponentCondition = (
+			EquipmentDurabilityCalculator.get_component_condition(
+				instance,
+				component.record_id
+			)
+		)
+		if condition != null:
+			component_text += (
+				"\nCondition: "
+				+ str(condition.current_condition)
+				+ " / " + str(condition.maximum_condition)
+				+ " (" + str(condition.get_condition_percent()) + "%)"
+			)
+			if condition.is_failed():
+				component_text += " — FAILED"
 		if component.amount > 1:
 			component_text += "\nQuantity: " + str(component.amount)
 

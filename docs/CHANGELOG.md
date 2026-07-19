@@ -4,6 +4,36 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.14-alpha1 — Equipment Durability Foundation
+
+### Added
+
+* Typed mutable condition records separate from immutable component history.
+* Centralized component maximum-condition, wear, failure, usability, and overall-condition calculations.
+* Independent head, handle, and binding condition for component-aware tools.
+* Tool-level fallback condition for equipment without known component history.
+
+### Changed
+
+* Successful tree chopping wears the axe head and binding after awarding the action's results.
+* Failed critical components prevent later tool-required actions.
+* Equipment Details displays overall condition, usability, per-component condition, and failures.
+* Save version 9 persists component condition and fallback condition.
+* Version 8 tools initialize their known components at full condition; versions 1 through 7 retain unknown history and receive only fallback condition.
+
+### Verified
+
+* Manual gameplay testing passed for component wear, final valid use, failure gating, inspection, storage, save/load, and succession continuity.
+* Stone and Flint head maximum condition remains derived from quality while primitive binding is the first expected failure point.
+* Isolated Godot 4.7 validation registered both durability classes without new implementation errors.
+* `git diff --check` passed.
+
+### Not Included
+
+* Repairs, component replacement, disassembly, material recovery, permanent item destruction, random breakage, handle wear, and maintenance controls remain future work.
+
+---
+
 ## v0.5.13-alpha1 — Component-Derived Tool Efficiency
 
 ### Added

@@ -713,3 +713,19 @@ If component history is unavailable or no valid head record exists, the calculat
 `ChopTreeAction` supplies the equipped instance to the calculator, then applies the existing Gathering and Strength bonuses after the derived base yield. `EquipmentDetailsScreen` uses the same calculator and identifies the source component, ensuring gameplay and presentation cannot disagree.
 
 Because the value is derived exclusively from already-persisted version 8 data, this milestone does not change the save format. Durability, handle and binding effects, repairs, replacement, and disassembly remain outside its scope.
+
+---
+
+## Equipment Durability
+
+`EquipmentComponentCondition` is mutable state linked to an immutable `EquipmentComponentRecord` through a stable local record ID. It stores current and maximum condition without changing the component's historical item, material, quality, or quantity.
+
+`EquipmentDurabilityCalculator` centralizes initialization, maximum-condition formulas, wear, critical-slot failure, usability, and overall-condition percentage. Current maximum condition uses slot bases of 20 for heads, 30 for handles, and 10 for bindings, plus 10 per material-quality point.
+
+`CivilizationData.create_item_instance()` assigns deterministic local component IDs, deep-copies the construction records, and initializes full condition. `ChopTreeAction` checks usability defensively, awards a valid action's results, then applies one wear to the head and binding. A component reaching zero on that use blocks subsequent actions rather than canceling the completed action.
+
+`ActionData.is_tool_requirement_met()` rejects unusable equipped instances before tool-required actions begin. `EquipmentDetailsScreen` derives overall condition and presents exact current/maximum values and failure state without mutating equipment.
+
+Save version 9 serializes component record IDs, component conditions, and legacy fallback condition. Version 8 component-aware tools receive deterministic record IDs and full starting condition. Versions 1 through 7 retain unavailable component history and use a tool-level fallback derived from base efficiency; migration never creates fictional parts.
+
+Repairs, replacement, disassembly, recovered materials, permanent destruction, random breakage, handle wear, and maintenance UI remain outside this milestone.

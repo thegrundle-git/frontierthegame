@@ -12,6 +12,9 @@ class_name ItemInstance
 @export var crafted_minute: int = 0
 @export var component_history_known: bool = false
 @export var components: Array[EquipmentComponentRecord] = []
+@export var component_conditions: Array[EquipmentComponentCondition] = []
+@export var legacy_current_condition: int = 0
+@export var legacy_maximum_condition: int = 0
 
 
 func is_valid() -> bool:
