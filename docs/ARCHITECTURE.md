@@ -777,3 +777,17 @@ If archive insertion fails, the removed instance returns to its original invento
 Save version 12 serializes civilization-owned disassembly records in insertion order, including their nested component, condition, and replacement snapshots. Versions 1 through 11 remain accepted with an empty archive. Malformed and duplicate records are skipped without fabricating history or recovery.
 
 Partial recovery, salvage percentages, damaged-component instances, disassembly time, skill checks, NPC automation, building disassembly, and a dedicated Tool Bench remain outside this foundation.
+
+---
+
+## Complete Component-Derived Equipment Stats
+
+`EquipmentStatCalculator` remains stateless and is the single authority for head efficiency, handle handling, binding stability, weakest-component overall quality, and real action duration. Active component records are the only inputs; none of these values are cached or serialized.
+
+Component quality ratings normalize the stored material quality by adding one, allowing current primitive handle and binding components to provide baseline rating 1. Overall quality is the lowest valid active-component rating.
+
+Handling reduces real duration by 10 percent per rating, capped at 25 percent. `GameManager.start_world_action()` applies that duration only to actions requiring an axe, then passes the original `game_minutes` unchanged to `ActionManager`. The current Chop Tree action therefore completes in 4.5 real seconds while still advancing 120 simulated minutes.
+
+`EquipmentDetailsScreen` uses the same calculator to identify each contributing component, display actual duration, and preview replacement outcomes. Unknown component history falls back to base item efficiency and unmodified duration without invented handling, stability, or overall quality.
+
+Save version remains 12 because every added value derives from existing persisted component records. Simulated-time reduction, random craftsmanship, wear probability, persistent use counters, maker bonuses, combat statistics, and new component materials remain outside this milestone.

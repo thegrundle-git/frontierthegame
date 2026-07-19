@@ -128,9 +128,16 @@ func start_world_action(
 		)
 		return false
 
+	var real_duration: float = action.duration_seconds
+	if "axe" in action.required_tool_tags:
+		real_duration = EquipmentStatCalculator.get_action_duration_seconds(
+			current_survivor.get_equipped_tool_instance(),
+			action.duration_seconds
+		)
+
 	return ActionManager.start_action(
 		action.display_name,
-		action.duration_seconds,
+		real_duration,
 		action.game_minutes,
 		Callable(
 			self,
