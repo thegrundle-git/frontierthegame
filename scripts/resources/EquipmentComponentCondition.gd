@@ -22,6 +22,13 @@ func apply_wear(amount: int) -> bool:
 	return true
 
 
+func repair_to_maximum() -> bool:
+	if not is_valid() or current_condition >= maximum_condition:
+		return false
+	current_condition = maximum_condition
+	return true
+
+
 func get_condition_percent() -> int:
 	if not is_valid():
 		return 0

@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.14-alpha1
+v0.5.15-alpha1
 
 ## Project Health
 
-🟢 Stable — Equipment durability passed gameplay and persistence testing
+🟢 Stable — Equipment maintenance passed gameplay and interface testing
 
 ## Current Milestone
 
@@ -226,13 +226,21 @@ Successful tree chopping wears the head and binding after granting the action's 
 
 Save version 9 preserves exact wear. Version 8 tools initialize known components at full condition, while older unknown-history tools receive only an overall fallback condition and no invented parts.
 
+## Equipment Maintenance
+
+At Camp, damaged equipment can be inspected from the survivor's pack, Camp Storage, or the currently equipped tool. A selected component consumes one matching component item and returns to full condition, including after failure.
+
+Maintenance changes present condition without rewriting construction history. Each successful repair records a maintenance count, day, and maintainer identity snapshot. Equipment Details exposes costs and availability in a bounded scrolling layout.
+
+Save version 10 preserves maintenance history. Versions 1 through 9 remain supported and begin with empty maintenance records.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.14-alpha1 durability foundation, then add deliberate maintenance and component replacement.
+Continue the vertical slice from the tested v0.5.15-alpha1 maintenance foundation, then add deliberate component replacement.
 
 ## Next Goals
 
-* Component replacement and maintenance
+* Component replacement
 * Disassembly and component recovery
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates

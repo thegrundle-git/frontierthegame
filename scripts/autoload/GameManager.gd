@@ -836,6 +836,27 @@ func get_accessible_crafting_item_amount(
 	return total
 
 
+func consume_accessible_item(item_id: String, amount: int = 1) -> bool:
+	if item_id.is_empty() or amount <= 0:
+		return false
+	if get_accessible_crafting_item_amount(item_id) < amount:
+		return false
+
+	var remaining := amount
+	for inventory: FrontierInventory in get_accessible_crafting_inventories():
+		if remaining <= 0:
+			break
+		var amount_to_remove: int = mini(
+			remaining,
+			inventory.get_item_amount(item_id)
+		)
+		if amount_to_remove <= 0:
+			continue
+		if inventory.remove_item(item_id, amount_to_remove):
+			remaining -= amount_to_remove
+	return remaining == 0
+
+
 func can_afford_recipe_from_accessible_inventories(
 	recipe: RecipeData
 ) -> bool:

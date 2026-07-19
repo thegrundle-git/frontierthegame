@@ -136,3 +136,43 @@ static func apply_axe_wear(instance: ItemInstance) -> bool:
 		if condition != null:
 			applied = condition.apply_wear(1) or applied
 	return applied
+
+
+static func get_repair_item_id(
+	instance: ItemInstance,
+	component_record_id: String = ""
+) -> String:
+	if instance == null:
+		return ""
+	if not instance.component_history_known:
+		if instance.legacy_current_condition >= instance.legacy_maximum_condition:
+			return ""
+		return instance.material_id if ItemDatabase.get_item(instance.material_id) != null else ""
+
+	for component: EquipmentComponentRecord in instance.components:
+		if component == null or component.record_id != component_record_id:
+			continue
+		var condition: EquipmentComponentCondition = get_component_condition(
+			instance,
+			component_record_id
+		)
+		if condition == null or condition.current_condition >= condition.maximum_condition:
+			return ""
+		return component.item_id
+	return ""
+
+
+static func repair(
+	instance: ItemInstance,
+	component_record_id: String = ""
+) -> bool:
+	if instance == null or get_repair_item_id(instance, component_record_id).is_empty():
+		return false
+	if not instance.component_history_known:
+		instance.legacy_current_condition = instance.legacy_maximum_condition
+		return true
+	var condition: EquipmentComponentCondition = get_component_condition(
+		instance,
+		component_record_id
+	)
+	return condition != null and condition.repair_to_maximum()

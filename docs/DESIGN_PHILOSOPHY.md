@@ -75,4 +75,8 @@ Component history is now both evidence and a source of behavior. Axe efficiency 
 
 Components can now change through use without rewriting what the tool was originally made from. Construction records remain durable facts, while separate condition records describe the present state. Wear occurs only after a confirmed successful action, and failure creates a comprehensible mechanical cause rather than an arbitrary disappearance.
 
-This durability foundation does not imply that maintenance is already available. Repair history, component replacement, disassembly, material recovery, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.
+Maintenance now demonstrates the separation between an object's past and present. Repair restores a component's condition and records who performed the work, but it does not pretend that a different component was used or rewrite the tool's construction record.
+
+Maintenance should be deliberate, legible, and materially grounded. The player sees which component is damaged, what matching part is required, and why the tool becomes usable again. Failure therefore creates a recoverable logistical problem rather than silently deleting a meaningful possession.
+
+Component replacement, disassembly, material recovery, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.

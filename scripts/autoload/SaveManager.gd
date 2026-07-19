@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 9
+const SAVE_VERSION := 10
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -224,6 +224,10 @@ func _serialize_item_instance(instance: ItemInstance) -> Dictionary:
 		),
 		"legacy_current_condition": instance.legacy_current_condition,
 		"legacy_maximum_condition": instance.legacy_maximum_condition,
+		"maintenance_count": instance.maintenance_count,
+		"last_maintained_day": instance.last_maintained_day,
+		"last_maintained_by_id": instance.last_maintained_by_id,
+		"last_maintained_by_name": instance.last_maintained_by_name,
 	}
 
 
@@ -757,6 +761,10 @@ func _item_instance_from_data(instance_data: Variant) -> ItemInstance:
 		)
 	else:
 		EquipmentDurabilityCalculator.initialize_condition(instance)
+	instance.maintenance_count = maxi(int(data.get("maintenance_count", 0)), 0)
+	instance.last_maintained_day = maxi(int(data.get("last_maintained_day", 0)), 0)
+	instance.last_maintained_by_id = str(data.get("last_maintained_by_id", ""))
+	instance.last_maintained_by_name = str(data.get("last_maintained_by_name", ""))
 	return instance
 
 

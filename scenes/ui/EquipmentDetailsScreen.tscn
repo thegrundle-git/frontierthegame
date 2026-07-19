@@ -30,8 +30,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(620, 560)
+custom_minimum_size = Vector2(620, 500)
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="Margin" type="MarginContainer" parent="Center/Panel"]
 layout_mode = 2
@@ -40,39 +41,49 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 20
 
-[node name="Layout" type="VBoxContainer" parent="Center/Panel/Margin"]
+[node name="OuterLayout" type="VBoxContainer" parent="Center/Panel/Margin"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Heading" type="Label" parent="Center/Panel/Margin/Layout"]
+[node name="ContentScroll" type="ScrollContainer" parent="Center/Panel/Margin/OuterLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin/OuterLayout/ContentScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Heading" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 text = "EQUIPMENT DETAILS"
 
-[node name="TitleLabel" type="Label" parent="Center/Panel/Margin/Layout"]
+[node name="TitleLabel" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Tool"
 
-[node name="IdentityLabel" type="Label" parent="Center/Panel/Margin/Layout"]
+[node name="IdentityLabel" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Instance"
 
-[node name="ProvenanceLabel" type="Label" parent="Center/Panel/Margin/Layout"]
+[node name="ProvenanceLabel" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Provenance"
 
-[node name="Divider" type="HSeparator" parent="Center/Panel/Margin/Layout"]
+[node name="Divider" type="HSeparator" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 
-[node name="ComponentsTitle" type="Label" parent="Center/Panel/Margin/Layout"]
+[node name="ComponentsTitle" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Components"
 
-[node name="ComponentsLog" type="RichTextLabel" parent="Center/Panel/Margin/Layout"]
+[node name="ComponentsLog" type="RichTextLabel" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
@@ -80,7 +91,28 @@ size_flags_vertical = 3
 focus_mode = 2
 selection_enabled = true
 
-[node name="CloseButton" type="Button" parent="Center/Panel/Margin/Layout"]
+[node name="MaintenanceTitle" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Maintenance"
+
+[node name="RepairSelector" type="OptionButton" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="RepairStatus" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No damaged components require maintenance."
+
+[node name="RepairButton" type="Button" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Repair Component"
+
+[node name="CloseButton" type="Button" parent="Center/Panel/Margin/OuterLayout"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
