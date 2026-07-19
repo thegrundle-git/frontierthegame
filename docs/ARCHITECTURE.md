@@ -728,4 +728,18 @@ Because the value is derived exclusively from already-persisted version 8 data, 
 
 Save version 9 serializes component record IDs, component conditions, and legacy fallback condition. Version 8 component-aware tools receive deterministic record IDs and full starting condition. Versions 1 through 7 retain unavailable component history and use a tool-level fallback derived from base efficiency; migration never creates fictional parts.
 
-Repairs, replacement, disassembly, recovered materials, permanent destruction, random breakage, handle wear, and maintenance UI remain outside this milestone.
+Replacement, disassembly, recovered materials, permanent destruction, random breakage, and handle wear remain outside this milestone.
+
+---
+
+## Equipment Maintenance
+
+`EquipmentDurabilityCalculator` remains the authority for repair eligibility, matching repair-item resolution, and condition restoration. `EquipmentComponentCondition.repair_to_maximum()` performs the bounded mutation without changing its associated immutable component record.
+
+`GameManager.consume_accessible_item()` verifies the complete cost before removing it across the established Camp Storage and carried-inventory order. Maintenance is gated to the active Camp interface, preventing field repairs while reusing existing accessible-inventory rules.
+
+`EquipmentDetailsScreen` orchestrates the selected repair and records mutable maintenance facts on the same `ItemInstance`: repair count, last-maintained day, and maintainer identity snapshot. `StorageUI` exposes inspection for carried, stored, and equipped instances; `GameUI` owns the shared details overlay and refreshes storage after successful repair.
+
+The Equipment Details panel uses a viewport-bounded outer layout. Equipment information and maintenance controls scroll together, while the Return control remains outside the scroll region.
+
+Save version 10 serializes maintenance fields alongside existing condition data. Versions 1 through 9 remain accepted with zero repairs and no fabricated maintainer. Component replacement, disassembly, recovery, repair time, skill outcomes, and a dedicated Tool Bench remain outside this foundation.

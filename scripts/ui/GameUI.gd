@@ -90,6 +90,9 @@ func _ready() -> void:
 		_on_unequip_tool_pressed
 	)
 	inspect_tool_button.pressed.connect(_on_inspect_tool_pressed)
+	equipment_details_screen.equipment_repaired.connect(
+		_on_equipment_repaired
+	)
 
 	open_legacy_summary_button.pressed.connect(
 		_on_open_legacy_summary_pressed
@@ -147,6 +150,9 @@ func _ready() -> void:
 	storage_ui.back_requested.connect(
    	 _on_storage_back_requested
 )
+	storage_ui.equipment_inspection_requested.connect(
+		_on_storage_equipment_inspection_requested
+	)
 
 	storage_ui.visible = false
 	event_overlay.visible = false
@@ -774,6 +780,18 @@ func _on_inspect_tool_pressed() -> void:
 	)
 	if instance != null:
 		equipment_details_screen.show_instance(instance)
+
+
+func _on_equipment_repaired(_instance: ItemInstance) -> void:
+	refresh_all()
+	if storage_ui.visible:
+		storage_ui.refresh_storage()
+
+
+func _on_storage_equipment_inspection_requested(
+	instance: ItemInstance
+) -> void:
+	equipment_details_screen.show_instance(instance)
 
 
 func _on_equip_tool_pressed() -> void:

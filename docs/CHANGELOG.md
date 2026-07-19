@@ -4,6 +4,35 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.15-alpha1 — Equipment Maintenance Foundation
+
+### Added
+
+* Individual repair controls for damaged and failed equipment components.
+* Matching component-item costs for head, handle, and binding maintenance.
+* Persistent maintenance count, last-maintained day, and maintainer identity snapshots.
+* Equipment inspection for carried, stored, and currently equipped tools from Camp Storage.
+
+### Changed
+
+* Repairs restore selected condition without rewriting immutable construction history.
+* Maintenance consumes accessible Camp Storage or carried materials atomically and is available only at Camp.
+* Equipment Details displays repair choices, costs, availability, and maintenance history.
+* Equipment Details uses a bounded scrolling layout with its Return button always accessible.
+* Save version 10 persists maintenance history while versions 1 through 9 load with empty maintenance records.
+
+### Verified
+
+* Manual gameplay testing passed for Camp inspection, component costs, failed-component recovery, UI refresh, and the scrollable details layout.
+* Godot 4.7 registered the changed maintenance and storage UI classes without new implementation errors.
+* `git diff --check` passed.
+
+### Not Included
+
+* Component replacement, disassembly, recovery, Tool Bench construction, repair time, repair skill outcomes, and automated maintenance remain future work.
+
+---
+
 ## v0.5.14-alpha1 — Equipment Durability Foundation
 
 ### Added

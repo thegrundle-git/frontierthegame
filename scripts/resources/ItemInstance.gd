@@ -15,6 +15,10 @@ class_name ItemInstance
 @export var component_conditions: Array[EquipmentComponentCondition] = []
 @export var legacy_current_condition: int = 0
 @export var legacy_maximum_condition: int = 0
+@export var maintenance_count: int = 0
+@export var last_maintained_day: int = 0
+@export var last_maintained_by_id: String = ""
+@export var last_maintained_by_name: String = ""
 
 
 func is_valid() -> bool:

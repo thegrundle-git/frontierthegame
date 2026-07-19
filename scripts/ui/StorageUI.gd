@@ -3,6 +3,7 @@ class_name StorageUI
 
 
 signal back_requested
+signal equipment_inspection_requested(instance: ItemInstance)
 
 
 @onready var storage_log: RichTextLabel = %StorageLog
@@ -19,8 +20,10 @@ var keep_checkbox: CheckBox
 var deposit_button: Button
 var take_button: Button
 var deposit_all_button: Button
+var inspect_equipment_button: Button
 
 var _is_refreshing := false
+var _selected_equipment: ItemInstance
 
 
 func _ready() -> void:
@@ -171,6 +174,16 @@ func _build_transfer_interface() -> void:
 		keep_checkbox
 	)
 
+	inspect_equipment_button = Button.new()
+	inspect_equipment_button.text = "Inspect Equipment"
+	inspect_equipment_button.disabled = true
+	inspect_equipment_button.pressed.connect(
+		_on_inspect_equipment_pressed
+	)
+	controls_column.add_child(
+		inspect_equipment_button
+	)
+
 	deposit_all_button = Button.new()
 	deposit_all_button.text = "Deposit All"
 	deposit_all_button.tooltip_text = (
@@ -252,6 +265,19 @@ func refresh_storage() -> void:
 		survivor.inventory,
 		true
 	)
+	if survivor.equipped_tool_instance != null:
+		var equipped: ItemInstance = survivor.equipped_tool_instance
+		var equipped_item: ItemData = equipped.get_item_data()
+		var equipped_name: String = equipped.item_id
+		if equipped_item != null:
+			equipped_name = equipped_item.display_name
+		var equipped_index: int = carried_list.add_item(
+			"Equipped: " + equipped_name + " [" + equipped.instance_id + "]"
+		)
+		carried_list.set_item_metadata(
+			equipped_index,
+			"equipped:" + equipped.instance_id
+		)
 
 	_populate_item_list(
 		storage_list,
@@ -263,6 +289,8 @@ func refresh_storage() -> void:
 	take_button.disabled = true
 	keep_checkbox.disabled = true
 	keep_checkbox.button_pressed = false
+	_selected_equipment = null
+	inspect_equipment_button.disabled = true
 
 	deposit_all_button.disabled = (
 		survivor.inventory.items.is_empty()
@@ -374,7 +402,28 @@ func _on_carried_item_selected(
 		take_button.disabled = true
 		keep_checkbox.disabled = true
 		keep_checkbox.button_pressed = false
+		_selected_equipment = instance
+		inspect_equipment_button.disabled = instance == null
 		return
+	if item_id.begins_with("equipped:"):
+		var equipped_id: String = item_id.trim_prefix("equipped:")
+		var equipped: ItemInstance = survivor.get_equipped_tool_instance()
+		amount_spinner.max_value = 1
+		amount_spinner.value = 1
+		deposit_button.disabled = true
+		take_button.disabled = true
+		keep_checkbox.disabled = true
+		keep_checkbox.button_pressed = false
+		_selected_equipment = (
+			equipped
+			if equipped != null and equipped.instance_id == equipped_id
+			else null
+		)
+		inspect_equipment_button.disabled = _selected_equipment == null
+		return
+
+	_selected_equipment = null
+	inspect_equipment_button.disabled = true
 
 	var amount: int = (
 		survivor.inventory.get_item_amount(
@@ -427,7 +476,12 @@ func _on_storage_item_selected(
 		deposit_button.disabled = true
 		keep_checkbox.disabled = true
 		keep_checkbox.button_pressed = false
+		_selected_equipment = instance
+		inspect_equipment_button.disabled = instance == null
 		return
+
+	_selected_equipment = null
+	inspect_equipment_button.disabled = true
 
 	var amount: int = (
 		civilization.inventory.get_item_amount(
@@ -470,6 +524,8 @@ func _on_deposit_pressed() -> void:
 	)
 
 	if item_id.is_empty():
+		return
+	if item_id.begins_with("equipped:"):
 		return
 	if item_id.begins_with("instance:"):
 		survivor.inventory.transfer_equipment_instance_to(
@@ -586,6 +642,12 @@ func _on_keep_toggled(
 	)
 
 	refresh_storage()
+
+
+func _on_inspect_equipment_pressed() -> void:
+	if _selected_equipment == null or not _selected_equipment.is_valid():
+		return
+	equipment_inspection_requested.emit(_selected_equipment)
 
 
 func _get_selected_item_id(
