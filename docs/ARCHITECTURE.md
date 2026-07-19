@@ -501,7 +501,7 @@ The Completed Lives Journal adds no save fields. It is a presentation consumer o
 
 ## Save Compatibility
 
-The current save version is 6.
+The current save version is 11.
 
 Save files store stable IDs rather than serialized resource objects.
 
@@ -743,3 +743,21 @@ Replacement, disassembly, recovered materials, permanent destruction, random bre
 The Equipment Details panel uses a viewport-bounded outer layout. Equipment information and maintenance controls scroll together, while the Return control remains outside the scroll region.
 
 Save version 10 serializes maintenance fields alongside existing condition data. Versions 1 through 9 remain accepted with zero repairs and no fabricated maintainer. Component replacement, disassembly, recovery, repair time, skill outcomes, and a dedicated Tool Bench remain outside this foundation.
+
+---
+
+## Equipment Component Replacement
+
+`EquipmentComponentReplacementService` is the gameplay authority for replacement eligibility, recovery truth, result previews, active-component mutation, fresh condition creation, and replacement-history recording. It accepts only registered `ItemData` components whose slot matches the selected active component.
+
+Each `ItemInstance` owns a monotonic `next_component_record_sequence` and an ordered collection of typed `EquipmentComponentReplacementRecord` resources. Installed components receive a new record ID that is never reused. Replacement records deep-copy the removed and installed component snapshots and retain removal condition, time, actor identity, and recovery outcome.
+
+The active `components` and `component_conditions` arrays describe the tool now. Replacement history describes how it reached that state. Original instance identity, maker, and crafting time remain unchanged.
+
+`RecipeDatabase.get_assembly_recipe_for_item()` finds the assembly recipe that owns either the default or variant result. The replacement service feeds the current component selection back through `RecipeData.get_results_for_components()`, so Stone and Flint result changes remain data-driven rather than hardcoded in the UI.
+
+Replacement consumes one compatible component through the existing atomic accessible-inventory helper. A removed component returns to Camp Storage only when its condition was full; damaged and failed components cannot truthfully enter a pristine stack. The newly installed component begins at its derived maximum condition.
+
+Save version 11 serializes replacement records and the next component sequence. Versions 1 through 10 load with an empty replacement history and derive the next safe sequence from active component IDs. No earlier replacements are fabricated.
+
+General disassembly, damaged-component recovery, partial recovery, removal failure, replacement time, skill outcomes, NPC replacement, and a dedicated Tool Bench remain outside this foundation.

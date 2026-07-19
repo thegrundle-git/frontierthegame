@@ -93,6 +93,9 @@ func _ready() -> void:
 	equipment_details_screen.equipment_repaired.connect(
 		_on_equipment_repaired
 	)
+	equipment_details_screen.equipment_component_replaced.connect(
+		_on_equipment_component_replaced
+	)
 
 	open_legacy_summary_button.pressed.connect(
 		_on_open_legacy_summary_pressed
@@ -783,6 +786,12 @@ func _on_inspect_tool_pressed() -> void:
 
 
 func _on_equipment_repaired(_instance: ItemInstance) -> void:
+	refresh_all()
+	if storage_ui.visible:
+		storage_ui.refresh_storage()
+
+
+func _on_equipment_component_replaced(_instance: ItemInstance) -> void:
 	refresh_all()
 	if storage_ui.visible:
 		storage_ui.refresh_storage()

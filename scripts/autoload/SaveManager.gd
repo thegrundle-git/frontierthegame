@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 10
+const SAVE_VERSION := 11
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -228,7 +228,35 @@ func _serialize_item_instance(instance: ItemInstance) -> Dictionary:
 		"last_maintained_day": instance.last_maintained_day,
 		"last_maintained_by_id": instance.last_maintained_by_id,
 		"last_maintained_by_name": instance.last_maintained_by_name,
+		"next_component_record_sequence": instance.next_component_record_sequence,
+		"component_replacements": _serialize_component_replacements(
+			instance.component_replacements
+		),
 	}
+
+
+func _serialize_component_replacements(
+	records: Array[EquipmentComponentReplacementRecord]
+) -> Array[Dictionary]:
+	var serialized: Array[Dictionary] = []
+	for record: EquipmentComponentReplacementRecord in records:
+		if record == null or not record.is_valid():
+			continue
+		serialized.append({
+			"sequence": record.sequence,
+			"component_slot": record.component_slot,
+			"removed_component": _serialize_equipment_component(record.removed_component),
+			"removed_current_condition": record.removed_current_condition,
+			"removed_maximum_condition": record.removed_maximum_condition,
+			"installed_component": _serialize_equipment_component(record.installed_component),
+			"replacement_day": record.replacement_day,
+			"replacement_hour": record.replacement_hour,
+			"replacement_minute": record.replacement_minute,
+			"replaced_by_id": record.replaced_by_id,
+			"replaced_by_name": record.replaced_by_name,
+			"removed_component_recovered": record.removed_component_recovered,
+		})
+	return serialized
 
 
 func _serialize_component_conditions(
@@ -253,15 +281,23 @@ func _serialize_equipment_components(
 	for component: EquipmentComponentRecord in components:
 		if component == null or not component.is_valid():
 			continue
-		serialized.append({
-			"record_id": component.record_id,
-			"component_slot": component.component_slot,
-			"item_id": component.item_id,
-			"material_id": component.material_id,
-			"material_quality": component.material_quality,
-			"amount": component.amount,
-		})
+		serialized.append(_serialize_equipment_component(component))
 	return serialized
+
+
+func _serialize_equipment_component(
+	component: EquipmentComponentRecord
+) -> Dictionary:
+	if component == null or not component.is_valid():
+		return {}
+	return {
+		"record_id": component.record_id,
+		"component_slot": component.component_slot,
+		"item_id": component.item_id,
+		"material_id": component.material_id,
+		"material_quality": component.material_quality,
+		"amount": component.amount,
+	}
 
 
 func _serialize_item_instances(
@@ -765,7 +801,65 @@ func _item_instance_from_data(instance_data: Variant) -> ItemInstance:
 	instance.last_maintained_day = maxi(int(data.get("last_maintained_day", 0)), 0)
 	instance.last_maintained_by_id = str(data.get("last_maintained_by_id", ""))
 	instance.last_maintained_by_name = str(data.get("last_maintained_by_name", ""))
+	instance.component_replacements = _component_replacements_from_data(
+		data.get("component_replacements", [])
+	)
+	instance.next_component_record_sequence = maxi(
+		int(data.get("next_component_record_sequence", 0)),
+		_get_next_component_record_sequence(instance)
+	)
 	return instance
+
+
+func _component_replacements_from_data(
+	records_data: Variant
+) -> Array[EquipmentComponentReplacementRecord]:
+	var records: Array[EquipmentComponentReplacementRecord] = []
+	if records_data is not Array:
+		return records
+	for value: Variant in records_data:
+		if value is not Dictionary:
+			continue
+		var data: Dictionary = value
+		var removed_components: Array[EquipmentComponentRecord] = (
+			_equipment_components_from_data([data.get("removed_component", {})])
+		)
+		var installed_components: Array[EquipmentComponentRecord] = (
+			_equipment_components_from_data([data.get("installed_component", {})])
+		)
+		if removed_components.is_empty() or installed_components.is_empty():
+			continue
+		var record := EquipmentComponentReplacementRecord.new()
+		record.sequence = maxi(int(data.get("sequence", 0)), 0)
+		record.component_slot = str(data.get("component_slot", ""))
+		record.removed_component = removed_components[0]
+		record.removed_current_condition = maxi(int(data.get("removed_current_condition", 0)), 0)
+		record.removed_maximum_condition = maxi(int(data.get("removed_maximum_condition", 0)), 0)
+		record.installed_component = installed_components[0]
+		record.replacement_day = maxi(int(data.get("replacement_day", 1)), 1)
+		record.replacement_hour = clampi(int(data.get("replacement_hour", 0)), 0, 23)
+		record.replacement_minute = clampi(int(data.get("replacement_minute", 0)), 0, 59)
+		record.replaced_by_id = str(data.get("replaced_by_id", ""))
+		record.replaced_by_name = str(data.get("replaced_by_name", ""))
+		record.removed_component_recovered = bool(data.get("removed_component_recovered", false))
+		if record.is_valid():
+			records.append(record)
+	return records
+
+
+func _get_next_component_record_sequence(instance: ItemInstance) -> int:
+	var greatest := 0
+	for component: EquipmentComponentRecord in instance.components:
+		if component == null:
+			continue
+		greatest = maxi(greatest, int(component.record_id.get_slice(".", 1)))
+	for record: EquipmentComponentReplacementRecord in instance.component_replacements:
+		if record != null and record.installed_component != null:
+			greatest = maxi(
+				greatest,
+				int(record.installed_component.record_id.get_slice(".", 1))
+			)
+	return greatest + 1
 
 
 func _component_conditions_from_data(

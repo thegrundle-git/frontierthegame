@@ -2,6 +2,7 @@ extends Control
 class_name EquipmentDetailsScreen
 
 signal equipment_repaired(instance: ItemInstance)
+signal equipment_component_replaced(instance: ItemInstance)
 
 
 @onready var title_label: Label = %TitleLabel
@@ -11,6 +12,10 @@ signal equipment_repaired(instance: ItemInstance)
 @onready var repair_selector: OptionButton = %RepairSelector
 @onready var repair_status: Label = %RepairStatus
 @onready var repair_button: Button = %RepairButton
+@onready var replacement_slot_selector: OptionButton = %ReplacementSlotSelector
+@onready var replacement_item_selector: OptionButton = %ReplacementItemSelector
+@onready var replacement_status: Label = %ReplacementStatus
+@onready var replace_button: Button = %ReplaceButton
 @onready var close_button: Button = %CloseButton
 
 var _previous_focus: Control
@@ -21,6 +26,9 @@ func _ready() -> void:
 	close_button.pressed.connect(hide_details)
 	repair_selector.item_selected.connect(_on_repair_selection_changed)
 	repair_button.pressed.connect(_on_repair_pressed)
+	replacement_slot_selector.item_selected.connect(_on_replacement_slot_changed)
+	replacement_item_selector.item_selected.connect(_on_replacement_item_changed)
+	replace_button.pressed.connect(_on_replace_pressed)
 	visible = false
 
 
@@ -68,6 +76,7 @@ func show_instance(instance: ItemInstance) -> void:
 	)
 	components_log.text = _build_components_text(instance)
 	_refresh_repair_controls()
+	_refresh_replacement_controls()
 	visible = true
 	move_to_front()
 	close_button.grab_focus()
@@ -184,6 +193,145 @@ func _get_last_maintenance_text(instance: ItemInstance) -> String:
 	return "Day " + str(instance.last_maintained_day) + " by " + maintainer
 
 
+func _refresh_replacement_controls() -> void:
+	replacement_slot_selector.clear()
+	replacement_item_selector.clear()
+	if _instance == null or not _instance.component_history_known:
+		replacement_status.text = "Component replacement requires known construction history."
+		replace_button.disabled = true
+		return
+	for component: EquipmentComponentRecord in _instance.components:
+		if component == null or not component.is_valid():
+			continue
+		replacement_slot_selector.add_item(component.component_slot.capitalize())
+		replacement_slot_selector.set_item_metadata(
+			replacement_slot_selector.item_count - 1,
+			component.component_slot
+		)
+	_populate_replacement_items()
+
+
+func _on_replacement_slot_changed(_index: int) -> void:
+	_populate_replacement_items()
+
+
+func _populate_replacement_items() -> void:
+	replacement_item_selector.clear()
+	if replacement_slot_selector.selected < 0:
+		_update_replacement_status()
+		return
+	var component_slot: String = str(
+		replacement_slot_selector.get_item_metadata(
+			replacement_slot_selector.selected
+		)
+	)
+	for item: ItemData in ItemDatabase.get_components_for_slot(component_slot):
+		if GameManager.get_accessible_crafting_item_amount(item.id) <= 0:
+			continue
+		if not EquipmentComponentReplacementService.can_replace(
+			_instance,
+			component_slot,
+			item
+		):
+			continue
+		replacement_item_selector.add_item(item.display_name)
+		replacement_item_selector.set_item_metadata(
+			replacement_item_selector.item_count - 1,
+			item.id
+		)
+	_update_replacement_status()
+
+
+func _on_replacement_item_changed(_index: int) -> void:
+	_update_replacement_status()
+
+
+func _update_replacement_status() -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	if replacement_slot_selector.selected < 0 or replacement_item_selector.selected < 0:
+		replacement_status.text = "No compatible available component can be installed."
+		replace_button.disabled = true
+		return
+	var component_slot: String = str(
+		replacement_slot_selector.get_item_metadata(replacement_slot_selector.selected)
+	)
+	var replacement_id: String = str(
+		replacement_item_selector.get_item_metadata(replacement_item_selector.selected)
+	)
+	var replacement: ItemData = ItemDatabase.get_item(replacement_id)
+	var result: ItemData = EquipmentComponentReplacementService.get_result_item(
+		_instance,
+		component_slot,
+		replacement
+	)
+	var recovered: bool = (
+		EquipmentComponentReplacementService.will_recover_removed_component(
+			_instance,
+			component_slot
+		)
+	)
+	var preview := "Consumes: 1 " + replacement.display_name
+	if result != null:
+		preview += "\nResult: " + result.display_name
+	preview += "\nEfficiency: " + str(replacement.material_quality if component_slot == "head" else EquipmentStatCalculator.get_tool_efficiency(_instance))
+	preview += "\nRemoved component: " + ("Recovered" if recovered else "Not recovered because it is damaged")
+	replacement_status.text = preview
+	replace_button.disabled = (
+		survivor == null
+		or not survivor.can_act()
+		or ActionManager.is_busy
+		or not GameManager.is_survivor_at_home()
+	)
+
+
+func _on_replace_pressed() -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	var civilization: CivilizationData = GameManager.current_civilization
+	if survivor == null or civilization == null or not GameManager.is_survivor_at_home():
+		return
+	if replacement_slot_selector.selected < 0 or replacement_item_selector.selected < 0:
+		return
+	var component_slot: String = str(
+		replacement_slot_selector.get_item_metadata(replacement_slot_selector.selected)
+	)
+	var replacement_id: String = str(
+		replacement_item_selector.get_item_metadata(replacement_item_selector.selected)
+	)
+	var replacement: ItemData = ItemDatabase.get_item(replacement_id)
+	var removed: EquipmentComponentRecord = (
+		EquipmentComponentReplacementService.get_active_component(_instance, component_slot)
+	)
+	if removed == null or replacement == null:
+		return
+	var recovered: bool = (
+		EquipmentComponentReplacementService.will_recover_removed_component(
+			_instance,
+			component_slot
+		)
+	)
+	if not GameManager.consume_accessible_item(replacement.id, 1):
+		_refresh_replacement_controls()
+		return
+	if not EquipmentComponentReplacementService.replace_component(
+		_instance,
+		component_slot,
+		replacement,
+		survivor.data.character_id,
+		survivor.data.display_name,
+		recovered
+	):
+		return
+	if recovered:
+		civilization.inventory.add_item(removed.item_id, 1)
+	if GameManager.game_ui != null:
+		GameManager.game_ui.add_event(
+			survivor.data.display_name + " replaced the " + component_slot
+			+ " on " + _instance.get_item_data().display_name + "."
+		)
+	equipment_component_replaced.emit(_instance)
+	show_instance(_instance)
+
+
 func _build_components_text(instance: ItemInstance) -> String:
 	if not instance.component_history_known:
 		return "Component history unavailable."
@@ -224,6 +372,25 @@ func _build_components_text(instance: ItemInstance) -> String:
 		if component.amount > 1:
 			component_text += "\nQuantity: " + str(component.amount)
 
+	if not instance.component_replacements.is_empty():
+		component_text += "\n\nReplacement history:"
+		for replacement: EquipmentComponentReplacementRecord in instance.component_replacements:
+			if replacement == null or not replacement.is_valid():
+				continue
+			var removed_item: ItemData = replacement.removed_component.get_item_data()
+			var installed_item: ItemData = replacement.installed_component.get_item_data()
+			var removed_name: String = replacement.removed_component.item_id
+			var installed_name: String = replacement.installed_component.item_id
+			if removed_item != null:
+				removed_name = removed_item.display_name
+			if installed_item != null:
+				installed_name = installed_item.display_name
+			component_text += (
+				"\nDay " + str(replacement.replacement_day)
+				+ ": " + removed_name + " → " + installed_name
+				+ " by " + replacement.replaced_by_name
+				+ ("; removed part recovered" if replacement.removed_component_recovered else "; removed part not recovered")
+			)
 	return component_text
 
 

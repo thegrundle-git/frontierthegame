@@ -46,7 +46,7 @@
 * [x] Calculate axe efficiency from the recorded head component.
 * [x] Add independent equipment-component condition and failure.
 * [x] Add component repair and maintenance history at Camp.
-* [ ] Add component replacement at the Tool Bench.
+* [x] Add component replacement and persistent replacement history at Camp.
 * [ ] Add disassembly and component recovery.
 * [ ] Calculate full equipment statistics from every selected component.
 * [ ] Expose field crafting outside the home interface.

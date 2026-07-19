@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.15-alpha1
+v0.5.16-alpha1
 
 ## Project Health
 
-🟢 Stable — Equipment maintenance passed gameplay and interface testing
+🟢 Stable — Equipment component replacement passed gameplay and persistence testing
 
 ## Current Milestone
 
@@ -166,7 +166,7 @@ Current tracked values:
 
 Finnley's stable character ID is `survivor.finnley`. Identity-safe milestone attribution uses this ID rather than the mutable display name.
 
-The current save version is 9. Versions 1 through 8 remain compatible through explicit migrations, without retroactively inventing history or components. Manual gameplay and save/load testing passed.
+The current save version is 11. Versions 1 through 10 remain compatible through explicit migrations, without retroactively inventing history, components, maintenance, or replacements. Manual gameplay and save/load testing passed.
 
 ## Legacy Summary
 
@@ -234,13 +234,20 @@ Maintenance changes present condition without rewriting construction history. Ea
 
 Save version 10 preserves maintenance history. Versions 1 through 9 remain supported and begin with empty maintenance records.
 
+## Equipment Component Replacement
+
+At Camp, the player can replace a known axe head, handle, or binding with a compatible available component. The tool keeps its stable instance identity, original maker, and crafting time while its active construction, condition, result name, material, and derived statistics update.
+
+Every replacement records removed and installed component snapshots, condition at removal, date, character identity, and recovery outcome. Full-condition removed components return to Camp Storage; damaged components are not converted into pristine stackable items.
+
+Stone and Flint head replacement reuses the assembly recipe's material-variant rules, allowing the same persistent tool to become a Stone Axe or Flint Axe without hardcoded UI mapping. Save version 11 preserves the active state, monotonic component sequence, and replacement history.
+
 ## Current Focus
 
-Continue the vertical slice from the tested v0.5.15-alpha1 maintenance foundation, then add deliberate component replacement.
+Continue the vertical slice from the tested v0.5.16-alpha1 replacement foundation, then add deliberate disassembly and component recovery.
 
 ## Next Goals
 
-* Component replacement
 * Disassembly and component recovery
 * Windows export regression pass for the interface foundation
 * Data-driven narrative templates

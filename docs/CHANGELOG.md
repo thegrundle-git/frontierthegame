@@ -4,6 +4,35 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.16-alpha1 — Equipment Component Replacement Foundation
+
+### Added
+
+* Typed, persistent component-replacement history with removed and installed component snapshots.
+* Camp replacement controls for axe heads, handles, and bindings.
+* Data-driven result previews and Stone Axe/Flint Axe transformation.
+* Monotonic component record IDs that are never reused within an equipment instance.
+
+### Changed
+
+* Replacing a component preserves the equipment instance, original maker, and crafting time while updating its current construction.
+* Installed components begin at full condition and immediately drive derived efficiency and durability.
+* Full-condition removed components return to Camp Storage; damaged or failed components are not converted into pristine stackable items.
+* Equipment Details displays replacement requirements, outcomes, recovery, and chronological replacement history.
+* Save version 11 persists active replacement state and history while versions 1 through 10 migrate without fabricated replacements.
+
+### Verified
+
+* Manual gameplay testing passed for replacement, Stone/Flint result changes, recovery rules, condition initialization, repeated replacement, and save/load persistence.
+* Godot 4.7 registered the replacement service, record, and changed Equipment Details class without new implementation errors.
+* `git diff --check` passed.
+
+### Not Included
+
+* General disassembly, damaged-component recovery, partial recovery, removal failure, replacement time, skill outcomes, NPC replacement, and a dedicated Tool Bench remain future work.
+
+---
+
 ## v0.5.15-alpha1 — Equipment Maintenance Foundation
 
 ### Added
