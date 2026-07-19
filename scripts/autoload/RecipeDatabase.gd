@@ -85,3 +85,22 @@ func has_recipe(
 	recipe_id: String
 ) -> bool:
 	return recipes.has(recipe_id)
+
+
+func get_assembly_recipe_for_item(item_id: String) -> RecipeData:
+	if item_id.is_empty():
+		return null
+	for value: Variant in recipes.values():
+		var recipe := value as RecipeData
+		if recipe == null or recipe.variant_component_slot.is_empty():
+			continue
+		for result: IngredientData in recipe.results:
+			if result != null and result.item != null and result.item.id == item_id:
+				return recipe
+		for variant: MaterialResultVariantData in recipe.material_result_variants:
+			if variant == null:
+				continue
+			for result: IngredientData in variant.results:
+				if result != null and result.item != null and result.item.id == item_id:
+					return recipe
+	return null

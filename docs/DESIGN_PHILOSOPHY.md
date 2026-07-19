@@ -79,4 +79,8 @@ Maintenance now demonstrates the separation between an object's past and present
 
 Maintenance should be deliberate, legible, and materially grounded. The player sees which component is damaged, what matching part is required, and why the tool becomes usable again. Failure therefore creates a recoverable logistical problem rather than silently deleting a meaningful possession.
 
-Component replacement, disassembly, material recovery, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.
+Component replacement makes the distinction between identity and composition explicit. A tool can receive a new head, handle, or binding without becoming an unrelated object: its instance identity and original origin remain continuous while its current construction truthfully changes.
+
+Replacement must preserve both sides of that change. The active component record explains what the tool contains now, while the replacement record remembers what was removed, what was installed, who performed the work, and whether anything was recovered. A damaged part is not silently converted into a pristine fungible item merely because the inventory system cannot represent its damage.
+
+Disassembly, broader material recovery, handle wear, calculated overall quality, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.

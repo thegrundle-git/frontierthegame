@@ -19,6 +19,8 @@ class_name ItemInstance
 @export var last_maintained_day: int = 0
 @export var last_maintained_by_id: String = ""
 @export var last_maintained_by_name: String = ""
+@export var next_component_record_sequence: int = 1
+@export var component_replacements: Array[EquipmentComponentReplacementRecord] = []
 
 
 func is_valid() -> bool:

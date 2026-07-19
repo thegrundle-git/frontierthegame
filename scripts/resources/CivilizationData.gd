@@ -54,6 +54,7 @@ func create_item_instance(
 			var stored_component := component.duplicate(true) as EquipmentComponentRecord
 			stored_component.record_id = "component." + str(instance.components.size() + 1)
 			instance.components.append(stored_component)
+	instance.next_component_record_sequence = instance.components.size() + 1
 	EquipmentDurabilityCalculator.initialize_condition(instance)
 	return instance
 
