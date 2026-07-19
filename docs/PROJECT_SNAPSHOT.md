@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.18-alpha1
+v0.5.19-alpha1
 
 ## Project Health
 
-🟢 Stable — Complete component-derived equipment stats passed gameplay testing
+🟢 Stable — UI navigation and layout foundation passed gameplay testing
 
 ## Current Milestone
 
@@ -85,6 +85,10 @@ Sprint 3 — The Age of Discovery
 * Accessible Actions and Travel accordion controls
 * Bounded scrolling for variable interface content
 * Improved event dialog and Chronicle presentation
+* Centralized Camp workspace routing
+* Persistent Camp navigation
+* Standard Camp Back/Escape behavior
+* Workspace focus entry points and navigation history
 * Civilization History Ledger
 * Dedicated Journal History tab
 * Unique persistent civilization milestones

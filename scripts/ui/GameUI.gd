@@ -62,6 +62,9 @@ var selected_recipe_id: String = ""
 @onready var crafting_panel: Control = %Crafting
 @onready var back_to_home_button: Button = %BackToHomeButton
 @onready var storage_ui: StorageUI = %StorageUI
+@onready var camp_navigation: CampNavigation = %CampNavigation
+
+var camp_router := UIRouter.new()
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
@@ -159,11 +162,31 @@ func _ready() -> void:
 	storage_ui.equipment_inspection_requested.connect(
 		_on_storage_equipment_inspection_requested
 	)
+	camp_navigation.screen_requested.connect(
+		_on_camp_screen_requested
+	)
+	camp_navigation.leave_requested.connect(
+		_on_leave_home_requested
+	)
+	camp_router.register_screen(
+		CampNavigation.OVERVIEW_SCREEN_ID,
+		home_ui,
+		home_ui.get_default_focus_target()
+	)
+	camp_router.register_screen(
+		CampNavigation.STORAGE_SCREEN_ID,
+		storage_ui,
+		storage_ui.get_default_focus_target()
+	)
+	camp_router.register_screen(
+		CampNavigation.CRAFTING_SCREEN_ID,
+		crafting_panel,
+		back_to_home_button
+	)
 
-	storage_ui.visible = false
 	event_overlay.visible = false
-	home_ui.visible = false
-	crafting_panel.visible = false
+	camp_router.close_all()
+	camp_navigation.visible = false
 	current_action_label.text = "Idle"
 	action_progress.value = 0.0
 
@@ -186,7 +209,26 @@ func _ready() -> void:
 
 	back_to_home_button.pressed.connect(
 		_on_back_to_home_pressed
-)
+	)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not camp_navigation.visible:
+		return
+	if (
+		equipment_details_screen.visible
+		or legacy_summary_screen.visible
+		or succession_screen.visible
+		or event_overlay.visible
+	):
+		return
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	if camp_router.get_current_screen_id() == CampNavigation.OVERVIEW_SCREEN_ID:
+		return
+
+	_back_in_camp()
+	get_viewport().set_input_as_handled()
 
 
 func _on_actions_toggle_pressed() -> void:
@@ -1340,9 +1382,7 @@ func _on_open_completed_life_pressed() -> void:
 
 
 func show_final_legacy_summary() -> void:
-	home_ui.visible = false
-	storage_ui.visible = false
-	crafting_panel.visible = false
+	_close_camp_workspace()
 	_on_open_legacy_summary_pressed()
 
 
@@ -1687,35 +1727,55 @@ func _on_return_home_pressed() -> void:
 	if not GameManager.enter_home():
 		return
 
-	crafting_panel.visible = false
-	home_ui.visible = true
+	_open_camp_screen(CampNavigation.OVERVIEW_SCREEN_ID, false)
 
 
 func _on_leave_home_requested() -> void:
 	GameManager.leave_home()
-
-	crafting_panel.visible = false
-	home_ui.visible = false
+	_close_camp_workspace()
 
 func _on_home_crafting_requested() -> void:
-	home_ui.visible = false
-	crafting_panel.visible = true
-	update_crafting()
+	_open_camp_screen(CampNavigation.CRAFTING_SCREEN_ID)
 
 
 func _on_back_to_home_pressed() -> void:
-	crafting_panel.visible = false
-	home_ui.visible = true
+	_back_in_camp()
 
 func _on_home_storage_requested() -> void:
-	home_ui.visible = false
-
-	storage_ui.refresh_storage()
-
-	storage_ui.visible = true
+	_open_camp_screen(CampNavigation.STORAGE_SCREEN_ID)
 
 
 func _on_storage_back_requested() -> void:
-	storage_ui.visible = false
+	_back_in_camp()
 
-	home_ui.visible = true
+
+func _on_camp_screen_requested(screen_id: String) -> void:
+	_open_camp_screen(screen_id)
+
+
+func _open_camp_screen(
+	screen_id: String,
+	remember_current: bool = true
+) -> void:
+	if screen_id == CampNavigation.STORAGE_SCREEN_ID:
+		storage_ui.refresh_storage()
+	elif screen_id == CampNavigation.CRAFTING_SCREEN_ID:
+		update_crafting()
+
+	if not camp_router.open(screen_id, remember_current):
+		return
+
+	camp_navigation.visible = true
+	camp_navigation.set_current_screen(screen_id)
+
+
+func _back_in_camp() -> void:
+	camp_router.back(CampNavigation.OVERVIEW_SCREEN_ID)
+	camp_navigation.set_current_screen(
+		camp_router.get_current_screen_id()
+	)
+
+
+func _close_camp_workspace() -> void:
+	camp_router.close_all()
+	camp_navigation.visible = false

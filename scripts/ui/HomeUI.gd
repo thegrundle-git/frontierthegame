@@ -14,6 +14,10 @@ signal storage_requested
 @onready var leave_home_button: Button = %LeaveHomeButton
 
 
+func get_default_focus_target() -> Control:
+	return storage_button
+
+
 func _ready() -> void:
 	leave_home_button.pressed.connect(
 		_on_leave_home_button_pressed

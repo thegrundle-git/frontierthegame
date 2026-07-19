@@ -353,6 +353,24 @@ Normal actions are disabled while an event choice is unresolved.
 
 `GameUI.tscn` uses container-based layout rather than manual absolute positioning.
 
+The current UI navigation contract is documented in `docs/UI_ARCHITECTURE.md`.
+
+### Camp Workspace Routing
+
+`GameUI` owns one lightweight `UIRouter`. It is not an autoload and does not contain gameplay or persistence logic. The router coordinates only the mutually exclusive Camp workspace screens registered under stable IDs:
+
+* `camp.overview`;
+* `camp.storage`;
+* `camp.crafting`.
+
+`CampNavigation` emits destination requests without directly changing another screen. `GameUI` remains the integration boundary: it performs the relevant refresh, asks the router to open the destination, and updates the navigation state.
+
+The router owns workspace visibility, navigation history, and each destination's initial focus target. Back buttons and keyboard cancel use the same history behavior. Closing Camp clears the routed workspace and its history.
+
+Equipment Details, world-event choices, Legacy Summary, and Succession remain modal overlays. They are deliberately excluded from workspace history, and an active modal prevents Camp keyboard cancellation from also navigating the underlying screen.
+
+This foundation changes no save data. Save version remains 12.
+
 Major areas include:
 
 ```text

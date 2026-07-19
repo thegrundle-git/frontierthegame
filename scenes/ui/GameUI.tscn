@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/LegacySummaryScreen.tscn" id="4_legacy"]
 [ext_resource type="PackedScene" path="res://scenes/ui/SuccessionScreen.tscn" id="5_successor"]
 [ext_resource type="PackedScene" path="res://scenes/ui/EquipmentDetailsScreen.tscn" id="6_details"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CampNavigation.tscn" id="7_camp_navigation"]
 
 [node name="GameUI" type="Control" unique_id=1054040398]
 layout_mode = 3
@@ -452,7 +453,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 90.0
+offset_top = 146.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -493,7 +494,7 @@ text = "Craft Stone Axe"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "Back to Home"
+text = "Back"
 
 [node name="HomeUI" parent="." unique_id=1443133491 instance=ExtResource("2_3pxe2")]
 unique_name_in_owner = true
@@ -501,6 +502,11 @@ visible = false
 layout_mode = 1
 
 [node name="StorageUI" parent="." unique_id=295644592 instance=ExtResource("3_jwej7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="CampNavigation" parent="." instance=ExtResource("7_camp_navigation")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
