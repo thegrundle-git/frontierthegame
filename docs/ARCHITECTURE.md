@@ -371,6 +371,16 @@ Equipment Details, world-event choices, Legacy Summary, and Succession remain mo
 
 This foundation changes no save data. Save version remains 12.
 
+### Crafting Workspace
+
+`CraftingUI.tscn` is the presentation owner for `camp.crafting`. It contains the recipe selector, bounded recipe-detail display, Craft control, and Back control as stable scene nodes.
+
+`CraftingUI.gd` owns session-local recipe selection and rebuilds the visible recipe requirements from civilization knowledge and accessible inventory amounts. It emits `craft_requested(recipe_id)` and `back_requested` rather than starting actions or changing sibling visibility directly.
+
+`GameUI` connects those signals, forwards craft intent to `GameManager.craft_recipe()`, and delegates Back behavior to `UIRouter`. `GameManager`, `ActionManager`, and `CraftAction` retain authority over eligibility, material consumption, time, XP, output placement, equipment creation, and historical recording.
+
+The selected recipe remains presentation state for the current UI session and is not saved. This extraction changes no gameplay data or save format.
+
 Major areas include:
 
 ```text

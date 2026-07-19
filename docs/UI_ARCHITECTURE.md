@@ -52,7 +52,7 @@ While a modal is visible, the underlying workspace must not respond to the same 
 Navigation never mutates gameplay state. `GameUI` remains responsible for requesting the relevant presentation refresh when a routed destination opens:
 
 * Storage refreshes when `camp.storage` opens.
-* Crafting refreshes when `camp.crafting` opens.
+* `CraftingUI` refreshes when `camp.crafting` opens.
 * Overview consumes its existing presentation state.
 
 Future UI extraction should keep gameplay rules in managers, actions, services, and Resources. Screens should receive or query presentation-ready state and emit player intent through signals.
@@ -65,14 +65,13 @@ New workspaces should reuse shared navigation and content bounds. They should no
 
 ## Current Boundary and Future Migration
 
-This foundation currently routes Camp Overview, Storage, and Crafting. It does not yet restructure the main HUD, Journal, or modal scenes.
+This foundation currently routes Camp Overview, Storage, and Crafting. Crafting is now a dedicated workspace scene rather than an embedded `GameUI` panel. The foundation does not yet restructure the main HUD, Journal, or modal scenes.
 
 Recommended migration order:
 
-1. Extract the embedded Crafting panel into a focused workspace scene.
-2. Convert equipment management from a large modal into a Camp workspace while retaining small confirmation dialogs as modals.
-3. Introduce reusable workspace headers, empty states, list/detail layouts, and bounded content containers.
-4. Centralize visual tokens such as spacing, minimum control sizes, typography, and responsive breakpoints.
-5. Replace broad UI refreshes with focused state-change signals where profiling and complexity justify it.
+1. Convert equipment management from a large modal into a Camp workspace while retaining small confirmation dialogs as modals.
+2. Introduce reusable workspace headers, empty states, list/detail layouts, and bounded content containers.
+3. Centralize visual tokens such as spacing, minimum control sizes, typography, and responsive breakpoints.
+4. Replace broad UI refreshes with focused state-change signals where profiling and complexity justify it.
 
 Until those migrations occur, new features should extend the existing routing boundary instead of creating parallel navigation systems.

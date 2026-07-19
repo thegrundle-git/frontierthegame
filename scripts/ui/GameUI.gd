@@ -47,20 +47,13 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var actions_toggle_button: Button = %ActionsToggleButton
 @onready var travel_toggle_button: Button = %TravelToggleButton
 
-@onready var recipe_label: Label = %RecipeLabel
-@onready var craft_button: Button = %CraftButton
-
-var recipe_selector: OptionButton
-var selected_recipe_id: String = ""
-
 @onready var event_overlay: CenterContainer = %EventOverlay
 @onready var event_title: Label = %EventTitle
 @onready var event_body: Label = %EventBody
 @onready var event_options: VBoxContainer = %EventOptions
 
 @onready var home_ui: HomeUI = %HomeUI
-@onready var crafting_panel: Control = %Crafting
-@onready var back_to_home_button: Button = %BackToHomeButton
+@onready var crafting_ui: CraftingUI = %CraftingUI
 @onready var storage_ui: StorageUI = %StorageUI
 @onready var camp_navigation: CampNavigation = %CampNavigation
 
@@ -168,6 +161,8 @@ func _ready() -> void:
 	camp_navigation.leave_requested.connect(
 		_on_leave_home_requested
 	)
+	crafting_ui.craft_requested.connect(_on_craft_requested)
+	crafting_ui.back_requested.connect(_on_crafting_back_requested)
 	camp_router.register_screen(
 		CampNavigation.OVERVIEW_SCREEN_ID,
 		home_ui,
@@ -180,8 +175,8 @@ func _ready() -> void:
 	)
 	camp_router.register_screen(
 		CampNavigation.CRAFTING_SCREEN_ID,
-		crafting_panel,
-		back_to_home_button
+		crafting_ui,
+		crafting_ui.get_default_focus_target()
 	)
 
 	event_overlay.visible = false
@@ -206,11 +201,6 @@ func _ready() -> void:
 	home_ui.crafting_requested.connect(
 		_on_home_crafting_requested
 )
-
-	back_to_home_button.pressed.connect(
-		_on_back_to_home_pressed
-	)
-
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not camp_navigation.visible:
@@ -300,7 +290,7 @@ func refresh_all() -> void:
 	update_survivor()
 	update_location()
 	update_tool_display()
-	update_crafting()
+	crafting_ui.refresh()
 	update_world_action_buttons()
 	update_travel_buttons()
 	update_locations_journal()
@@ -913,229 +903,6 @@ func _on_unequip_tool_pressed() -> void:
 	)
 
 	refresh_all()
-func update_crafting() -> void:
-	_ensure_recipe_selector()
-
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
-
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		survivor == null
-		or civilization == null
-	):
-		recipe_selector.visible = false
-		recipe_label.text = "Crafting unavailable."
-		craft_button.disabled = true
-		craft_button.visible = false
-		return
-
-	_populate_recipe_selector(
-		civilization
-	)
-
-	if selected_recipe_id.is_empty():
-		recipe_selector.visible = false
-		recipe_label.text = (
-			"Crafting\n\n"
-			+ "No recipes discovered."
-		)
-		craft_button.disabled = true
-		craft_button.visible = false
-		return
-
-	var recipe: RecipeData = (
-		RecipeDatabase.get_recipe(
-			selected_recipe_id
-		)
-	)
-
-	if recipe == null:
-		recipe_selector.visible = false
-		recipe_label.text = "Crafting unavailable."
-		craft_button.disabled = true
-		craft_button.visible = false
-		return
-
-	recipe_selector.visible = true
-	recipe_selector.disabled = false
-	craft_button.visible = true
-	craft_button.text = (
-		"Craft "
-		+ recipe.display_name
-	)
-
-	var recipe_text := (
-		recipe.display_name
-		+ "\n\n"
-		+ recipe.description
-		+ "\n\nRequires:\n"
-	)
-
-	for ingredient: IngredientData in recipe.ingredients:
-		if (
-			ingredient == null
-			or not ingredient.is_valid()
-		):
-			continue
-
-		var owned: int = (
-			GameManager.get_accessible_crafting_ingredient_amount(
-				ingredient
-			)
-		)
-
-		var ingredient_name := ""
-
-		if ingredient.uses_component_slot():
-			ingredient_name = (
-				ingredient.component_slot.capitalize()
-				+ " (best available)"
-			)
-		else:
-			ingredient_name = (
-				ingredient.item.display_name
-			)
-
-		recipe_text += (
-			ingredient_name
-			+ ": "
-			+ str(owned)
-			+ " / "
-			+ str(ingredient.amount)
-			+ "\n"
-		)
-
-	recipe_label.text = recipe_text
-
-	craft_button.disabled = (
-		not survivor.can_act()
-		or
-		ActionManager.is_busy
-		or WorldEventManager.has_pending_event()
-		or not GameManager.can_afford_recipe_from_accessible_inventories(
-	recipe
-)
-	)
-
-
-func _ensure_recipe_selector() -> void:
-	if is_instance_valid(
-		recipe_selector
-	):
-		return
-
-	recipe_selector = OptionButton.new()
-	recipe_selector.name = "RecipeSelector"
-	recipe_selector.custom_minimum_size.y = (
-		INTERACTIVE_CONTROL_MINIMUM_HEIGHT
-	)
-	recipe_selector.focus_mode = Control.FOCUS_ALL
-
-	recipe_selector.item_selected.connect(
-		_on_recipe_selected
-	)
-
-	var crafting_layout: VBoxContainer = (
-		recipe_label.get_parent()
-	)
-
-	crafting_layout.add_child(
-		recipe_selector
-	)
-
-	crafting_layout.move_child(
-		recipe_selector,
-		recipe_label.get_index()
-	)
-
-
-func _populate_recipe_selector(
-	civilization: CivilizationData
-) -> void:
-	var previous_recipe_id := (
-		selected_recipe_id
-	)
-
-	recipe_selector.clear()
-
-	for recipe_id: String in (
-		civilization.unlocked_recipe_ids
-	):
-		var recipe: RecipeData = (
-			RecipeDatabase.get_recipe(
-				recipe_id
-			)
-		)
-
-		if recipe == null:
-			continue
-
-		recipe_selector.add_item(
-			recipe.display_name
-		)
-
-		var index: int = (
-			recipe_selector.item_count - 1
-		)
-
-		recipe_selector.set_item_metadata(
-			index,
-			recipe.id
-		)
-
-	if recipe_selector.item_count <= 0:
-		selected_recipe_id = ""
-		return
-
-	var selected_index := 0
-
-	for index: int in range(
-		recipe_selector.item_count
-	):
-		var recipe_id := str(
-			recipe_selector.get_item_metadata(
-				index
-			)
-		)
-
-		if recipe_id == previous_recipe_id:
-			selected_index = index
-			break
-
-	recipe_selector.select(
-		selected_index
-	)
-
-	selected_recipe_id = str(
-		recipe_selector.get_item_metadata(
-			selected_index
-		)
-	)
-
-
-func _on_recipe_selected(
-	index: int
-) -> void:
-	if (
-		index < 0
-		or index >= recipe_selector.item_count
-	):
-		return
-
-	selected_recipe_id = str(
-		recipe_selector.get_item_metadata(
-			index
-		)
-	)
-
-	update_crafting()
-
-
 func _update_time() -> void:
 	time_label.text = TimeManager.get_time_text()
 
@@ -1621,13 +1388,8 @@ func _on_busy_changed(
 	refresh_all()
 
 
-func _on_craft_button_pressed() -> void:
-	if selected_recipe_id.is_empty():
-		return
-
-	GameManager.craft_recipe(
-		selected_recipe_id
-	)
+func _on_craft_requested(recipe_id: String) -> void:
+	GameManager.craft_recipe(recipe_id)
 
 
 # -------------------------------------------------------------------
@@ -1738,7 +1500,7 @@ func _on_home_crafting_requested() -> void:
 	_open_camp_screen(CampNavigation.CRAFTING_SCREEN_ID)
 
 
-func _on_back_to_home_pressed() -> void:
+func _on_crafting_back_requested() -> void:
 	_back_in_camp()
 
 func _on_home_storage_requested() -> void:
@@ -1760,7 +1522,7 @@ func _open_camp_screen(
 	if screen_id == CampNavigation.STORAGE_SCREEN_ID:
 		storage_ui.refresh_storage()
 	elif screen_id == CampNavigation.CRAFTING_SCREEN_ID:
-		update_crafting()
+		crafting_ui.refresh()
 
 	if not camp_router.open(screen_id, remember_current):
 		return

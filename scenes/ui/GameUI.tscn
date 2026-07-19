@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/SuccessionScreen.tscn" id="5_successor"]
 [ext_resource type="PackedScene" path="res://scenes/ui/EquipmentDetailsScreen.tscn" id="6_details"]
 [ext_resource type="PackedScene" path="res://scenes/ui/CampNavigation.tscn" id="7_camp_navigation"]
+[ext_resource type="PackedScene" path="res://scenes/ui/CraftingUI.tscn" id="8_crafting"]
 
 [node name="GameUI" type="Control" unique_id=1054040398]
 layout_mode = 3
@@ -446,55 +447,10 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Crafting" type="PanelContainer" parent="." unique_id=12433698]
+[node name="CraftingUI" parent="." instance=ExtResource("8_crafting")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 146.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="CraftingBackground" type="ColorRect" parent="Crafting" unique_id=619864220]
-layout_mode = 2
-color = Color(0.10747974, 0.10747974, 0.10747967, 1)
-
-[node name="CraftingCenter" type="CenterContainer" parent="Crafting" unique_id=1924899879]
-layout_mode = 2
-
-[node name="CraftingPanel" type="VBoxContainer" parent="Crafting/CraftingCenter" unique_id=1776161968]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(500, 350)
-layout_mode = 2
-mouse_filter = 0
-
-[node name="CraftingLayout" type="VBoxContainer" parent="Crafting/CraftingCenter/CraftingPanel" unique_id=1087235980]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 12
-
-[node name="RecipeLabel" type="Label" parent="Crafting/CraftingCenter/CraftingPanel/CraftingLayout" unique_id=1619250410]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-text = "Crafting
-
-No recipes discovered."
-autowrap_mode = 3
-
-[node name="CraftButton" type="Button" parent="Crafting/CraftingCenter/CraftingPanel/CraftingLayout" unique_id=2007992763]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-text = "Craft Stone Axe"
-
-[node name="BackToHomeButton" type="Button" parent="Crafting/CraftingCenter/CraftingPanel/CraftingLayout" unique_id=210938268]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-text = "Back"
 
 [node name="HomeUI" parent="." unique_id=1443133491 instance=ExtResource("2_3pxe2")]
 unique_name_in_owner = true
@@ -543,4 +499,3 @@ tooltip_text = "Debug only: finalize the current character's life."
 
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/LoadButton" to="." method="_on_load_button_pressed"]
-[connection signal="pressed" from="Crafting/CraftingCenter/CraftingPanel/CraftingLayout/CraftButton" to="." method="_on_craft_button_pressed"]

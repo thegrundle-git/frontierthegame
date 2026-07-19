@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.19-alpha1
+v0.5.20-alpha1
 
 ## Project Health
 
-🟢 Stable — UI navigation and layout foundation passed gameplay testing
+🟢 Stable — Crafting workspace extraction passed gameplay testing
 
 ## Current Milestone
 
@@ -89,6 +89,9 @@ Sprint 3 — The Age of Discovery
 * Persistent Camp navigation
 * Standard Camp Back/Escape behavior
 * Workspace focus entry points and navigation history
+* Dedicated routed Crafting workspace
+* Scene-owned recipe selection and bounded recipe details
+* Signal-based Crafting intent forwarding
 * Civilization History Ledger
 * Dedicated Journal History tab
 * Unique persistent civilization milestones
