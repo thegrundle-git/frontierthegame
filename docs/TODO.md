@@ -36,7 +36,7 @@
 * [ ] Add weight and bulk capacity displays.
 * [x] Add basic survivor equipment selection and unequip controls.
 * [x] Rebalance Skills, Inventory, and Journal interface proportions.
-* [x] Add bounded, accessible Actions and Travel accordion sections.
+* [x] Add bounded, simultaneously visible Actions and Travel sections.
 * [x] Prevent variable UI content from resizing or shifting the root interface.
 * [ ] Expand basic equipment controls into a dedicated multi-slot equipment panel.
 * [x] Add the first modular Stone Axe component-crafting chain.
