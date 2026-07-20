@@ -371,6 +371,18 @@ Equipment Details, world-event choices, Legacy Summary, and Succession remain mo
 
 This foundation changes no save data. Save version remains 12.
 
+### Equipment Workspace
+
+`EquipmentUI.tscn` is the routed presentation owner for `camp.equipment`. It builds one selection list from the current survivor's equipped instance, Expedition Pack equipment, and Camp Storage equipment. Every entry carries the stable equipment instance ID rather than a list index or display name.
+
+`EquipmentDetailsScreen` is no longer instantiated as a top-level `GameUI` overlay. Its scene is now a container-native, internally scrolling detail pane embedded by `EquipmentUI`. It retains the proven identity, provenance, component, durability, repair, replacement, and disassembly presentation while allowing the surrounding workspace to own selection and navigation.
+
+Repair and replacement preserve the selected instance ID. Disassembly clears the removed identity and selects the nearest remaining entry. The native disassembly `ConfirmationDialog` remains modal and reports its active state so keyboard cancel cannot navigate the underlying workspace simultaneously.
+
+Camp Storage and HUD inspection requests route to the selected instance. When inspection begins outside Camp, the Equipment workspace opens below the persistent Header without exposing Camp navigation or granting access to Camp materials. Existing gameplay gates continue disabling repair, replacement, and disassembly away from Camp.
+
+This milestone preserves the existing equipment mutation paths. Moving repair and replacement behind dedicated gameplay-service APIs remains a future architectural task and should not be conflated with this presentation migration.
+
 ### Crafting Workspace
 
 `CraftingUI.tscn` is the presentation owner for `camp.crafting`. It contains the recipe selector, bounded recipe-detail display, Craft control, and Back control as stable scene nodes.

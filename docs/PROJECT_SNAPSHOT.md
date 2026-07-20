@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.20-alpha1
+v0.5.21-alpha1
 
 ## Project Health
 
-🟢 Stable — Crafting workspace extraction passed gameplay testing
+🟢 Stable — Equipment workspace foundation passed gameplay testing
 
 ## Current Milestone
 
@@ -92,6 +92,10 @@ Sprint 3 — The Age of Discovery
 * Dedicated routed Crafting workspace
 * Scene-owned recipe selection and bounded recipe details
 * Signal-based Crafting intent forwarding
+* Routed Equipment workspace
+* Unified equipped, carried, and stored equipment selection
+* Container-native equipment detail and maintenance panel
+* Field and Camp equipment inspection continuity
 * Civilization History Ledger
 * Dedicated Journal History tab
 * Unique persistent civilization milestones

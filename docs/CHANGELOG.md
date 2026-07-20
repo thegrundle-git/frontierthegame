@@ -4,6 +4,44 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.21-alpha1 — Equipment Workspace Foundation
+
+### Added
+
+* A routed Equipment workspace with a unified accessible-equipment list and container-native detail pane.
+* Source labels for equipped, Expedition Pack, and Camp Storage equipment.
+* Workspace equip and unequip controls.
+* Stable instance selection across maintenance and component replacement.
+
+### Changed
+
+* Equipment inspection from Camp Storage and the HUD now opens the selected instance in the Equipment workspace.
+* Field inspection remains available without falsely entering Camp; maintenance continues to require Camp access.
+* The former full-screen Equipment Details overlay now operates as an embedded, internally scrolling detail panel.
+* Disassembly confirmation remains modal and prevents underlying workspace navigation.
+* Successful disassembly selects the nearest remaining equipment entry or displays an empty state.
+
+### Fixed
+
+* Replaced the incompatible embedded-modal hierarchy that could collapse the detail pane into a black region.
+* Corrected the invalid root cast introduced during the panel conversion.
+
+### Verified
+
+* Manual gameplay testing passed for the rebuilt Equipment workspace and inspection panel.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because the workspace reuses existing equipment instances and operations.
+
+### Not Included
+
+* Repair and replacement gameplay-service extraction, new equipment mechanics, responsive breakpoint switching, final visual styling, and removal of the legacy HUD tool controls remain future work.
+
+---
+
 ## v0.5.20-alpha1 — Crafting Workspace Extraction
 
 ### Added

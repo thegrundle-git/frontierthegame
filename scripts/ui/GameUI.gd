@@ -25,7 +25,7 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var equip_tool_button: Button = %EquipToolButton
 @onready var unequip_tool_button: Button = %UnequipToolButton
 @onready var inspect_tool_button: Button = %InspectToolButton
-@onready var equipment_details_screen: EquipmentDetailsScreen = %EquipmentDetailsScreen
+@onready var equipment_ui: EquipmentUI = %EquipmentUI
 @onready var location_label: Label = %LocationLabel
 @onready var locations_log: RichTextLabel = %LocationsLog
 @onready var landmarks_log: RichTextLabel = %LandmarksLog
@@ -86,13 +86,13 @@ func _ready() -> void:
 		_on_unequip_tool_pressed
 	)
 	inspect_tool_button.pressed.connect(_on_inspect_tool_pressed)
-	equipment_details_screen.equipment_repaired.connect(
+	equipment_ui.equipment_repaired.connect(
 		_on_equipment_repaired
 	)
-	equipment_details_screen.equipment_component_replaced.connect(
+	equipment_ui.equipment_component_replaced.connect(
 		_on_equipment_component_replaced
 	)
-	equipment_details_screen.equipment_disassembled.connect(
+	equipment_ui.equipment_disassembled.connect(
 		_on_equipment_disassembled
 	)
 
@@ -163,6 +163,9 @@ func _ready() -> void:
 	)
 	crafting_ui.craft_requested.connect(_on_craft_requested)
 	crafting_ui.back_requested.connect(_on_crafting_back_requested)
+	equipment_ui.back_requested.connect(_on_equipment_back_requested)
+	equipment_ui.equip_requested.connect(_on_equipment_equip_requested)
+	equipment_ui.unequip_requested.connect(_on_equipment_unequip_requested)
 	camp_router.register_screen(
 		CampNavigation.OVERVIEW_SCREEN_ID,
 		home_ui,
@@ -177,6 +180,11 @@ func _ready() -> void:
 		CampNavigation.CRAFTING_SCREEN_ID,
 		crafting_ui,
 		crafting_ui.get_default_focus_target()
+	)
+	camp_router.register_screen(
+		CampNavigation.EQUIPMENT_SCREEN_ID,
+		equipment_ui,
+		equipment_ui.get_default_focus_target()
 	)
 
 	event_overlay.visible = false
@@ -203,16 +211,20 @@ func _ready() -> void:
 )
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not camp_navigation.visible:
+	if not camp_navigation.visible and not equipment_ui.visible:
 		return
 	if (
-		equipment_details_screen.visible
+		equipment_ui.has_active_modal()
 		or legacy_summary_screen.visible
 		or succession_screen.visible
 		or event_overlay.visible
 	):
 		return
 	if not event.is_action_pressed("ui_cancel"):
+		return
+	if equipment_ui.visible and not camp_navigation.visible:
+		_close_camp_workspace()
+		get_viewport().set_input_as_handled()
 		return
 	if camp_router.get_current_screen_id() == CampNavigation.OVERVIEW_SCREEN_ID:
 		return
@@ -291,6 +303,8 @@ func refresh_all() -> void:
 	update_location()
 	update_tool_display()
 	crafting_ui.refresh()
+	if equipment_ui.visible:
+		equipment_ui.refresh()
 	update_world_action_buttons()
 	update_travel_buttons()
 	update_locations_journal()
@@ -817,17 +831,19 @@ func _on_inspect_tool_pressed() -> void:
 		survivor.get_accessible_equipment_instance(instance_id)
 	)
 	if instance != null:
-		equipment_details_screen.show_instance(instance)
+		_open_equipment_workspace(instance.instance_id)
 
 
 func _on_equipment_repaired(_instance: ItemInstance) -> void:
 	refresh_all()
+	equipment_ui.refresh(_instance.instance_id)
 	if storage_ui.visible:
 		storage_ui.refresh_storage()
 
 
 func _on_equipment_component_replaced(_instance: ItemInstance) -> void:
 	refresh_all()
+	equipment_ui.refresh(_instance.instance_id)
 	if storage_ui.visible:
 		storage_ui.refresh_storage()
 
@@ -842,7 +858,35 @@ func _on_equipment_disassembled(_instance_id: String) -> void:
 func _on_storage_equipment_inspection_requested(
 	instance: ItemInstance
 ) -> void:
-	equipment_details_screen.show_instance(instance)
+	_open_equipment_workspace(instance.instance_id)
+
+
+func _open_equipment_workspace(instance_id: String = "") -> void:
+	equipment_ui.refresh(instance_id)
+	if GameManager.is_survivor_at_home():
+		_open_camp_screen(CampNavigation.EQUIPMENT_SCREEN_ID)
+		return
+
+	equipment_ui.set_camp_navigation_visible(false)
+	camp_router.open(CampNavigation.EQUIPMENT_SCREEN_ID, false)
+	camp_navigation.visible = false
+
+
+func _on_equipment_equip_requested(instance_id: String) -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	if survivor == null or not survivor.equip_tool(instance_id):
+		return
+	refresh_all()
+	equipment_ui.refresh(instance_id)
+
+
+func _on_equipment_unequip_requested() -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	if survivor == null or survivor.get_equipped_tool_instance() == null:
+		return
+	survivor.unequip_tool()
+	refresh_all()
+	equipment_ui.refresh()
 
 
 func _on_equip_tool_pressed() -> void:
@@ -1503,6 +1547,13 @@ func _on_home_crafting_requested() -> void:
 func _on_crafting_back_requested() -> void:
 	_back_in_camp()
 
+
+func _on_equipment_back_requested() -> void:
+	if camp_navigation.visible:
+		_back_in_camp()
+	else:
+		_close_camp_workspace()
+
 func _on_home_storage_requested() -> void:
 	_open_camp_screen(CampNavigation.STORAGE_SCREEN_ID)
 
@@ -1523,6 +1574,9 @@ func _open_camp_screen(
 		storage_ui.refresh_storage()
 	elif screen_id == CampNavigation.CRAFTING_SCREEN_ID:
 		crafting_ui.refresh()
+	elif screen_id == CampNavigation.EQUIPMENT_SCREEN_ID:
+		equipment_ui.set_camp_navigation_visible(true)
+		equipment_ui.refresh()
 
 	if not camp_router.open(screen_id, remember_current):
 		return

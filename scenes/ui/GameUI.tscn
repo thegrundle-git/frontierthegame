@@ -5,9 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://c84ip6rn6xat4" path="res://scenes/ui/StorageUI.tscn" id="3_jwej7"]
 [ext_resource type="PackedScene" path="res://scenes/ui/LegacySummaryScreen.tscn" id="4_legacy"]
 [ext_resource type="PackedScene" path="res://scenes/ui/SuccessionScreen.tscn" id="5_successor"]
-[ext_resource type="PackedScene" path="res://scenes/ui/EquipmentDetailsScreen.tscn" id="6_details"]
 [ext_resource type="PackedScene" path="res://scenes/ui/CampNavigation.tscn" id="7_camp_navigation"]
 [ext_resource type="PackedScene" path="res://scenes/ui/CraftingUI.tscn" id="8_crafting"]
+[ext_resource type="PackedScene" path="res://scenes/ui/EquipmentUI.tscn" id="9_equipment"]
 
 [node name="GameUI" type="Control" unique_id=1054040398]
 layout_mode = 3
@@ -452,6 +452,11 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
+[node name="EquipmentUI" parent="." instance=ExtResource("9_equipment")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
 [node name="HomeUI" parent="." unique_id=1443133491 instance=ExtResource("2_3pxe2")]
 unique_name_in_owner = true
 visible = false
@@ -473,11 +478,6 @@ visible = false
 layout_mode = 1
 
 [node name="SuccessionScreen" parent="." instance=ExtResource("5_successor")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-
-[node name="EquipmentDetailsScreen" parent="." instance=ExtResource("6_details")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

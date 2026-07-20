@@ -9,11 +9,13 @@ signal leave_requested
 const OVERVIEW_SCREEN_ID := "camp.overview"
 const STORAGE_SCREEN_ID := "camp.storage"
 const CRAFTING_SCREEN_ID := "camp.crafting"
+const EQUIPMENT_SCREEN_ID := "camp.equipment"
 
 
 @onready var overview_button: Button = %OverviewButton
 @onready var storage_button: Button = %StorageButton
 @onready var crafting_button: Button = %CraftingButton
+@onready var equipment_button: Button = %EquipmentButton
 @onready var leave_button: Button = %LeaveButton
 
 
@@ -27,6 +29,9 @@ func _ready() -> void:
 	crafting_button.pressed.connect(
 		_request_screen.bind(CRAFTING_SCREEN_ID)
 	)
+	equipment_button.pressed.connect(
+		_request_screen.bind(EQUIPMENT_SCREEN_ID)
+	)
 	leave_button.pressed.connect(leave_requested.emit)
 
 
@@ -34,6 +39,7 @@ func set_current_screen(screen_id: String) -> void:
 	overview_button.disabled = screen_id == OVERVIEW_SCREEN_ID
 	storage_button.disabled = screen_id == STORAGE_SCREEN_ID
 	crafting_button.disabled = screen_id == CRAFTING_SCREEN_ID
+	equipment_button.disabled = screen_id == EQUIPMENT_SCREEN_ID
 
 
 func _request_screen(screen_id: String) -> void:

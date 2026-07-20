@@ -23,6 +23,7 @@ The first implemented workspace group is Camp:
 camp.overview
 camp.storage
 camp.crafting
+camp.equipment
 ```
 
 `UIRouter` owns:
@@ -43,7 +44,9 @@ Back buttons and keyboard cancel share the router's history. Keyboard cancel doe
 
 ## Modal Boundaries
 
-Equipment Details, world-event decisions, Legacy Summary, and Succession are modal overlays. They may capture focus and keyboard cancel, but they do not enter workspace history.
+World-event decisions, Legacy Summary, Succession, and irreversible confirmation dialogs are modal overlays. They may capture focus and keyboard cancel, but they do not enter workspace history.
+
+Equipment Details is now an embedded workspace panel rather than a modal. Only its disassembly confirmation interrupts the workspace.
 
 While a modal is visible, the underlying workspace must not respond to the same cancel input. Closing a modal restores focus without silently changing the workspace beneath it.
 
@@ -53,6 +56,7 @@ Navigation never mutates gameplay state. `GameUI` remains responsible for reques
 
 * Storage refreshes when `camp.storage` opens.
 * `CraftingUI` refreshes when `camp.crafting` opens.
+* `EquipmentUI` rebuilds stable instance selection when `camp.equipment` opens.
 * Overview consumes its existing presentation state.
 
 Future UI extraction should keep gameplay rules in managers, actions, services, and Resources. Screens should receive or query presentation-ready state and emit player intent through signals.
@@ -65,13 +69,13 @@ New workspaces should reuse shared navigation and content bounds. They should no
 
 ## Current Boundary and Future Migration
 
-This foundation currently routes Camp Overview, Storage, and Crafting. Crafting is now a dedicated workspace scene rather than an embedded `GameUI` panel. The foundation does not yet restructure the main HUD, Journal, or modal scenes.
+This foundation currently routes Camp Overview, Storage, Crafting, and Equipment. Crafting and Equipment are dedicated workspace scenes rather than embedded `GameUI` panels. The foundation does not yet restructure the main HUD, Journal, or remaining modal scenes.
 
 Recommended migration order:
 
-1. Convert equipment management from a large modal into a Camp workspace while retaining small confirmation dialogs as modals.
-2. Introduce reusable workspace headers, empty states, list/detail layouts, and bounded content containers.
-3. Centralize visual tokens such as spacing, minimum control sizes, typography, and responsive breakpoints.
-4. Replace broad UI refreshes with focused state-change signals where profiling and complexity justify it.
+1. Introduce reusable workspace headers, empty states, list/detail layouts, and bounded content containers.
+2. Centralize visual tokens such as spacing, minimum control sizes, typography, and responsive breakpoints.
+3. Replace broad UI refreshes with focused state-change signals where profiling and complexity justify it.
+4. Move repair and replacement mutations behind gameplay-service APIs before expanding equipment mechanics.
 
 Until those migrations occur, new features should extend the existing routing boundary instead of creating parallel navigation systems.
