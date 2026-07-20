@@ -2,32 +2,25 @@ extends Control
 
 
 const INTERACTIVE_CONTROL_MINIMUM_HEIGHT := 42.0
+const JOURNAL_WORKSPACE_ID := "exploration.journal"
 const EVENT_SEPARATOR := "────────────────────────"
 
 
 
 
-@onready var event_log: RichTextLabel = %EventLog
-@onready var history_log: RichTextLabel = %HistoryLog
-@onready var legacy_preview_log: RichTextLabel = %LegacyPreviewLog
-@onready var open_legacy_summary_button: Button = %OpenLegacySummaryButton
 @onready var legacy_summary_screen: LegacySummaryScreen = %LegacySummaryScreen
 @onready var succession_screen: SuccessionScreen = %SuccessionScreen
 @onready var debug_death_button: Button = %DebugDeathButton
-@onready var completed_lives_log: RichTextLabel = %CompletedLivesLog
-@onready var completed_life_selector: OptionButton = %CompletedLifeSelector
-@onready var open_completed_life_button: Button = %OpenCompletedLifeButton
-@onready var inventory_label: RichTextLabel = %InventoryLabel
+@onready var journal_ui: JournalUI = %JournalUI
+@onready var open_journal_button: Button = %OpenJournalButton
+@onready var event_log: RichTextLabel = %EventLog
+@onready var inventory_left_label: RichTextLabel = %InventoryLeftLabel
+@onready var inventory_right_label: RichTextLabel = %InventoryRightLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
 @onready var open_equipment_button: Button = %OpenEquipmentButton
 @onready var equipment_ui: EquipmentUI = %EquipmentUI
 @onready var location_label: Label = %LocationLabel
-@onready var locations_log: RichTextLabel = %LocationsLog
-@onready var landmarks_log: RichTextLabel = %LandmarksLog
-@onready var journal_tabs: TabContainer = %JournalTabs
-@onready var landmarks_tab: Control = %Landmarks
-@onready var discoveries_log: RichTextLabel = %DiscoveriesLog
 
 @onready var time_label: Label = %TimeLabel
 @onready var current_action_label: Label = %CurrentActionLabel
@@ -49,6 +42,7 @@ const EVENT_SEPARATOR := "──────────────────
 @onready var camp_navigation: CampNavigation = %CampNavigation
 
 var camp_router := UIRouter.new()
+var exploration_router := UIRouter.new()
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
@@ -58,6 +52,12 @@ func _ready() -> void:
 
 	open_equipment_button.pressed.connect(_on_open_equipment_pressed)
 	enter_camp_button.pressed.connect(_on_enter_camp_pressed)
+	open_journal_button.pressed.connect(_on_open_journal_pressed)
+	journal_ui.back_requested.connect(_on_journal_back_requested)
+	journal_ui.legacy_summary_requested.connect(_on_open_legacy_summary_pressed)
+	journal_ui.completed_life_requested.connect(
+		_on_journal_completed_life_requested
+	)
 	equipment_ui.equipment_repaired.connect(
 		_on_equipment_repaired
 	)
@@ -68,9 +68,6 @@ func _ready() -> void:
 		_on_equipment_disassembled
 	)
 
-	open_legacy_summary_button.pressed.connect(
-		_on_open_legacy_summary_pressed
-	)
 	legacy_summary_screen.save_requested.connect(
 		_on_save_button_pressed
 	)
@@ -85,10 +82,6 @@ func _ready() -> void:
 		_on_debug_death_pressed
 	)
 	debug_death_button.visible = OS.is_debug_build()
-	open_completed_life_button.pressed.connect(
-		_on_open_completed_life_pressed
-	)
-
 	ActionManager.action_started.connect(
 		_on_action_started
 	)
@@ -158,9 +151,15 @@ func _ready() -> void:
 		equipment_ui,
 		equipment_ui.get_default_focus_target()
 	)
+	exploration_router.register_screen(
+		JOURNAL_WORKSPACE_ID,
+		journal_ui,
+		journal_ui.get_default_focus_target()
+	)
 
 	event_overlay.visible = false
 	camp_router.close_all()
+	exploration_router.close_all()
 	camp_navigation.visible = false
 	current_action_label.text = "Idle"
 	action_progress.value = 0.0
@@ -183,7 +182,11 @@ func _ready() -> void:
 )
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not camp_navigation.visible and not equipment_ui.visible:
+	if (
+		not camp_navigation.visible
+		and not equipment_ui.visible
+		and not journal_ui.visible
+	):
 		return
 	if (
 		equipment_ui.has_active_modal()
@@ -193,6 +196,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	):
 		return
 	if not event.is_action_pressed("ui_cancel"):
+		return
+	if journal_ui.visible:
+		_close_journal_workspace()
+		get_viewport().set_input_as_handled()
 		return
 	if equipment_ui.visible and not camp_navigation.visible:
 		_close_camp_workspace()
@@ -215,13 +222,7 @@ func refresh_all() -> void:
 	update_world_action_buttons()
 	update_travel_buttons()
 	update_home_access()
-	update_locations_journal()
-	update_landmarks_journal()
-	update_history_journal()
-	update_legacy_preview()
-	update_completed_lives_journal()
-	update_journal_tab_visibility()
-	update_discoveries_journal()
+	journal_ui.refresh()
 	_update_time()
 	
 	var survivor: Survivor = (
@@ -242,31 +243,47 @@ func refresh_all() -> void:
 
 
 func add_event(event_text: String) -> void:
-	var existing_text := event_log.get_parsed_text()
-	var has_existing_entries := not existing_text.is_empty()
+	var existing_text: String = event_log.get_parsed_text()
+	var has_existing_entries: bool = not existing_text.is_empty()
 
 	if event_text.is_empty():
 		if has_existing_entries:
-			event_log.append_text(
-				"\n\n" + EVENT_SEPARATOR + "\n"
-			)
+			event_log.append_text("\n\n" + EVENT_SEPARATOR + "\n")
 	else:
-		if (
-			has_existing_entries
-			and not existing_text.ends_with("\n")
-		):
+		if has_existing_entries and not existing_text.ends_with("\n"):
 			event_log.append_text("\n\n")
-
 		event_log.append_text(event_text)
 
-	var last_line: int = maxi(
-		event_log.get_line_count() - 1,
-		0
-	)
+	var last_line: int = maxi(event_log.get_line_count() - 1, 0)
+	event_log.scroll_to_line(last_line)
 
-	event_log.scroll_to_line(
-		last_line
-	)
+
+func update_history_journal() -> void:
+	journal_ui.refresh()
+
+
+func update_legacy_preview() -> void:
+	journal_ui.refresh()
+
+
+func update_completed_lives_journal() -> void:
+	journal_ui.refresh()
+
+
+func update_locations_journal() -> void:
+	journal_ui.refresh()
+
+
+func update_landmarks_journal() -> void:
+	journal_ui.refresh()
+
+
+func update_journal_tab_visibility() -> void:
+	journal_ui.refresh()
+
+
+func update_discoveries_journal() -> void:
+	journal_ui.refresh()
 
 
 # -------------------------------------------------------------------
@@ -512,54 +529,46 @@ func update_travel_buttons() -> void:
 func update_inventory(
 	inventory: FrontierInventory
 ) -> void:
-	var inventory_text := "Inventory\n\n"
+	var entries: Array[String] = []
 
 	if inventory.items.is_empty() and inventory.equipment_instances.is_empty():
-		inventory_text += "Empty"
-	else:
-		for item_id_variant: Variant in inventory.items:
-			var item_id := str(
-				item_id_variant
-			)
+		inventory_left_label.text = "Empty"
+		inventory_right_label.text = ""
+		return
 
-			var item_data: ItemData = (
-				ItemDatabase.get_item(
-					item_id
-				)
-			)
+	var stack_entries: Array[String] = []
+	for item_id_variant: Variant in inventory.items:
+		var item_id := str(item_id_variant)
+		var item_data: ItemData = ItemDatabase.get_item(item_id)
+		var amount: int = inventory.get_item_amount(item_id)
+		var display_name := item_id
+		if item_data != null:
+			display_name = item_data.display_name
+		stack_entries.append(display_name + ": " + str(amount))
 
-			var amount: int = (
-				inventory.get_item_amount(
-					item_id
-				)
-			)
+	stack_entries.sort()
+	entries.append_array(stack_entries)
 
-			if item_data == null:
-				inventory_text += (
-					item_id
-					+ ": "
-					+ str(amount)
-					+ "\n"
-				)
-				continue
+	var equipment_entries: Array[String] = []
+	for instance: ItemInstance in inventory.equipment_instances:
+		if instance == null:
+			continue
+		var item_data: ItemData = instance.get_item_data()
+		var display_name := instance.item_id
+		if item_data != null:
+			display_name = item_data.display_name
+		equipment_entries.append(display_name + " [" + instance.instance_id + "]")
 
-			inventory_text += (
-				item_data.display_name
-				+ ": "
-				+ str(amount)
-				+ "\n"
-			)
+	equipment_entries.sort()
+	entries.append_array(equipment_entries)
 
-		for instance: ItemInstance in inventory.equipment_instances:
-			if instance == null:
-				continue
-			var item_data: ItemData = instance.get_item_data()
-			var display_name := instance.item_id
-			if item_data != null:
-				display_name = item_data.display_name
-			inventory_text += display_name + " [" + instance.instance_id + "]\n"
-
-	inventory_label.text = inventory_text
+	var split_index: int = ceili(float(entries.size()) / 2.0)
+	var left_entries: PackedStringArray = PackedStringArray(entries.slice(0, split_index))
+	var right_entries: PackedStringArray = PackedStringArray(
+		entries.slice(split_index, entries.size())
+	)
+	inventory_left_label.text = "\n".join(left_entries)
+	inventory_right_label.text = "\n".join(right_entries)
 
 
 func update_survivor() -> void:
@@ -648,7 +657,6 @@ func _on_equipment_component_replaced(_instance: ItemInstance) -> void:
 
 func _on_equipment_disassembled(_instance_id: String) -> void:
 	refresh_all()
-	update_history_journal()
 	if storage_ui.visible:
 		storage_ui.refresh_storage()
 
@@ -715,125 +723,6 @@ func _format_minutes(
 # Journal
 # -------------------------------------------------------------------
 
-func update_history_journal() -> void:
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		civilization == null
-		or civilization.history_entries.is_empty()
-	):
-		history_log.text = (
-			"No milestones have been recorded."
-		)
-		return
-
-	var history_text := ""
-
-	for entry: CivilizationHistoryEntry in (
-		civilization.history_entries
-	):
-		if entry == null:
-			continue
-
-		if not history_text.is_empty():
-			history_text += "\n\n"
-
-		history_text += entry.title
-		history_text += (
-			"\nDay "
-			+ str(entry.day)
-			+ " — "
-			+ str(entry.hour).pad_zeros(2)
-			+ ":"
-			+ str(entry.minute).pad_zeros(2)
-		)
-
-		if not entry.contributor_name.is_empty():
-			history_text += (
-				"\nContributor: "
-				+ entry.contributor_name
-			)
-
-		if not entry.description.is_empty():
-			history_text += "\n" + entry.description
-
-	history_log.text = history_text
-
-
-func update_legacy_preview() -> void:
-	var survivor: Survivor = GameManager.current_survivor
-
-	if (
-		survivor == null
-		or survivor.data == null
-		or survivor.data.life_record == null
-	):
-		legacy_preview_log.text = "No character life record is available."
-		return
-
-	var life_record: CharacterLifeRecord = (
-		survivor.data.life_record
-	)
-	var first_day_text := "Not yet recorded"
-	var latest_day_text := "Not yet recorded"
-
-	if life_record.first_recorded_day > 0:
-		first_day_text = str(
-			life_record.first_recorded_day
-		)
-
-	if life_record.latest_recorded_day > 0:
-		latest_day_text = str(
-			life_record.latest_recorded_day
-		)
-
-	var credited_milestones := 0
-	var character_id := survivor.data.character_id
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if not character_id.is_empty() and civilization != null:
-		for entry: CivilizationHistoryEntry in (
-			civilization.history_entries
-		):
-			if (
-				entry != null
-				and not entry.contributor_id.is_empty()
-				and entry.contributor_id == character_id
-			):
-				credited_milestones += 1
-
-	legacy_preview_log.text = (
-		survivor.data.display_name
-		+ " — Life Record\n\n"
-		+ "First recorded day: "
-		+ first_day_text
-		+ "\nLatest recorded day: "
-		+ latest_day_text
-		+ "\n\nSearches completed: "
-		+ str(life_record.searches_completed)
-		+ "\nItem units gathered: "
-		+ str(life_record.item_units_gathered)
-		+ "\nCrafting actions completed: "
-		+ str(life_record.crafting_actions_completed)
-		+ "\nItem units crafted: "
-		+ str(life_record.item_units_crafted)
-		+ "\nDiscoveries contributed: "
-		+ str(life_record.discoveries_contributed)
-		+ "\nKnowledge earned: "
-		+ str(life_record.knowledge_earned)
-		+ "\nSkill levels gained: "
-		+ str(life_record.skill_levels_gained)
-		+ "\nHistorical milestones credited: "
-		+ str(credited_milestones)
-	)
-
-	open_legacy_summary_button.disabled = false
-
-
 func _on_open_legacy_summary_pressed() -> void:
 	var survivor: Survivor = GameManager.current_survivor
 	var civilization: CivilizationData = GameManager.current_civilization
@@ -857,66 +746,7 @@ func _on_open_legacy_summary_pressed() -> void:
 	)
 
 
-func update_completed_lives_journal() -> void:
-	var previous_character_id: String = ""
-	if completed_life_selector.selected >= 0:
-		previous_character_id = str(
-			completed_life_selector.get_item_metadata(
-				completed_life_selector.selected
-			)
-		)
-
-	completed_life_selector.clear()
-	var civilization: CivilizationData = GameManager.current_civilization
-
-	if civilization == null or civilization.archived_lives.is_empty():
-		completed_lives_log.text = "No completed lives have been recorded."
-		completed_life_selector.disabled = true
-		open_completed_life_button.disabled = true
-		return
-
-	var journal_text: String = ""
-	var restored_index: int = -1
-
-	for archived_life: ArchivedCharacterLife in civilization.archived_lives:
-		if archived_life == null or not archived_life.is_valid():
-			continue
-
-		if not journal_text.is_empty():
-			journal_text += "\n\n"
-
-		journal_text += (
-			archived_life.display_name
-			+ "\nDied on Day "
-			+ str(archived_life.life_record.death_day)
-			+ " — "
-			+ archived_life.life_record.cause_of_death
-		)
-
-		completed_life_selector.add_item(archived_life.display_name)
-		var index: int = completed_life_selector.item_count - 1
-		completed_life_selector.set_item_metadata(index, archived_life.character_id)
-		if archived_life.character_id == previous_character_id:
-			restored_index = index
-
-	completed_lives_log.text = journal_text
-	var has_entries: bool = completed_life_selector.item_count > 0
-	completed_life_selector.disabled = not has_entries
-	open_completed_life_button.disabled = not has_entries
-
-	if restored_index >= 0:
-		completed_life_selector.select(restored_index)
-
-
-func _on_open_completed_life_pressed() -> void:
-	if completed_life_selector.selected < 0:
-		return
-
-	var character_id: String = str(
-		completed_life_selector.get_item_metadata(
-			completed_life_selector.selected
-		)
-	)
+func _on_journal_completed_life_requested(character_id: String) -> void:
 	var civilization: CivilizationData = GameManager.current_civilization
 	if civilization == null:
 		return
@@ -934,6 +764,7 @@ func _on_open_completed_life_pressed() -> void:
 
 func show_final_legacy_summary() -> void:
 	_close_camp_workspace()
+	exploration_router.close_all()
 	_on_open_legacy_summary_pressed()
 
 
@@ -965,153 +796,6 @@ func _on_successor_selected(
 	refresh_all()
 
 
-func update_locations_journal() -> void:
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		civilization == null
-		or civilization.visited_location_ids.is_empty()
-	):
-		locations_log.text = (
-			"No locations recorded."
-		)
-		return
-
-	var journal_text := ""
-
-	for location_id: String in (
-		civilization.visited_location_ids
-	):
-		var location: LocationData = (
-			LocationDatabase.get_location(
-				location_id
-			)
-		)
-
-		if location == null:
-			continue
-
-		if not journal_text.is_empty():
-			journal_text += "\n\n"
-
-		journal_text += (
-			"[b]"
-			+ location.display_name
-			+ "[/b]\n"
-			+ location.description
-		)
-
-	locations_log.text = journal_text
-
-
-func update_landmarks_journal() -> void:
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		civilization == null
-		or civilization.discovered_landmark_ids.is_empty()
-	):
-		landmarks_log.text = (
-			"No landmarks recorded."
-		)
-		return
-
-	var journal_text := ""
-
-	for landmark_id: String in (
-		civilization.discovered_landmark_ids
-	):
-		var landmark: LandmarkData = (
-			LandmarkDatabase.get_landmark(
-				landmark_id
-			)
-		)
-
-		if landmark == null:
-			continue
-
-		if not journal_text.is_empty():
-			journal_text += "\n\n"
-
-		journal_text += (
-			"[b]"
-			+ landmark.display_name
-			+ "[/b]\n"
-			+ landmark.description
-		)
-
-	landmarks_log.text = journal_text
-
-
-func update_journal_tab_visibility() -> void:
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if civilization == null:
-		return
-
-
-
-	var landmarks_tab_index: int = (
-		journal_tabs.get_tab_idx_from_control(
-			landmarks_tab
-		)
-	)
-
-	if landmarks_tab_index < 0:
-		push_warning(
-			"Landmarks tab is not a direct child of JournalTabs."
-		)
-		return
-
-	journal_tabs.set_tab_hidden(
-		landmarks_tab_index,
-		civilization.discovered_landmark_ids.is_empty()
-	)
-	
-func update_discoveries_journal() -> void:
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		civilization == null
-		or civilization.discovered_ids.is_empty()
-	):
-		discoveries_log.text = (
-			"No discoveries recorded."
-		)
-		return
-
-	var journal_text := ""
-
-	for discovery_id: String in civilization.discovered_ids:
-		var discovery: DiscoveryData = (
-			DiscoveryDatabase.get_discovery(
-				discovery_id
-			)
-		)
-
-		if discovery == null:
-			continue
-
-		if not journal_text.is_empty():
-			journal_text += "\n\n"
-
-		journal_text += (
-			"[b]"
-			+ discovery.display_name
-			+ "[/b]\n"
-			+ discovery.description
-		)
-
-	discoveries_log.text = journal_text
-	
 # -------------------------------------------------------------------
 # Action callbacks
 # -------------------------------------------------------------------
@@ -1274,6 +958,20 @@ func _on_enter_camp_pressed() -> void:
 		return
 
 	_open_camp_screen(CampNavigation.OVERVIEW_SCREEN_ID, false)
+
+
+func _on_open_journal_pressed() -> void:
+	journal_ui.refresh()
+	exploration_router.open(JOURNAL_WORKSPACE_ID, false)
+
+
+func _on_journal_back_requested() -> void:
+	_close_journal_workspace()
+
+
+func _close_journal_workspace() -> void:
+	exploration_router.close_all()
+	open_journal_button.call_deferred("grab_focus")
 
 
 func _on_leave_home_requested() -> void:

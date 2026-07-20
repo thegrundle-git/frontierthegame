@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/CampNavigation.tscn" id="7_camp_navigation"]
 [ext_resource type="PackedScene" path="res://scenes/ui/CraftingUI.tscn" id="8_crafting"]
 [ext_resource type="PackedScene" path="res://scenes/ui/EquipmentUI.tscn" id="9_equipment"]
+[ext_resource type="PackedScene" path="res://scenes/ui/JournalUI.tscn" id="10_journal"]
 
 [node name="GameUI" type="Control" unique_id=1054040398]
 layout_mode = 3
@@ -153,10 +154,21 @@ theme_override_constants/separation = 8
 
 [node name="InventoryHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 16
 text = "EXPEDITION PACK"
 
-[node name="InventoryLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=1901707611]
+[node name="InventoryColumns" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="InventoryLeftLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/InventoryColumns"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="InventoryRightLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/InventoryColumns"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -256,30 +268,33 @@ layout_mode = 2
 tooltip_text = "Enter the camp workspace."
 text = "Enter Camp"
 
-[node name="DetailTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=314125264]
-custom_minimum_size = Vector2(0, 260)
+[node name="ChroniclePanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn"]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 6.0
-current_tab = 0
 
-[node name="Journal" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs" unique_id=1891697158]
+[node name="ChronicleLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel"]
 layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 0
+theme_override_constants/separation = 10
 
-[node name="JournalTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal" unique_id=848680813]
+[node name="ChronicleHeader" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChronicleHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout/ChronicleHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "CHRONICLE"
+
+[node name="OpenJournalButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout/ChronicleHeader"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 42)
 layout_mode = 2
-size_flags_vertical = 3
-current_tab = 0
+tooltip_text = "Open the Journal workspace."
+text = "Open Journal"
 
-[node name="Chronicle" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=2021029852]
-layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 0
-
-[node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Chronicle" unique_id=606803694]
+[node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -288,128 +303,6 @@ focus_mode = 2
 theme_override_constants/line_separation = 3
 scroll_following = true
 selection_enabled = true
-
-[node name="History" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 1
-
-[node name="HistoryLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/History"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-focus_mode = 2
-theme_override_constants/line_separation = 3
-text = "No milestones have been recorded."
-selection_enabled = true
-
-[node name="Legacy Preview" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 2
-
-[node name="LegacyPreviewLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Legacy Preview"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="LegacyPreviewLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Legacy Preview/LegacyPreviewLayout"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-focus_mode = 2
-theme_override_constants/line_separation = 3
-text = "No character life record is available."
-selection_enabled = true
-
-[node name="OpenLegacySummaryButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Legacy Preview/LegacyPreviewLayout"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-focus_mode = 2
-tooltip_text = "Open Finnley's full legacy summary."
-text = "Open Legacy Summary"
-
-[node name="Completed Lives" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 3
-
-[node name="CompletedLivesLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Completed Lives"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="CompletedLivesLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Completed Lives/CompletedLivesLayout"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-focus_mode = 2
-theme_override_constants/line_separation = 3
-text = "No completed lives have been recorded."
-selection_enabled = true
-
-[node name="CompletedLifeSelector" type="OptionButton" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Completed Lives/CompletedLivesLayout"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-focus_mode = 2
-
-[node name="OpenCompletedLifeButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Completed Lives/CompletedLivesLayout"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-focus_mode = 2
-text = "Open Completed Life"
-
-[node name="Locations" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=1193564463]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 4
-
-[node name="LocationsLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Locations" unique_id=1351369458]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-bbcode_enabled = true
-text = "No locations recorded."
-
-[node name="Discoveries" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=1940248824]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 5
-
-[node name="DiscoveriesLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Discoveries" unique_id=220362884]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-bbcode_enabled = true
-text = "No discoveries recorded."
-
-[node name="Landmarks" type="MarginContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs" unique_id=1628222443]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-metadata/_tab_index = 6
-
-[node name="LandmarksLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/DetailTabs/Journal/JournalTabs/Landmarks" unique_id=836744476]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-bbcode_enabled = true
-text = "No landmarks recorded."
 
 [node name="EventOverlay" type="CenterContainer" parent="." unique_id=1164358211]
 unique_name_in_owner = true
@@ -461,6 +354,11 @@ visible = false
 layout_mode = 1
 
 [node name="EquipmentUI" parent="." instance=ExtResource("9_equipment")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="JournalUI" parent="." instance=ExtResource("10_journal")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

@@ -365,6 +365,20 @@ The survivor panel displays the equipped tool as a concise summary and routes **
 
 This foundation changes only scene composition and presentation orchestration. World actions, travel, timing, equipment authority, Camp routing, persistence, and save version 12 remain unchanged.
 
+### Journal Workspace
+
+`JournalUI.tscn` is the scene-owned presentation authority for durable and reference-oriented Journal views: History, Legacy Preview, Completed Lives, Locations, Discoveries, and Landmarks. It owns their rendering, tab visibility, completed-life selection, bounded scrolling, and Back intent.
+
+The Chronicle remains embedded in the exploration view so immediate narration stays visible during actions and travel. `GameUI.add_event()` remains the public narration gateway used by gameplay systems and appends directly to that persistent Chronicle. Opening or closing the Journal cannot discard Chronicle text.
+
+`JournalUI` emits requests for Back, the current Legacy Summary, and an archived-life summary. `GameUI` remains the integration boundary that routes the workspace and opens the existing modal summary. Compatibility refresh methods on `GameUI` forward older action and manager callbacks to `JournalUI.refresh()`, preserving the established public interface while presentation ownership moves out of the controller.
+
+The Journal uses the stable `exploration.journal` workspace ID through a local `UIRouter`. Back and keyboard cancel close it and return focus to the exploration entry point. Journal refreshes query existing Resources and databases without mutating gameplay state.
+
+The Expedition Pack presentation now sorts entries and divides them into two balanced columns beneath one scene-owned header. It continues reading the existing `FrontierInventory`; no inventory authority or persistence moved into UI code.
+
+This extraction changes no save data. Save version remains 12.
+
 ### Camp Workspace Routing
 
 `GameUI` owns one lightweight `UIRouter`. It is not an autoload and does not contain gameplay or persistence logic. The router coordinates only the mutually exclusive Camp workspace screens registered under stable IDs:
@@ -507,7 +521,7 @@ Inventory transfers, deposits, world-event item rewards, equipment ownership cha
 
 Historical milestone credit is not stored a second time in the life record. Legacy Preview derives it by counting `CivilizationHistoryEntry` records whose nonempty `contributor_id` matches the survivor's stable character ID. Display names remain historical presentation snapshots and are not used as an identity fallback.
 
-`GameUI.update_legacy_preview()` renders the current survivor's record in a dedicated Journal tab. UI refreshes are read-only and never mutate counters.
+`JournalUI` renders the current survivor's record in a dedicated Journal tab. UI refreshes are read-only and never mutate counters.
 
 ### Legacy Summary Screen
 
@@ -551,7 +565,7 @@ The active survivor's personal inventory object, kept-item settings, and equippe
 
 ### Completed Lives Journal
 
-`GameUI.update_completed_lives_journal()` reads `CivilizationData.archived_lives` in insertion order and rebuilds a chronological, read-only Journal view. The tab remains visible when the archive is empty so the player can understand that completed lives will eventually appear there.
+`JournalUI` reads `CivilizationData.archived_lives` in insertion order and rebuilds a chronological, read-only Journal view. The tab remains visible when the archive is empty so the player can understand that completed lives will eventually appear there.
 
 The selector stores stable character IDs as item metadata. Opening an entry resolves that ID against the civilization-owned archive and passes the matching `ArchivedCharacterLife` to `LegacySummaryScreen.show_archived_summary()`.
 
