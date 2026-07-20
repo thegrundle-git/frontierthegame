@@ -10,7 +10,16 @@ signal equipment_component_replaced(instance: ItemInstance)
 signal equipment_disassembled(instance_id: String)
 
 
-@onready var equipment_list: ItemList = %EquipmentList
+const EQUIPMENT_SLOT_SCENE := preload("res://scenes/ui/EquipmentSlot.tscn")
+
+
+@onready var selection_scroll: ScrollContainer = %SelectionScroll
+@onready var equipped_title: Label = %EquippedTitle
+@onready var equipped_slots: HBoxContainer = %EquippedSlots
+@onready var pack_title: Label = %PackTitle
+@onready var pack_slots: GridContainer = %PackSlots
+@onready var storage_title: Label = %StorageTitle
+@onready var storage_slots: GridContainer = %StorageSlots
 @onready var empty_label: Label = %EmptyLabel
 @onready var equip_button: Button = %EquipButton
 @onready var unequip_button: Button = %UnequipButton
@@ -18,10 +27,11 @@ signal equipment_disassembled(instance_id: String)
 @onready var details: EquipmentDetailsScreen = %EquipmentDetails
 
 var _selected_instance_id: String = ""
+var _slots_by_instance_id: Dictionary = {}
+var _ordered_instance_ids: Array[String] = []
 
 
 func _ready() -> void:
-	equipment_list.item_selected.connect(_on_item_selected)
 	equip_button.pressed.connect(_on_equip_pressed)
 	unequip_button.pressed.connect(unequip_requested.emit)
 	back_button.pressed.connect(back_requested.emit)
@@ -34,7 +44,7 @@ func _ready() -> void:
 
 
 func get_default_focus_target() -> Control:
-	return equipment_list
+	return selection_scroll
 
 
 func has_active_modal() -> bool:
@@ -49,87 +59,98 @@ func refresh(preferred_instance_id: String = "") -> void:
 	if not preferred_instance_id.is_empty():
 		_selected_instance_id = preferred_instance_id
 
+	_clear_slots()
 	var survivor: Survivor = GameManager.current_survivor
-	equipment_list.clear()
-
 	if survivor == null:
 		_show_empty_state()
 		return
 
 	var equipped: ItemInstance = survivor.get_equipped_tool_instance()
 	if equipped != null:
-		_add_instance(equipped, "Equipped")
+		_add_instance(equipped, "Equipped", equipped_slots)
 
 	for instance: ItemInstance in survivor.inventory.equipment_instances:
 		if instance != null:
-			_add_instance(instance, "Expedition Pack")
+			_add_instance(instance, "Expedition Pack", pack_slots)
 
-	var civilization: CivilizationData = GameManager.current_civilization
-	if civilization != null and civilization.inventory != null:
-		for instance: ItemInstance in civilization.inventory.equipment_instances:
-			if instance != null:
-				_add_instance(instance, "Camp Storage")
+	if GameManager.is_survivor_at_home():
+		var civilization: CivilizationData = GameManager.current_civilization
+		if civilization != null and civilization.inventory != null:
+			for instance: ItemInstance in civilization.inventory.equipment_instances:
+				if instance != null:
+					_add_instance(instance, "Camp Storage", storage_slots)
 
-	if equipment_list.item_count <= 0:
+	_update_section_visibility()
+	if _ordered_instance_ids.is_empty():
 		_show_empty_state()
 		return
 
 	empty_label.visible = false
-	equipment_list.visible = true
-	var selected_index := _find_instance_index(_selected_instance_id)
-	if selected_index < 0:
-		selected_index = 0
-
-	equipment_list.select(selected_index)
-	_show_selected_index(selected_index)
+	selection_scroll.visible = true
+	if not _slots_by_instance_id.has(_selected_instance_id):
+		_selected_instance_id = _ordered_instance_ids[0]
+	_select_instance(_selected_instance_id)
 
 
-func _add_instance(instance: ItemInstance, source: String) -> void:
+func focus_selected_slot() -> void:
+	var slot: EquipmentSlot = _slots_by_instance_id.get(_selected_instance_id)
+	if slot != null and slot.is_visible_in_tree():
+		slot.call_deferred("grab_focus")
+
+
+func _clear_slots() -> void:
+	_slots_by_instance_id.clear()
+	_ordered_instance_ids.clear()
+	for container: Container in [equipped_slots, pack_slots, storage_slots]:
+		for child: Node in container.get_children():
+			container.remove_child(child)
+			child.queue_free()
+
+
+func _add_instance(
+	instance: ItemInstance,
+	source: String,
+	container: Container
+) -> void:
 	if not instance.is_valid():
 		return
-
-	var item: ItemData = instance.get_item_data()
-	var display_name: String = instance.item_id
-	if item != null:
-		display_name = item.display_name
-
-	var index: int = equipment_list.add_item(
-		display_name + " — " + source
-	)
-	equipment_list.set_item_metadata(index, instance.instance_id)
-	equipment_list.set_item_tooltip(
-		index,
-		display_name + " [" + instance.instance_id + "]\n" + source
-	)
+	var slot: EquipmentSlot = EQUIPMENT_SLOT_SCENE.instantiate()
+	container.add_child(slot)
+	slot.configure(instance, source)
+	slot.instance_selected.connect(_select_instance)
+	_slots_by_instance_id[instance.instance_id] = slot
+	_ordered_instance_ids.append(instance.instance_id)
 
 
-func _find_instance_index(instance_id: String) -> int:
-	if instance_id.is_empty():
-		return -1
+func _update_section_visibility() -> void:
+	var has_equipped: bool = equipped_slots.get_child_count() > 0
+	var has_pack: bool = pack_slots.get_child_count() > 0
+	var has_storage: bool = storage_slots.get_child_count() > 0
+	equipped_title.visible = has_equipped
+	equipped_slots.visible = has_equipped
+	pack_title.visible = has_pack
+	pack_slots.visible = has_pack
+	storage_title.visible = has_storage
+	storage_slots.visible = has_storage
 
-	for index: int in range(equipment_list.item_count):
-		if str(equipment_list.get_item_metadata(index)) == instance_id:
-			return index
 
-	return -1
-
-
-func _show_selected_index(index: int) -> void:
-	if index < 0 or index >= equipment_list.item_count:
+func _select_instance(instance_id: String) -> void:
+	if not _slots_by_instance_id.has(instance_id):
 		return
+	_selected_instance_id = instance_id
+	for slot_id: String in _slots_by_instance_id:
+		var slot: EquipmentSlot = _slots_by_instance_id[slot_id]
+		slot.set_selected(slot_id == instance_id)
 
-	_selected_instance_id = str(equipment_list.get_item_metadata(index))
 	var survivor: Survivor = GameManager.current_survivor
 	if survivor == null:
 		return
-
 	var instance: ItemInstance = survivor.get_accessible_equipment_instance(
-		_selected_instance_id
+		instance_id
 	)
 	if instance == null:
 		refresh()
 		return
-
 	details.show_instance(instance)
 	_update_equip_controls(instance, survivor)
 
@@ -137,47 +158,35 @@ func _show_selected_index(index: int) -> void:
 func _update_equip_controls(instance: ItemInstance, survivor: Survivor) -> void:
 	var equipped: ItemInstance = survivor.get_equipped_tool_instance()
 	var is_equipped := (
-		equipped != null
-		and equipped.instance_id == instance.instance_id
+		equipped != null and equipped.instance_id == instance.instance_id
 	)
 	var item: ItemData = instance.get_item_data()
 	var is_tool := item != null and "tool" in item.tags
 	var can_change := survivor.can_act() and not ActionManager.is_busy
-
 	equip_button.disabled = not can_change or not is_tool or is_equipped
 	unequip_button.disabled = not can_change or equipped == null
 
 
 func _show_empty_state() -> void:
 	_selected_instance_id = ""
-	equipment_list.visible = false
+	selection_scroll.visible = false
 	empty_label.visible = true
 	equip_button.disabled = true
 	unequip_button.disabled = true
 	details.clear_instance()
 
 
-func _on_item_selected(index: int) -> void:
-	_show_selected_index(index)
-
-
 func _on_equip_pressed() -> void:
-	if _selected_instance_id.is_empty():
-		return
-	equip_requested.emit(_selected_instance_id)
+	if not _selected_instance_id.is_empty():
+		equip_requested.emit(_selected_instance_id)
 
 
 func _on_equipment_disassembled(instance_id: String) -> void:
-	var previous_index := 0
-	var selected_indices: PackedInt32Array = equipment_list.get_selected_items()
-	if not selected_indices.is_empty():
-		previous_index = selected_indices[0]
-
+	var previous_index: int = _ordered_instance_ids.find(instance_id)
 	if _selected_instance_id == instance_id:
 		_selected_instance_id = ""
 	refresh()
-	if equipment_list.item_count > 0:
-		var next_index := mini(previous_index, equipment_list.item_count - 1)
-		equipment_list.select(next_index)
-		_show_selected_index(next_index)
+	if not _ordered_instance_ids.is_empty():
+		var next_index: int = clampi(previous_index, 0, _ordered_instance_ids.size() - 1)
+		_select_instance(_ordered_instance_ids[next_index])
 	equipment_disassembled.emit(instance_id)

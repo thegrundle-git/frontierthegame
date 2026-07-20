@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.24-alpha1
+v0.5.25-alpha1
 
 ## Project Health
 
-🟢 Stable — Journal workspace and Expedition Pack refinement passed gameplay testing
+🟢 Stable — Equipment presentation refinement passed gameplay testing
 
 ## Current Milestone
 
@@ -103,6 +103,10 @@ Sprint 3 — The Age of Discovery
 * Dedicated contextual Enter Camp area at the home location
 * Clear exploration hierarchy for location, survivor, pack, actions, and travel
 * Single Equipment workspace entry point from the survivor summary
+* Reusable visual equipment slots with icon fallback
+* Equipped, Expedition Pack, and Camp Storage equipment groups
+* At-a-glance equipment condition, usability, and failure states
+* Collapsible Components, Maintenance, Replacement, and Disassembly sections
 * Permanently visible exploration Chronicle
 * Dedicated routed Journal workspace
 * Scene-owned History, Legacy, Completed Lives, Locations, Discoveries, and Landmarks tabs
@@ -283,12 +287,11 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Refine Equipment presentation with reusable visual slots, strong selection states, condition cues, and hover details without adding unsupported equipment categories.
+Prepare the icon-and-level Skills layout while preserving the compact exploration hierarchy and accessible detail-on-demand behavior.
 
 ## Next Goals
 
 * Windows export regression pass for the interface foundation
-* Equipment presentation refinement
 * RuneScape-inspired icon-and-level Skills layout
 * Data-driven narrative templates
 * Meadow ambient event

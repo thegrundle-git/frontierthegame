@@ -676,6 +676,7 @@ func _open_equipment_workspace(instance_id: String = "") -> void:
 	equipment_ui.set_camp_navigation_visible(false)
 	camp_router.open(CampNavigation.EQUIPMENT_SCREEN_ID, false)
 	camp_navigation.visible = false
+	equipment_ui.focus_selected_slot()
 
 
 func _on_equipment_equip_requested(instance_id: String) -> void:
@@ -1021,6 +1022,8 @@ func _open_camp_screen(
 
 	camp_navigation.visible = true
 	camp_navigation.set_current_screen(screen_id)
+	if screen_id == CampNavigation.EQUIPMENT_SCREEN_ID:
+		equipment_ui.focus_selected_slot()
 
 
 func _back_in_camp() -> void:

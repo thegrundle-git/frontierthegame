@@ -41,6 +41,22 @@ theme_override_font_sizes/font_size = 26
 text = "No equipment selected"
 autowrap_mode = 3
 
+[node name="QuickStatus" type="HBoxContainer" parent="Margin/OuterLayout/ContentScroll/Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ConditionBar" type="ProgressBar" parent="Margin/OuterLayout/ContentScroll/Content/QuickStatus"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 0.0
+
+[node name="UsabilityLabel" type="Label" parent="Margin/OuterLayout/ContentScroll/Content/QuickStatus"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "NO SELECTION"
+
 [node name="IdentityLabel" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -55,12 +71,20 @@ autowrap_mode = 3
 [node name="Divider" type="HSeparator" parent="Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 
-[node name="ComponentsTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="ComponentsToggleButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Components"
+text = "Components ▸"
+alignment = 0
 
-[node name="ComponentsLog" type="RichTextLabel" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="ComponentsSection" type="VBoxContainer" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ComponentsLog" type="RichTextLabel" parent="Margin/OuterLayout/ContentScroll/Content/ComponentsSection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
@@ -68,67 +92,94 @@ size_flags_horizontal = 3
 focus_mode = 2
 selection_enabled = true
 
-[node name="MaintenanceTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="MaintenanceToggleButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Maintenance"
+text = "Maintenance ▸"
+alignment = 0
 
-[node name="RepairSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="MaintenanceSection" type="VBoxContainer" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RepairSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content/MaintenanceSection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="RepairStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="RepairStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content/MaintenanceSection"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "No damaged components require maintenance."
 autowrap_mode = 3
 
-[node name="RepairButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="RepairButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content/MaintenanceSection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Repair Component"
 
-[node name="ReplacementTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementToggleButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Component Replacement"
+text = "Component Replacement ▸"
+alignment = 0
 
-[node name="ReplacementSlotSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementSection" type="VBoxContainer" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ReplacementSlotSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content/ReplacementSection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="ReplacementItemSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementItemSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content/ReplacementSection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="ReplacementStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content/ReplacementSection"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Select a component to replace."
 autowrap_mode = 3
 
-[node name="ReplaceButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplaceButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content/ReplacementSection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Replace Component"
 
-[node name="DisassemblyTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="DisassemblyToggleButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "Disassembly"
+text = "Disassembly ▸"
+alignment = 0
 
-[node name="DisassemblyStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="DisassemblySection" type="VBoxContainer" parent="Margin/OuterLayout/ContentScroll/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DisassemblyStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content/DisassemblySection"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Disassembly is available at Camp."
 autowrap_mode = 3
 
-[node name="DisassembleButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
+[node name="DisassembleButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content/DisassemblySection"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
