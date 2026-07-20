@@ -47,6 +47,8 @@ Storage should present movement between inventories as continuity rather than di
 
 The Exploration Interface Foundation applies these rules to the main play view. Location, survivor, expedition pack, available actions, and travel have explicit visual hierarchy; Actions and Travel remain independently scrollable without competing accordion state; Camp access appears only at the civilization's home location; and the survivor panel summarizes equipped gear while routing inspection and mutation into the Equipment workspace. This is structural refinement rather than a final visual theme or responsive-breakpoint system.
 
+Immediate narration should remain visible while the player makes moment-to-moment decisions. The Chronicle therefore belongs on the exploration surface rather than behind navigation. Durable history, discovered knowledge, places, and completed lives belong in the dedicated Journal workspace, where deeper reading does not compete with active play. The Expedition Pack follows the same hierarchy: one clear heading and compact columns expose current contents without adding another nested inventory label.
+
 ---
 
 ## Memory and Moment-to-Moment Narration

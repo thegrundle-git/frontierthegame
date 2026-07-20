@@ -58,6 +58,7 @@ Navigation never mutates gameplay state. `GameUI` remains responsible for reques
 * `CraftingUI` refreshes when `camp.crafting` opens.
 * `EquipmentUI` rebuilds stable instance selection when `camp.equipment` opens.
 * Overview consumes its existing presentation state.
+* `JournalUI` refreshes durable and reference-oriented Journal views when `exploration.journal` opens.
 
 Future UI extraction should keep gameplay rules in managers, actions, services, and Resources. Screens should receive or query presentation-ready state and emit player intent through signals.
 
@@ -71,7 +72,7 @@ New workspaces should reuse shared navigation and content bounds. They should no
 
 ## Current Boundary and Future Migration
 
-This foundation currently routes Camp Overview, Storage, Crafting, and Equipment. Storage, Crafting, and Equipment are scene-owned workspaces rather than runtime-built or embedded `GameUI` panels. The foundation does not yet restructure the main HUD, Journal, or remaining modal scenes.
+This foundation currently routes Camp Overview, Storage, Crafting, Equipment, and the exploration Journal. Storage, Crafting, Equipment, and Journal are scene-owned workspaces rather than runtime-built or embedded `GameUI` panels. Chronicle narration deliberately remains on the exploration surface while durable and reference-oriented records live in `JournalUI`.
 
 Recommended migration order:
 

@@ -4,6 +4,44 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.24-alpha1 — Journal Workspace Foundation
+
+### Added
+
+* A dedicated scene-owned Journal workspace for History, Legacy Preview, Completed Lives, Locations, Discoveries, and Landmarks.
+* Stable `exploration.journal` routing with explicit Back and keyboard-cancel behavior.
+* A clear **Open Journal** entry point beside the exploration Chronicle.
+* Two balanced columns for sorted Expedition Pack resources and equipment.
+
+### Changed
+
+* Chronicle narration remains permanently visible on the exploration screen instead of becoming a workspace tab.
+* Journal rendering, selection, tab visibility, and navigation moved out of `GameUI` into `JournalUI`.
+* `GameUI.add_event()` remains the stable narration API used by gameplay systems.
+* Legacy Summary and completed-life requests now travel from `JournalUI` to the existing `GameUI` integration boundary through signals.
+* Expedition Pack uses one prominent header without a redundant nested Inventory label.
+
+### Fixed
+
+* Restored compatibility refresh methods used by Search, Craft, Discovery, chopping, and skill progression after the Journal extraction.
+* Prevented search and discovery crashes caused by calls to removed `GameUI` Journal methods.
+
+### Verified
+
+* Manual gameplay testing passed for searches, Chronicle narration, Journal navigation and tabs, and the two-column Expedition Pack.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because Journal and Pack changes consume existing runtime and persistent data without changing its shape.
+
+### Not Included
+
+* Journal search, filters, categories, bookmarks, custom notes, final visual styling, Equipment presentation refinement, and the planned icon-based Skills grid remain future work.
+
+---
+
 ## v0.5.23-alpha1 — Exploration Interface Foundation
 
 ### Added
