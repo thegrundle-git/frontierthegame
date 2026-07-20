@@ -4,6 +4,37 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.26-alpha1 — Skills Interface Foundation
+
+### Added
+
+* Reusable two-column skill cells for Strength, Gathering, Crafting, and Exploration.
+* Original Frontier skill icons and data-driven presentation Resources.
+* At-a-glance levels and XP progress bars for every current skill.
+* Fully opaque hover cards with exact XP, descriptions, and grounded effect summaries.
+
+### Changed
+
+* Replaced the exploration survivor panel's plain-text skill list with a compact icon grid.
+* Skill details now appear on demand instead of permanently consuming exploration-screen height.
+* Reduced the tooltip delay to near-instant feedback while keeping the popup strictly bounded.
+
+### Verified
+
+* Manual gameplay testing passed for layout, icon presentation, XP display, hover timing, tooltip readability, and exploration-screen fit.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because the interface consumes existing `SkillProgress` data without changing progression or persistence.
+
+### Not Included
+
+* New skills, perks, gameplay bonuses, skill categories, final shared theme tokens, and a dedicated full-screen Skills workspace remain future work.
+
+---
+
 ## v0.5.25-alpha1 — Equipment Presentation Refinement
 
 ### Added
