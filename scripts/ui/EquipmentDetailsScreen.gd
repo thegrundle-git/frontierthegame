@@ -21,9 +21,11 @@ signal equipment_disassembled(instance_id: String)
 @onready var disassemble_button: Button = %DisassembleButton
 @onready var disassembly_confirmation: ConfirmationDialog = %DisassemblyConfirmation
 @onready var close_button: Button = %CloseButton
+@onready var panel: Control = self
 
 var _previous_focus: Control
 var _instance: ItemInstance
+var _embedded_mode := false
 
 
 func _ready() -> void:
@@ -39,6 +41,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _embedded_mode:
+		return
 	if visible and event.is_action_pressed("ui_cancel"):
 		hide_details()
 		get_viewport().set_input_as_handled()
@@ -52,7 +56,7 @@ func show_instance(instance: ItemInstance) -> void:
 	if item == null:
 		return
 
-	if not visible:
+	if not visible and not _embedded_mode:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	_instance = instance
 	title_label.text = item.display_name
@@ -86,11 +90,46 @@ func show_instance(instance: ItemInstance) -> void:
 	_refresh_replacement_controls()
 	_refresh_disassembly_controls()
 	visible = true
-	move_to_front()
-	close_button.grab_focus()
+	if not _embedded_mode:
+		move_to_front()
+		close_button.grab_focus()
+
+
+func set_embedded_mode(is_embedded: bool) -> void:
+	_embedded_mode = is_embedded
+	close_button.visible = not is_embedded
+	panel.custom_minimum_size = (
+		Vector2.ZERO if is_embedded else Vector2(620, 500)
+	)
+	panel.size_flags_horizontal = (
+		Control.SIZE_EXPAND_FILL
+		if is_embedded
+		else Control.SIZE_SHRINK_CENTER
+	)
+	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	if is_embedded:
+		visible = true
+
+
+func clear_instance() -> void:
+	_instance = null
+	title_label.text = "No equipment selected"
+	identity_label.text = "Select accessible equipment to inspect it."
+	provenance_label.text = ""
+	components_log.text = ""
+	_refresh_repair_controls()
+	_refresh_replacement_controls()
+	_refresh_disassembly_controls()
+
+
+func has_active_confirmation() -> bool:
+	return disassembly_confirmation.visible
 
 
 func hide_details() -> void:
+	if _embedded_mode:
+		clear_instance()
+		return
 	if not visible:
 		return
 	visible = false

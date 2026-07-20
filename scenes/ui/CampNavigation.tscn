@@ -46,6 +46,12 @@ custom_minimum_size = Vector2(110, 42)
 layout_mode = 2
 text = "Crafting"
 
+[node name="EquipmentButton" type="Button" parent="NavigationMargin/NavigationRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 42)
+layout_mode = 2
+text = "Equipment"
+
 [node name="LeaveButton" type="Button" parent="NavigationMargin/NavigationRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(130, 42)

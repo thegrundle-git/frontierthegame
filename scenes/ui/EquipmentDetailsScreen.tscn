@@ -2,165 +2,143 @@
 
 [ext_resource type="Script" path="res://scripts/ui/EquipmentDetailsScreen.gd" id="1_details"]
 
-[node name="EquipmentDetailsScreen" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 0
+[node name="EquipmentDetailsScreen" type="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_details")
 
-[node name="Backdrop" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.03, 0.03, 0.03, 0.92)
-
-[node name="Center" type="CenterContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Panel" type="PanelContainer" parent="Center"]
-custom_minimum_size = Vector2(620, 500)
+[node name="Margin" type="MarginContainer" parent="."]
 layout_mode = 2
-size_flags_vertical = 3
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
 
-[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+[node name="OuterLayout" type="VBoxContainer" parent="Margin"]
 layout_mode = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 20
+theme_override_constants/separation = 10
 
-[node name="OuterLayout" type="VBoxContainer" parent="Center/Panel/Margin"]
+[node name="ContentScroll" type="ScrollContainer" parent="Margin/OuterLayout"]
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="ContentScroll" type="ScrollContainer" parent="Center/Panel/Margin/OuterLayout"]
-layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="Content" type="VBoxContainer" parent="Center/Panel/Margin/OuterLayout/ContentScroll"]
+[node name="Content" type="VBoxContainer" parent="Margin/OuterLayout/ContentScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
-[node name="Heading" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="Heading" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 text = "EQUIPMENT DETAILS"
 
-[node name="TitleLabel" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="TitleLabel" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "Tool"
+theme_override_font_sizes/font_size = 26
+text = "No equipment selected"
+autowrap_mode = 3
 
-[node name="IdentityLabel" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="IdentityLabel" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Instance"
+text = "Select accessible equipment to inspect it."
+autowrap_mode = 3
 
-[node name="ProvenanceLabel" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ProvenanceLabel" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Provenance"
+autowrap_mode = 3
 
-[node name="Divider" type="HSeparator" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="Divider" type="HSeparator" parent="Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 
-[node name="ComponentsTitle" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ComponentsTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Components"
 
-[node name="ComponentsLog" type="RichTextLabel" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ComponentsLog" type="RichTextLabel" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 220)
+custom_minimum_size = Vector2(0, 180)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 focus_mode = 2
 selection_enabled = true
 
-[node name="MaintenanceTitle" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="MaintenanceTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Maintenance"
 
-[node name="RepairSelector" type="OptionButton" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="RepairSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="RepairStatus" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="RepairStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "No damaged components require maintenance."
+autowrap_mode = 3
 
-[node name="RepairButton" type="Button" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="RepairButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Repair Component"
 
-[node name="ReplacementTitle" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Component Replacement"
 
-[node name="ReplacementSlotSelector" type="OptionButton" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementSlotSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="ReplacementItemSelector" type="OptionButton" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementItemSelector" type="OptionButton" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="ReplacementStatus" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplacementStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-autowrap_mode = 2
 text = "Select a component to replace."
+autowrap_mode = 3
 
-[node name="ReplaceButton" type="Button" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="ReplaceButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Replace Component"
 
-[node name="DisassemblyTitle" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="DisassemblyTitle" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Disassembly"
 
-[node name="DisassemblyStatus" type="Label" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="DisassemblyStatus" type="Label" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
 layout_mode = 2
-autowrap_mode = 2
 text = "Disassembly is available at Camp."
+autowrap_mode = 3
 
-[node name="DisassembleButton" type="Button" parent="Center/Panel/Margin/OuterLayout/ContentScroll/Content"]
+[node name="DisassembleButton" type="Button" parent="Margin/OuterLayout/ContentScroll/Content"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Disassemble Equipment"
 
-[node name="CloseButton" type="Button" parent="Center/Panel/Margin/OuterLayout"]
+[node name="CloseButton" type="Button" parent="Margin/OuterLayout"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
-text = "Return to Frontier"
+text = "Back"
 
 [node name="DisassemblyConfirmation" type="ConfirmationDialog" parent="."]
 unique_name_in_owner = true

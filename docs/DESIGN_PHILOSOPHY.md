@@ -37,6 +37,8 @@ Future menus should extend the shared navigation, layout, focus, scrolling, and 
 
 The extracted Crafting workspace is the first completed replacement built on that foundation. It owns its presentation and emits player intent without taking authority over crafting rules, inventory consumption, time, skill rewards, or item creation. Future workspace migrations should preserve the same separation between interface responsibility and simulation authority.
 
+Equipment inspection now follows the same workspace model. A meaningful object should remain the same selectable instance whether it is equipped, carried, or stored, and its identity should survive repair, replacement, navigation, and refresh. Destructive confirmation remains modal because it interrupts the workspace for an explicit irreversible choice; routine inspection and maintenance do not.
+
 ---
 
 ## Memory and Moment-to-Moment Narration
