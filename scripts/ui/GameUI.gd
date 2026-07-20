@@ -16,7 +16,7 @@ const EVENT_SEPARATOR := "──────────────────
 @onready var event_log: RichTextLabel = %EventLog
 @onready var inventory_left_label: RichTextLabel = %InventoryLeftLabel
 @onready var inventory_right_label: RichTextLabel = %InventoryRightLabel
-@onready var skills_label: Label = %SkillsLabel
+@onready var skills_panel: SkillsPanel = %SkillsPanel
 @onready var tool_label: Label = %ToolLabel
 @onready var open_equipment_button: Button = %OpenEquipmentButton
 @onready var equipment_ui: EquipmentUI = %EquipmentUI
@@ -576,25 +576,7 @@ func update_survivor() -> void:
 		GameManager.current_survivor
 	)
 
-	if survivor == null:
-		skills_label.text = "Skills unavailable."
-		return
-
-	var skill_text := "Skills\n\n"
-
-	for skill: SkillProgress in survivor.get_all_skills():
-		skill_text += (
-			skill.display_name
-			+ " — Level "
-			+ str(skill.level)
-			+ " — XP "
-			+ str(skill.xp)
-			+ " / "
-			+ str(skill.get_xp_needed())
-			+ "\n"
-		)
-
-	skills_label.text = skill_text
+	skills_panel.refresh(survivor)
 
 
 func update_tool_display() -> void:

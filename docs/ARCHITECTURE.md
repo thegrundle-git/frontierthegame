@@ -363,6 +363,10 @@ Camp access is a scene-owned contextual panel outside the action list. `GameUI.u
 
 The survivor panel displays the equipped tool as a concise summary and routes **Open Equipment** into the existing Equipment workspace. Equipment selection, equipping, unequipping, inspection, and maintenance are not duplicated in the exploration controller. Outside Camp, the workspace retains its established field constraints without exposing Camp navigation.
 
+`SkillsPanel.tscn` replaces the former plain-text skill summary with a reusable two-column grid. `SkillCell.tscn` consumes the existing runtime `SkillProgress` level and XP state, while `SkillPresentationData` Resources provide icons, descriptions, and effect explanations keyed by stable skill ID. Presentation metadata does not own progression and cannot award XP or levels.
+
+Skill detail is demand-driven through a bounded, opaque hover card rather than a permanently expanded details pane. The card exposes exact XP and readable explanations without increasing the exploration layout's persistent height. The project tooltip delay is near-instant, and each cell remains a focusable control even though the current descriptive popup is pointer-driven.
+
 This foundation changes only scene composition and presentation orchestration. World actions, travel, timing, equipment authority, Camp routing, persistence, and save version 12 remain unchanged.
 
 ### Journal Workspace

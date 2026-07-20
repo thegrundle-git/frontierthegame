@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.25-alpha1
+v0.5.26-alpha1
 
 ## Project Health
 
-🟢 Stable — Equipment presentation refinement passed gameplay testing
+🟢 Stable — Skills interface foundation passed gameplay testing
 
 ## Current Milestone
 
@@ -112,6 +112,9 @@ Sprint 3 — The Age of Discovery
 * Scene-owned History, Legacy, Completed Lives, Locations, Discoveries, and Landmarks tabs
 * Back and keyboard-cancel Journal navigation
 * Two-column sorted Expedition Pack contents
+* Two-column icon-and-level Skills grid
+* Data-driven skill presentation metadata
+* Skill XP progress bars and bounded near-instant hover details
 * Civilization History Ledger
 * Dedicated Journal History tab
 * Unique persistent civilization milestones
@@ -287,12 +290,11 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Prepare the icon-and-level Skills layout while preserving the compact exploration hierarchy and accessible detail-on-demand behavior.
+Validate the completed exploration-interface foundations together and select the next vertical-slice gameplay milestone.
 
 ## Next Goals
 
 * Windows export regression pass for the interface foundation
-* RuneScape-inspired icon-and-level Skills layout
 * Data-driven narrative templates
 * Meadow ambient event
 * Additional landmarks

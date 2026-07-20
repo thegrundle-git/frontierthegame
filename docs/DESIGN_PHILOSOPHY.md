@@ -53,6 +53,8 @@ The Exploration Interface Foundation applies these rules to the main play view. 
 
 Immediate narration should remain visible while the player makes moment-to-moment decisions. The Chronicle therefore belongs on the exploration surface rather than behind navigation. Durable history, discovered knowledge, places, and completed lives belong in the dedicated Journal workspace, where deeper reading does not compete with active play. The Expedition Pack follows the same hierarchy: one clear heading and compact columns expose current contents without adding another nested inventory label.
 
+Skills should be readable as capabilities rather than presented as a dense diagnostic list. Icons, levels, and progress belong at a glance; exact XP and explanations belong on demand. Presentation metadata may clarify what a skill means, but it must not invent effects that the simulation does not implement or become a second authority for progression.
+
 ---
 
 ## Memory and Moment-to-Moment Narration

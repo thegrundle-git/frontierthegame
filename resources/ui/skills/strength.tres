@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillPresentationData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/SkillPresentationData.gd" id="1_data"]
+[ext_resource type="Texture2D" path="res://assets/ui/skills/strength.svg" id="2_icon"]
+
+[resource]
+script = ExtResource("1_data")
+skill_id = "strength"
+icon = ExtResource("2_icon")
+description = "Physical power developed through demanding work."
+effect_summary = "Each Strength level increases carrying capacity by 2 weight."
