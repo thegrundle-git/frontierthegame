@@ -7,16 +7,26 @@ signal equipment_disassembled(instance_id: String)
 
 
 @onready var title_label: Label = %TitleLabel
+@onready var condition_bar: ProgressBar = %ConditionBar
+@onready var usability_label: Label = %UsabilityLabel
 @onready var identity_label: Label = %IdentityLabel
 @onready var provenance_label: Label = %ProvenanceLabel
+@onready var components_toggle_button: Button = %ComponentsToggleButton
+@onready var components_section: VBoxContainer = %ComponentsSection
 @onready var components_log: RichTextLabel = %ComponentsLog
+@onready var maintenance_toggle_button: Button = %MaintenanceToggleButton
+@onready var maintenance_section: VBoxContainer = %MaintenanceSection
 @onready var repair_selector: OptionButton = %RepairSelector
 @onready var repair_status: Label = %RepairStatus
 @onready var repair_button: Button = %RepairButton
+@onready var replacement_toggle_button: Button = %ReplacementToggleButton
+@onready var replacement_section: VBoxContainer = %ReplacementSection
 @onready var replacement_slot_selector: OptionButton = %ReplacementSlotSelector
 @onready var replacement_item_selector: OptionButton = %ReplacementItemSelector
 @onready var replacement_status: Label = %ReplacementStatus
 @onready var replace_button: Button = %ReplaceButton
+@onready var disassembly_toggle_button: Button = %DisassemblyToggleButton
+@onready var disassembly_section: VBoxContainer = %DisassemblySection
 @onready var disassembly_status: Label = %DisassemblyStatus
 @onready var disassemble_button: Button = %DisassembleButton
 @onready var disassembly_confirmation: ConfirmationDialog = %DisassemblyConfirmation
@@ -29,6 +39,26 @@ var _embedded_mode := false
 
 
 func _ready() -> void:
+	components_toggle_button.pressed.connect(
+		_toggle_section.bind(components_toggle_button, components_section, "Components")
+	)
+	maintenance_toggle_button.pressed.connect(
+		_toggle_section.bind(maintenance_toggle_button, maintenance_section, "Maintenance")
+	)
+	replacement_toggle_button.pressed.connect(
+		_toggle_section.bind(
+			replacement_toggle_button,
+			replacement_section,
+			"Component Replacement"
+		)
+	)
+	disassembly_toggle_button.pressed.connect(
+		_toggle_section.bind(
+			disassembly_toggle_button,
+			disassembly_section,
+			"Disassembly"
+		)
+	)
 	close_button.pressed.connect(hide_details)
 	repair_selector.item_selected.connect(_on_repair_selection_changed)
 	repair_button.pressed.connect(_on_repair_pressed)
@@ -38,6 +68,41 @@ func _ready() -> void:
 	disassemble_button.pressed.connect(_on_disassemble_pressed)
 	disassembly_confirmation.confirmed.connect(_on_disassembly_confirmed)
 	visible = false
+	_set_section_expanded(components_toggle_button, components_section, "Components", false)
+	_set_section_expanded(maintenance_toggle_button, maintenance_section, "Maintenance", false)
+	_set_section_expanded(
+		replacement_toggle_button,
+		replacement_section,
+		"Component Replacement",
+		false
+	)
+	_set_section_expanded(
+		disassembly_toggle_button,
+		disassembly_section,
+		"Disassembly",
+		false
+	)
+
+
+func _toggle_section(
+	button: Button,
+	section: Control,
+	title: String
+) -> void:
+	_set_section_expanded(button, section, title, not section.visible)
+
+
+func _set_section_expanded(
+	button: Button,
+	section: Control,
+	title: String,
+	is_expanded: bool
+) -> void:
+	section.visible = is_expanded
+	button.text = title + (" ▾" if is_expanded else " ▸")
+	button.tooltip_text = (
+		"Collapse " + title if is_expanded else "Expand " + title
+	)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -60,6 +125,12 @@ func show_instance(instance: ItemInstance) -> void:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	_instance = instance
 	title_label.text = item.display_name
+	var condition_percent: int = (
+		EquipmentDurabilityCalculator.get_overall_condition_percent(instance)
+	)
+	var is_usable: bool = EquipmentDurabilityCalculator.is_usable(instance)
+	condition_bar.value = condition_percent
+	usability_label.text = "USABLE" if is_usable else "FAILED"
 	var efficiency: int = EquipmentStatCalculator.get_tool_efficiency(instance)
 	identity_label.text = (
 		"Instance: " + instance.instance_id
@@ -67,10 +138,10 @@ func show_instance(instance: ItemInstance) -> void:
 		+ "\nTool efficiency: " + str(efficiency)
 		+ "\n" + _get_efficiency_source_text(instance)
 		+ "\nOverall condition: "
-		+ str(EquipmentDurabilityCalculator.get_overall_condition_percent(instance))
+		+ str(condition_percent)
 		+ "%"
 		+ "\nUsable: "
-		+ ("Yes" if EquipmentDurabilityCalculator.is_usable(instance) else "No")
+		+ ("Yes" if is_usable else "No")
 	)
 	identity_label.text += "\n" + _build_derived_stats_text(instance)
 	var maker: String = instance.crafted_by_name
@@ -114,6 +185,8 @@ func set_embedded_mode(is_embedded: bool) -> void:
 func clear_instance() -> void:
 	_instance = null
 	title_label.text = "No equipment selected"
+	condition_bar.value = 0.0
+	usability_label.text = "NO SELECTION"
 	identity_label.text = "Select accessible equipment to inspect it."
 	provenance_label.text = ""
 	components_log.text = ""

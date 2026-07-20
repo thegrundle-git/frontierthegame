@@ -1,0 +1,73 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/EquipmentSlot.gd" id="1_slot"]
+
+[node name="EquipmentSlot" type="Button"]
+custom_minimum_size = Vector2(92, 116)
+toggle_mode = true
+focus_mode = 2
+script = ExtResource("1_slot")
+
+[node name="SlotMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="SlotLayout" type="VBoxContainer" parent="SlotMargin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="IconCenter" type="CenterContainer" parent="SlotMargin/SlotLayout"]
+custom_minimum_size = Vector2(0, 46)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconRect" type="TextureRect" parent="SlotMargin/SlotLayout/IconCenter"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="AbbreviationLabel" type="Label" parent="SlotMargin/SlotLayout/IconCenter"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 22
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NameLabel" type="Label" parent="SlotMargin/SlotLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+text = "Equipment"
+horizontal_alignment = 1
+text_overrun_behavior = 3
+
+[node name="ConditionBar" type="ProgressBar" parent="SlotMargin/SlotLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+mouse_filter = 2
+value = 100.0
+show_percentage = false
+
+[node name="StatusLabel" type="Label" parent="SlotMargin/SlotLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 11
+text = "100%"
+horizontal_alignment = 1

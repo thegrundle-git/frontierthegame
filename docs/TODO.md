@@ -40,8 +40,8 @@
 * [x] Prevent variable UI content from resizing or shifting the root interface.
 * [x] Extract durable Journal views into a dedicated workspace while keeping Chronicle visible.
 * [x] Present Expedition Pack contents in two balanced columns.
-* [ ] Expand basic equipment controls into a dedicated multi-slot equipment panel.
-* [ ] Refine Equipment with visual slots, hover details, and stronger selection states.
+* [x] Expand basic equipment controls into a dedicated multi-slot equipment panel.
+* [x] Refine Equipment with visual slots, hover details, and stronger selection states.
 * [ ] Replace the text-only Skills summary with an icon-and-level grid.
 * [x] Add the first modular Stone Axe component-crafting chain.
 * [x] Add unique equipment instances with stable identity and crafting provenance.

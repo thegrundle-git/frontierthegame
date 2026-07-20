@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.25-alpha1 — Equipment Presentation Refinement
+
+### Added
+
+* Reusable visual equipment slots grouped into Equipped Tool, Expedition Pack, and Camp Storage sections.
+* Automatic `ItemData.icon` presentation with readable abbreviation fallback when artwork is unavailable.
+* Per-slot condition bars, percentages, failed-state treatment, selected states, and detailed tooltips.
+* At-a-glance condition and usability presentation in Equipment Details.
+* Independent collapsible sections for Components, Maintenance, Component Replacement, and Disassembly.
+
+### Changed
+
+* Replaced the flat Accessible Equipment text list with a compact Minecraft-inspired slot layout.
+* Camp Storage equipment appears only while the survivor is actually at Camp.
+* Equipment opens with keyboard focus directed to the selected visual slot.
+* Identity, condition, usability, derived statistics, and provenance remain visible while advanced operations stay available on demand.
+
+### Verified
+
+* Manual gameplay testing passed for slot selection, source grouping, tooltips, condition presentation, equip and unequip, collapsible details, and workspace navigation.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because slots and collapsible sections consume existing equipment data without changing its shape.
+
+### Not Included
+
+* New item artwork, armor or accessory categories, drag-and-drop, comparison views, final shared theme tokens, and the planned icon-based Skills grid remain future work.
+
+---
+
 ## v0.5.24-alpha1 — Journal Workspace Foundation
 
 ### Added
