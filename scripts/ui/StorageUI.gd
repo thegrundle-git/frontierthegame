@@ -6,605 +6,324 @@ signal back_requested
 signal equipment_inspection_requested(instance: ItemInstance)
 
 
-@onready var storage_log: RichTextLabel = %StorageLog
+enum SelectionSide {
+	NONE,
+	PACK,
+	STORAGE,
+}
+
+const ITEM_PREFIX := "item:"
+const INSTANCE_PREFIX := "instance:"
+const EQUIPPED_PREFIX := "equipped:"
+
+
+@onready var pack_title: Label = %PackTitle
+@onready var pack_list: ItemList = %PackList
+@onready var storage_list: ItemList = %StorageList
+@onready var amount_spinner: SpinBox = %AmountSpinner
+@onready var deposit_button: Button = %DepositButton
+@onready var take_button: Button = %TakeButton
+@onready var keep_checkbox: CheckBox = %KeepCheckbox
+@onready var inspect_equipment_button: Button = %InspectEquipmentButton
+@onready var deposit_all_button: Button = %DepositAllButton
 @onready var back_button: Button = %BackButton
 
-
-var carried_title: Label
-var carried_list: ItemList
-var storage_list: ItemList
-
-var amount_spinner: SpinBox
-var keep_checkbox: CheckBox
-
-var deposit_button: Button
-var take_button: Button
-var deposit_all_button: Button
-var inspect_equipment_button: Button
-
 var _is_refreshing := false
+var _selected_side: SelectionSide = SelectionSide.NONE
+var _selected_token: String = ""
 var _selected_equipment: ItemInstance
 
 
-func get_default_focus_target() -> Control:
-	return back_button
-
-
 func _ready() -> void:
-	back_button.pressed.connect(
-		_on_back_pressed
-	)
-
-	_build_transfer_interface()
-
-
-func _build_transfer_interface() -> void:
-	storage_log.visible = false
-
-	var storage_layout: VBoxContainer = (
-		storage_log.get_parent()
-	)
-
-	var transfer_row := HBoxContainer.new()
-	transfer_row.name = "TransferRow"
-	transfer_row.size_flags_vertical = (
-		Control.SIZE_EXPAND_FILL
-	)
-	transfer_row.add_theme_constant_override(
-		"separation",
-		16
-	)
-
-	storage_layout.add_child(
-		transfer_row
-	)
-
-	storage_layout.move_child(
-		transfer_row,
-		back_button.get_index()
-	)
-
-	var carried_column := VBoxContainer.new()
-	carried_column.size_flags_horizontal = (
-		Control.SIZE_EXPAND_FILL
-	)
-
-	transfer_row.add_child(
-		carried_column
-	)
-
-	carried_title = Label.new()
-	carried_title.text = "Expedition Inventory"
-	carried_title.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
-	)
-
-	carried_column.add_child(
-		carried_title
-	)
-
-	carried_list = ItemList.new()
-	carried_list.custom_minimum_size = Vector2(
-		220,
-		300
-	)
-	carried_list.size_flags_vertical = (
-		Control.SIZE_EXPAND_FILL
-	)
-	carried_list.select_mode = (
-		ItemList.SELECT_SINGLE
-	)
-
-	carried_list.item_selected.connect(
-		_on_carried_item_selected
-	)
-
-	carried_column.add_child(
-		carried_list
-	)
-
-	var controls_column := VBoxContainer.new()
-	controls_column.custom_minimum_size.x = 150
-	controls_column.alignment = (
-		BoxContainer.ALIGNMENT_CENTER
-	)
-	controls_column.add_theme_constant_override(
-		"separation",
-		10
-	)
-
-	transfer_row.add_child(
-		controls_column
-	)
-
-	var amount_label := Label.new()
-	amount_label.text = "Quantity"
-	amount_label.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
-	)
-
-	controls_column.add_child(
-		amount_label
-	)
-
-	amount_spinner = SpinBox.new()
-	amount_spinner.min_value = 1
-	amount_spinner.max_value = 1
-	amount_spinner.value = 1
-	amount_spinner.step = 1
-	amount_spinner.allow_greater = false
-	amount_spinner.allow_lesser = false
-
-	controls_column.add_child(
-		amount_spinner
-	)
-
-	deposit_button = Button.new()
-	deposit_button.text = "Deposit →"
-	deposit_button.disabled = true
-
-	deposit_button.pressed.connect(
-		_on_deposit_pressed
-	)
-
-	controls_column.add_child(
-		deposit_button
-	)
-
-	take_button = Button.new()
-	take_button.text = "← Take"
-	take_button.disabled = true
-
-	take_button.pressed.connect(
-		_on_take_pressed
-	)
-
-	controls_column.add_child(
-		take_button
-	)
-
-	keep_checkbox = CheckBox.new()
-	keep_checkbox.text = "Keep"
-	keep_checkbox.disabled = true
-	keep_checkbox.tooltip_text = (
-		"Kept items are skipped by Deposit All."
-	)
-
-	keep_checkbox.toggled.connect(
-		_on_keep_toggled
-	)
-
-	controls_column.add_child(
-		keep_checkbox
-	)
-
-	inspect_equipment_button = Button.new()
-	inspect_equipment_button.text = "Inspect Equipment"
-	inspect_equipment_button.disabled = true
+	pack_list.item_selected.connect(_on_pack_item_selected)
+	storage_list.item_selected.connect(_on_storage_item_selected)
+	deposit_button.pressed.connect(_on_deposit_pressed)
+	take_button.pressed.connect(_on_take_pressed)
+	keep_checkbox.toggled.connect(_on_keep_toggled)
 	inspect_equipment_button.pressed.connect(
 		_on_inspect_equipment_pressed
 	)
-	controls_column.add_child(
-		inspect_equipment_button
-	)
-
-	deposit_all_button = Button.new()
-	deposit_all_button.text = "Deposit All"
-	deposit_all_button.tooltip_text = (
-		"Deposit every carried item except those marked Keep."
-	)
-
-	deposit_all_button.pressed.connect(
-		_on_deposit_all_pressed
-	)
-
-	controls_column.add_child(
-		deposit_all_button
-	)
-
-	var storage_column := VBoxContainer.new()
-	storage_column.size_flags_horizontal = (
-		Control.SIZE_EXPAND_FILL
-	)
-
-	transfer_row.add_child(
-		storage_column
-	)
-
-	var storage_title := Label.new()
-	storage_title.text = "Camp Storage"
-	storage_title.horizontal_alignment = (
-		HORIZONTAL_ALIGNMENT_CENTER
-	)
-
-	storage_column.add_child(
-		storage_title
-	)
-
-	storage_list = ItemList.new()
-	storage_list.custom_minimum_size = Vector2(
-		220,
-		300
-	)
-	storage_list.size_flags_vertical = (
-		Control.SIZE_EXPAND_FILL
-	)
-	storage_list.select_mode = (
-		ItemList.SELECT_SINGLE
-	)
-
-	storage_list.item_selected.connect(
-		_on_storage_item_selected
-	)
-
-	storage_column.add_child(
-		storage_list
-	)
+	deposit_all_button.pressed.connect(_on_deposit_all_pressed)
+	back_button.pressed.connect(back_requested.emit)
 
 
-func refresh_storage() -> void:
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
+func get_default_focus_target() -> Control:
+	return pack_list
 
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
 
-	if (
-		survivor == null
-		or civilization == null
-	):
+func refresh_storage(
+	preferred_side: SelectionSide = SelectionSide.NONE,
+	preferred_token: String = ""
+) -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	var civilization: CivilizationData = GameManager.current_civilization
+	if survivor == null or civilization == null:
 		return
 
+	if preferred_side == SelectionSide.NONE:
+		preferred_side = _selected_side
+	if preferred_token.is_empty():
+		preferred_token = _selected_token
+
 	_is_refreshing = true
-
-	carried_title.text = (
-		survivor.data.display_name
-		+ "'s Pack"
-	)
-
-	_populate_item_list(
-		carried_list,
-		survivor.inventory,
-		true
-	)
-	if survivor.equipped_tool_instance != null:
-		var equipped: ItemInstance = survivor.equipped_tool_instance
-		var equipped_item: ItemData = equipped.get_item_data()
-		var equipped_name: String = equipped.item_id
-		if equipped_item != null:
-			equipped_name = equipped_item.display_name
-		var equipped_index: int = carried_list.add_item(
-			"Equipped: " + equipped_name + " [" + equipped.instance_id + "]"
-		)
-		carried_list.set_item_metadata(
-			equipped_index,
-			"equipped:" + equipped.instance_id
-		)
-
-	_populate_item_list(
-		storage_list,
-		civilization.inventory,
-		false
-	)
-
-	deposit_button.disabled = true
-	take_button.disabled = true
-	keep_checkbox.disabled = true
-	keep_checkbox.button_pressed = false
-	_selected_equipment = null
-	inspect_equipment_button.disabled = true
-
+	pack_title.text = survivor.data.display_name + "'s Pack"
+	_populate_inventory_list(pack_list, survivor.inventory, true)
+	_add_equipped_instance(pack_list, survivor.get_equipped_tool_instance())
+	_populate_inventory_list(storage_list, civilization.inventory, false)
+	_reset_selection_controls()
 	deposit_all_button.disabled = (
 		survivor.inventory.items.is_empty()
 		and survivor.inventory.equipment_instances.is_empty()
 	)
 
-	amount_spinner.min_value = 1
-	amount_spinner.max_value = 1
-	amount_spinner.value = 1
+	var selected_index := -1
+	if preferred_side == SelectionSide.PACK:
+		selected_index = _find_token_index(pack_list, preferred_token)
+		if selected_index >= 0:
+			pack_list.select(selected_index)
+	elif preferred_side == SelectionSide.STORAGE:
+		selected_index = _find_token_index(storage_list, preferred_token)
+		if selected_index >= 0:
+			storage_list.select(selected_index)
 
 	_is_refreshing = false
+	if selected_index >= 0:
+		_set_selection(preferred_side, preferred_token)
 
 
-func _populate_item_list(
+func _populate_inventory_list(
 	item_list: ItemList,
 	inventory: FrontierInventory,
 	show_keep_status: bool
 ) -> void:
 	item_list.clear()
-
 	if inventory == null:
+		_add_empty_entry(item_list)
 		return
 
 	var item_ids: Array = inventory.items.keys()
 	item_ids.sort()
-
+	var has_resources := false
 	for item_id_variant: Variant in item_ids:
-		var item_id := str(
-			item_id_variant
-		)
-
-		var amount: int = (
-			inventory.get_item_amount(
-				item_id
-			)
-		)
-
+		var item_id := str(item_id_variant)
+		var amount: int = inventory.get_item_amount(item_id)
 		if amount <= 0:
 			continue
+		if not has_resources:
+			_add_section_header(item_list, "Resources")
+			has_resources = true
 
-		var item_data: ItemData = (
-			ItemDatabase.get_item(
-				item_id
-			)
-		)
-
+		var item_data: ItemData = ItemDatabase.get_item(item_id)
 		var display_name := item_id
-
 		if item_data != null:
 			display_name = item_data.display_name
+		var item_text := display_name + " x" + str(amount)
+		if show_keep_status and inventory.is_item_kept(item_id):
+			item_text = "[Keep] " + item_text
 
-		var item_text := (
-			display_name
-			+ " x"
-			+ str(amount)
-		)
+		var index: int = item_list.add_item(item_text)
+		item_list.set_item_metadata(index, ITEM_PREFIX + item_id)
 
-		if (
-			show_keep_status
-			and inventory.is_item_kept(item_id)
-		):
-			item_text = "★ " + item_text
-
-		var index: int = (
-			item_list.add_item(
-				item_text
-			)
-		)
-
-		item_list.set_item_metadata(
-			index,
-			item_id
-		)
-
+	var has_equipment := false
 	for instance: ItemInstance in inventory.equipment_instances:
-		if instance == null:
+		if instance == null or not instance.is_valid():
 			continue
-		var item_data: ItemData = instance.get_item_data()
-		var display_name: String = instance.item_id
-		if item_data != null:
-			display_name = item_data.display_name
-		var index: int = item_list.add_item(
-			display_name + " [" + instance.instance_id + "]"
-		)
-		item_list.set_item_metadata(index, "instance:" + instance.instance_id)
+		if not has_equipment:
+			_add_section_header(item_list, "Equipment")
+			has_equipment = true
+		_add_equipment_entry(item_list, instance, INSTANCE_PREFIX)
+
+	if not has_resources and not has_equipment:
+		_add_empty_entry(item_list)
 
 
-func _on_carried_item_selected(
-	index: int
+func _add_equipped_instance(
+	item_list: ItemList,
+	instance: ItemInstance
 ) -> void:
-	var survivor: Survivor = (
-		GameManager.current_survivor
+	if instance == null or not instance.is_valid():
+		return
+	if (
+		item_list.item_count == 1
+		and str(item_list.get_item_metadata(0)).is_empty()
+	):
+		item_list.clear()
+	_add_section_header(item_list, "Equipped")
+	_add_equipment_entry(item_list, instance, EQUIPPED_PREFIX)
+
+
+func _add_equipment_entry(
+	item_list: ItemList,
+	instance: ItemInstance,
+	prefix: String
+) -> void:
+	var item_data: ItemData = instance.get_item_data()
+	var display_name: String = instance.item_id
+	if item_data != null:
+		display_name = item_data.display_name
+	var index: int = item_list.add_item(display_name)
+	item_list.set_item_metadata(index, prefix + instance.instance_id)
+	item_list.set_item_tooltip(
+		index,
+		display_name + " [" + instance.instance_id + "]"
 	)
 
-	if survivor == null:
+
+func _add_section_header(item_list: ItemList, title: String) -> void:
+	var index: int = item_list.add_item("— " + title + " —")
+	item_list.set_item_disabled(index, true)
+	item_list.set_item_metadata(index, "")
+
+
+func _add_empty_entry(item_list: ItemList) -> void:
+	var index: int = item_list.add_item("No items")
+	item_list.set_item_disabled(index, true)
+	item_list.set_item_metadata(index, "")
+
+
+func _on_pack_item_selected(index: int) -> void:
+	if _is_refreshing:
+		return
+	storage_list.deselect_all()
+	_set_selection(
+		SelectionSide.PACK,
+		str(pack_list.get_item_metadata(index))
+	)
+
+
+func _on_storage_item_selected(index: int) -> void:
+	if _is_refreshing:
+		return
+	pack_list.deselect_all()
+	_set_selection(
+		SelectionSide.STORAGE,
+		str(storage_list.get_item_metadata(index))
+	)
+
+
+func _set_selection(side: SelectionSide, token: String) -> void:
+	_selected_side = side
+	_selected_token = token
+	_selected_equipment = null
+	_reset_selection_controls(false)
+	if token.is_empty():
 		return
 
-	var item_id := str(
-		carried_list.get_item_metadata(
-			index
+	var survivor: Survivor = GameManager.current_survivor
+	var civilization: CivilizationData = GameManager.current_civilization
+	if survivor == null or civilization == null:
+		return
+
+	if token.begins_with(EQUIPPED_PREFIX):
+		_selected_equipment = survivor.get_equipped_tool_instance()
+		inspect_equipment_button.disabled = _selected_equipment == null
+		return
+
+	if token.begins_with(INSTANCE_PREFIX):
+		var instance_id: String = token.trim_prefix(INSTANCE_PREFIX)
+		var inventory: FrontierInventory = (
+			survivor.inventory
+			if side == SelectionSide.PACK
+			else civilization.inventory
 		)
-	)
-	if item_id.begins_with("instance:"):
-		var instance_id: String = item_id.trim_prefix("instance:")
-		var instance: ItemInstance = survivor.inventory.get_equipment_instance(instance_id)
+		_selected_equipment = inventory.get_equipment_instance(instance_id)
 		amount_spinner.max_value = 1
-		amount_spinner.value = 1
-		deposit_button.disabled = instance == null
-		take_button.disabled = true
-		keep_checkbox.disabled = true
-		keep_checkbox.button_pressed = false
-		_selected_equipment = instance
-		inspect_equipment_button.disabled = instance == null
-		return
-	if item_id.begins_with("equipped:"):
-		var equipped_id: String = item_id.trim_prefix("equipped:")
-		var equipped: ItemInstance = survivor.get_equipped_tool_instance()
-		amount_spinner.max_value = 1
-		amount_spinner.value = 1
-		deposit_button.disabled = true
-		take_button.disabled = true
-		keep_checkbox.disabled = true
-		keep_checkbox.button_pressed = false
-		_selected_equipment = (
-			equipped
-			if equipped != null and equipped.instance_id == equipped_id
-			else null
+		deposit_button.disabled = (
+			side != SelectionSide.PACK or _selected_equipment == null
+		)
+		take_button.disabled = (
+			side != SelectionSide.STORAGE or _selected_equipment == null
 		)
 		inspect_equipment_button.disabled = _selected_equipment == null
 		return
 
-	_selected_equipment = null
-	inspect_equipment_button.disabled = true
-
-	var amount: int = (
-		survivor.inventory.get_item_amount(
-			item_id
-		)
-	)
-
-	amount_spinner.max_value = maxi(
-		amount,
-		1
-	)
-	amount_spinner.value = 1
-
-	deposit_button.disabled = amount <= 0
-	take_button.disabled = true
-
-	_is_refreshing = true
-
-	keep_checkbox.disabled = amount <= 0
-	keep_checkbox.button_pressed = (
-		survivor.inventory.is_item_kept(
-			item_id
-		)
-	)
-
-	_is_refreshing = false
-
-
-func _on_storage_item_selected(
-	index: int
-) -> void:
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if civilization == null:
+	if not token.begins_with(ITEM_PREFIX):
 		return
 
-	var item_id := str(
-		storage_list.get_item_metadata(
-			index
-		)
+	var item_id: String = token.trim_prefix(ITEM_PREFIX)
+	var inventory: FrontierInventory = (
+		survivor.inventory
+		if side == SelectionSide.PACK
+		else civilization.inventory
 	)
-	if item_id.begins_with("instance:"):
-		var instance_id: String = item_id.trim_prefix("instance:")
-		var instance: ItemInstance = civilization.inventory.get_equipment_instance(instance_id)
-		amount_spinner.max_value = 1
-		amount_spinner.value = 1
-		take_button.disabled = instance == null
-		deposit_button.disabled = true
-		keep_checkbox.disabled = true
-		keep_checkbox.button_pressed = false
-		_selected_equipment = instance
-		inspect_equipment_button.disabled = instance == null
-		return
+	var amount: int = inventory.get_item_amount(item_id)
+	amount_spinner.max_value = maxi(amount, 1)
+	deposit_button.disabled = side != SelectionSide.PACK or amount <= 0
+	take_button.disabled = side != SelectionSide.STORAGE or amount <= 0
+	if side == SelectionSide.PACK:
+		_is_refreshing = true
+		keep_checkbox.disabled = amount <= 0
+		keep_checkbox.button_pressed = inventory.is_item_kept(item_id)
+		_is_refreshing = false
 
+
+func _reset_selection_controls(clear_identity: bool = true) -> void:
+	if clear_identity:
+		_selected_side = SelectionSide.NONE
+		_selected_token = ""
 	_selected_equipment = null
-	inspect_equipment_button.disabled = true
-
-	var amount: int = (
-		civilization.inventory.get_item_amount(
-			item_id
-		)
-	)
-
-	amount_spinner.max_value = maxi(
-		amount,
-		1
-	)
+	amount_spinner.min_value = 1
+	amount_spinner.max_value = 1
 	amount_spinner.value = 1
-
-	take_button.disabled = amount <= 0
 	deposit_button.disabled = true
+	take_button.disabled = true
 	keep_checkbox.disabled = true
-
-	_is_refreshing = true
 	keep_checkbox.button_pressed = false
-	_is_refreshing = false
+	inspect_equipment_button.disabled = true
 
 
 func _on_deposit_pressed() -> void:
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
-
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		survivor == null
-		or civilization == null
-	):
-		return
-
-	var item_id := _get_selected_item_id(
-		carried_list
-	)
-
-	if item_id.is_empty():
-		return
-	if item_id.begins_with("equipped:"):
-		return
-	if item_id.begins_with("instance:"):
-		survivor.inventory.transfer_equipment_instance_to(
-			civilization.inventory,
-			item_id.trim_prefix("instance:")
-		)
-		_refresh_after_transfer()
-		return
-
-	survivor.inventory.transfer_item_to(
-		civilization.inventory,
-		item_id,
-		int(amount_spinner.value)
-	)
-
-	_refresh_after_transfer()
+	_transfer_selected(SelectionSide.PACK, SelectionSide.STORAGE)
 
 
 func _on_take_pressed() -> void:
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
+	_transfer_selected(SelectionSide.STORAGE, SelectionSide.PACK)
 
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
 
-	if (
-		survivor == null
-		or civilization == null
-	):
+func _transfer_selected(
+	from_side: SelectionSide,
+	to_side: SelectionSide
+) -> void:
+	if _selected_side != from_side or _selected_token.is_empty():
+		return
+	var survivor: Survivor = GameManager.current_survivor
+	var civilization: CivilizationData = GameManager.current_civilization
+	if survivor == null or civilization == null:
 		return
 
-	var item_id := _get_selected_item_id(
-		storage_list
+	var source: FrontierInventory = (
+		survivor.inventory
+		if from_side == SelectionSide.PACK
+		else civilization.inventory
 	)
-
-	if item_id.is_empty():
-		return
-	if item_id.begins_with("instance:"):
-		civilization.inventory.transfer_equipment_instance_to(
-			survivor.inventory,
-			item_id.trim_prefix("instance:")
+	var destination: FrontierInventory = (
+		civilization.inventory
+		if to_side == SelectionSide.STORAGE
+		else survivor.inventory
+	)
+	var transferred := false
+	if _selected_token.begins_with(INSTANCE_PREFIX):
+		transferred = source.transfer_equipment_instance_to(
+			destination,
+			_selected_token.trim_prefix(INSTANCE_PREFIX)
 		)
-		_refresh_after_transfer()
-		return
-
-	civilization.inventory.transfer_item_to(
-		survivor.inventory,
-		item_id,
-		int(amount_spinner.value)
-	)
-
-	_refresh_after_transfer()
+	elif _selected_token.begins_with(ITEM_PREFIX):
+		transferred = source.transfer_item_to(
+			destination,
+			_selected_token.trim_prefix(ITEM_PREFIX),
+			int(amount_spinner.value)
+		) > 0
+	if transferred:
+		_refresh_after_transfer(to_side, _selected_token)
 
 
 func _on_deposit_all_pressed() -> void:
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
-
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	if (
-		survivor == null
-		or civilization == null
-	):
+	var survivor: Survivor = GameManager.current_survivor
+	var civilization: CivilizationData = GameManager.current_civilization
+	if survivor == null or civilization == null:
 		return
 
-	survivor.inventory.transfer_all_to(
-		civilization.inventory,
-		true
-	)
+	survivor.inventory.transfer_all_to(civilization.inventory, true)
 	var carried_instances: Array[ItemInstance] = (
 		survivor.inventory.equipment_instances.duplicate()
 	)
@@ -614,38 +333,22 @@ func _on_deposit_all_pressed() -> void:
 				civilization.inventory,
 				instance.instance_id
 			)
-
 	_refresh_after_transfer()
 
 
-func _on_keep_toggled(
-	is_kept: bool
-) -> void:
-	if _is_refreshing:
+func _on_keep_toggled(is_kept: bool) -> void:
+	if _is_refreshing or _selected_side != SelectionSide.PACK:
 		return
-
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
-
+	if not _selected_token.begins_with(ITEM_PREFIX):
+		return
+	var survivor: Survivor = GameManager.current_survivor
 	if survivor == null:
 		return
-
-	var item_id := _get_selected_item_id(
-		carried_list
-	)
-
-	if item_id.is_empty():
-		return
-	if item_id.begins_with("instance:"):
-		return
-
 	survivor.inventory.set_item_kept(
-		item_id,
+		_selected_token.trim_prefix(ITEM_PREFIX),
 		is_kept
 	)
-
-	refresh_storage()
+	refresh_storage(SelectionSide.PACK, _selected_token)
 
 
 func _on_inspect_equipment_pressed() -> void:
@@ -654,29 +357,19 @@ func _on_inspect_equipment_pressed() -> void:
 	equipment_inspection_requested.emit(_selected_equipment)
 
 
-func _get_selected_item_id(
-	item_list: ItemList
-) -> String:
-	var selected: PackedInt32Array = (
-		item_list.get_selected_items()
-	)
-
-	if selected.is_empty():
-		return ""
-
-	return str(
-		item_list.get_item_metadata(
-			selected[0]
-		)
-	)
+func _find_token_index(item_list: ItemList, token: String) -> int:
+	if token.is_empty():
+		return -1
+	for index: int in range(item_list.item_count):
+		if str(item_list.get_item_metadata(index)) == token:
+			return index
+	return -1
 
 
-func _refresh_after_transfer() -> void:
-	refresh_storage()
-
+func _refresh_after_transfer(
+	preferred_side: SelectionSide = SelectionSide.NONE,
+	preferred_token: String = ""
+) -> void:
+	refresh_storage(preferred_side, preferred_token)
 	if GameManager.game_ui != null:
 		GameManager.game_ui.refresh_all()
-
-
-func _on_back_pressed() -> void:
-	back_requested.emit()

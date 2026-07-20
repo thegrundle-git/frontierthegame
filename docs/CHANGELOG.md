@@ -4,6 +4,40 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.22-alpha1 — Storage Workspace Refinement
+
+### Added
+
+* Permanent scene-owned Pack, transfer-control, and Camp Storage panels.
+* Clear Resources, Equipment, and Equipped sections in inventory lists.
+* Stable item and equipment selection based on item IDs and instance IDs.
+* Disabled empty-state entries for inventories without contents.
+
+### Changed
+
+* Removed the runtime Storage interface builder and obsolete hidden `StorageLog` anchor.
+* Transfer controls now consume one centralized selection model.
+* Deposit and Take select the transferred entry on its destination side.
+* Keep changes and ordinary refreshes preserve the current selection.
+* Equipment inspection continues routing to the selected Equipment workspace instance.
+* `StorageUI.gd` was reduced from 678 to 375 lines.
+
+### Verified
+
+* Manual gameplay testing passed for list presentation, empty states, partial transfers, equipment transfers, Keep, Deposit All, inspection, navigation, and bounded list behavior.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because Storage continues using the existing inventory data and transfer APIs.
+
+### Not Included
+
+* Capacity limits, sorting controls, filters, search, new transfer rules, shared theme tokens, and responsive breakpoint switching remain future work.
+
+---
+
 ## v0.5.21-alpha1 — Equipment Workspace Foundation
 
 ### Added
