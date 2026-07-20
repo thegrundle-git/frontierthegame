@@ -383,6 +383,18 @@ Camp Storage and HUD inspection requests route to the selected instance. When in
 
 This milestone preserves the existing equipment mutation paths. Moving repair and replacement behind dedicated gameplay-service APIs remains a future architectural task and should not be conflated with this presentation migration.
 
+### Storage Workspace
+
+`StorageUI.tscn` owns the complete Pack, transfer-control, and Camp Storage layout as permanent scene nodes. `StorageUI.gd` no longer constructs controls at runtime or relies on a hidden display node as an insertion anchor.
+
+Selection is represented by a side plus a stable token. Stackable resources use their item ID, while unique equipment uses its instance ID. Equipped equipment has its own non-transferable token. Section headers and empty-state entries contain no token and cannot become actionable selections.
+
+Deposit and Take continue calling `FrontierInventory.transfer_item_to()` or `transfer_equipment_instance_to()`. `StorageUI` does not recreate inventory mutation rules. After a successful transfer it rebuilds both lists and restores selection on the destination side. Keep changes rebuild the Pack while restoring the same item selection.
+
+The transfer-control column derives Quantity, Keep, Deposit, Take, and Inspect availability from the centralized selection. Equipment inspection emits the selected `ItemInstance` to `GameUI`, which routes its stable identity into the Equipment workspace.
+
+The workspace changes no persistent state shape. Save version remains 12.
+
 ### Crafting Workspace
 
 `CraftingUI.tscn` is the presentation owner for `camp.crafting`. It contains the recipe selector, bounded recipe-detail display, Craft control, and Back control as stable scene nodes.

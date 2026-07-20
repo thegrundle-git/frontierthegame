@@ -39,6 +39,8 @@ The extracted Crafting workspace is the first completed replacement built on tha
 
 Equipment inspection now follows the same workspace model. A meaningful object should remain the same selectable instance whether it is equipped, carried, or stored, and its identity should survive repair, replacement, navigation, and refresh. Destructive confirmation remains modal because it interrupts the workspace for an explicit irreversible choice; routine inspection and maintenance do not.
 
+Storage should present movement between inventories as continuity rather than disappearance and recreation. A transferred resource or equipment instance remains selected on its destination side, helping the player understand where it went. Scene-owned controls and stable identifiers make that continuity explicit while leaving inventory authority with the existing simulation model.
+
 ---
 
 ## Memory and Moment-to-Moment Narration

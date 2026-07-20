@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.21-alpha1
+v0.5.22-alpha1
 
 ## Project Health
 
-🟢 Stable — Equipment workspace foundation passed gameplay testing
+🟢 Stable — Storage workspace refinement passed gameplay testing
 
 ## Current Milestone
 
@@ -96,6 +96,10 @@ Sprint 3 — The Age of Discovery
 * Unified equipped, carried, and stored equipment selection
 * Container-native equipment detail and maintenance panel
 * Field and Camp equipment inspection continuity
+* Scene-native Storage workspace
+* Stable cross-inventory transfer selection
+* Distinct resource, equipment, and equipped inventory sections
+* Context-sensitive Storage transfer controls
 * Civilization History Ledger
 * Dedicated Journal History tab
 * Unique persistent civilization milestones

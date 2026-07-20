@@ -61,6 +61,8 @@ Navigation never mutates gameplay state. `GameUI` remains responsible for reques
 
 Future UI extraction should keep gameplay rules in managers, actions, services, and Resources. Screens should receive or query presentation-ready state and emit player intent through signals.
 
+Storage is now fully scene-owned. Its Pack and Camp lists use stable metadata tokens, while transfer buttons derive their state from one selected side and token. Runtime control construction is not part of the workspace pattern.
+
 ## Layout Rules
 
 Workspace content must remain below the persistent Header and Camp navigation regions. Variable content must scroll inside bounded containers rather than expanding the overall interface.
@@ -69,7 +71,7 @@ New workspaces should reuse shared navigation and content bounds. They should no
 
 ## Current Boundary and Future Migration
 
-This foundation currently routes Camp Overview, Storage, Crafting, and Equipment. Crafting and Equipment are dedicated workspace scenes rather than embedded `GameUI` panels. The foundation does not yet restructure the main HUD, Journal, or remaining modal scenes.
+This foundation currently routes Camp Overview, Storage, Crafting, and Equipment. Storage, Crafting, and Equipment are scene-owned workspaces rather than runtime-built or embedded `GameUI` panels. The foundation does not yet restructure the main HUD, Journal, or remaining modal scenes.
 
 Recommended migration order:
 
