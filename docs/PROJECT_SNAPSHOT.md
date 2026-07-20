@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.22-alpha1
+v0.5.23-alpha1
 
 ## Project Health
 
-🟢 Stable — Storage workspace refinement passed gameplay testing
+🟢 Stable — Exploration interface foundation passed gameplay testing
 
 ## Current Milestone
 
@@ -82,7 +82,7 @@ Sprint 3 — The Age of Discovery
 * Tag-based tool requirements
 * Rebalanced Skills, Inventory, and Journal interface proportions
 * Priority expandable Journal reading area
-* Accessible Actions and Travel accordion controls
+* Simultaneously visible Actions and Travel panels
 * Bounded scrolling for variable interface content
 * Improved event dialog and Chronicle presentation
 * Centralized Camp workspace routing
@@ -100,6 +100,9 @@ Sprint 3 — The Age of Discovery
 * Stable cross-inventory transfer selection
 * Distinct resource, equipment, and equipped inventory sections
 * Context-sensitive Storage transfer controls
+* Dedicated contextual Enter Camp area at the home location
+* Clear exploration hierarchy for location, survivor, pack, actions, and travel
+* Single Equipment workspace entry point from the survivor summary
 * Civilization History Ledger
 * Dedicated Journal History tab
 * Unique persistent civilization milestones
@@ -275,7 +278,7 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Stabilize the completed equipment vertical slice with the deferred Windows export and interface regression pass.
+Continue replacing legacy embedded interface areas with scene-owned workspaces while preserving the clearer exploration hierarchy.
 
 ## Next Goals
 

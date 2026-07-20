@@ -355,6 +355,16 @@ Normal actions are disabled while an event choice is unresolved.
 
 The current UI navigation contract is documented in `docs/UI_ARCHITECTURE.md`.
 
+### Exploration Interface
+
+The main exploration view presents five stable information areas: current location, survivor state, Expedition Pack, available actions, and travel. Actions and Travel are sibling panels that remain visible together and own independent bounded scrolling. They no longer share accordion state, so revealing one choice category cannot hide the other.
+
+Camp access is a scene-owned contextual panel outside the action list. `GameUI.update_home_access()` shows it only when the current location matches `CivilizationData.home_location_id`, and applies the same survivor, action-busy, and pending-event gates used by other interaction entry points. Its **Enter Camp** request continues through `GameManager.enter_home()` and the existing Camp router; it does not create a second home-state authority.
+
+The survivor panel displays the equipped tool as a concise summary and routes **Open Equipment** into the existing Equipment workspace. Equipment selection, equipping, unequipping, inspection, and maintenance are not duplicated in the exploration controller. Outside Camp, the workspace retains its established field constraints without exposing Camp navigation.
+
+This foundation changes only scene composition and presentation orchestration. World actions, travel, timing, equipment authority, Camp routing, persistence, and save version 12 remain unchanged.
+
 ### Camp Workspace Routing
 
 `GameUI` owns one lightweight `UIRouter`. It is not an autoload and does not contain gameplay or persistence logic. The router coordinates only the mutually exclusive Camp workspace screens registered under stable IDs:

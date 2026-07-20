@@ -31,6 +31,10 @@ These principles describe the direction of Frontier. They do not imply that ever
 
 Frontier's interface should make interconnected systems easier to understand rather than exposing the structure of the codebase. Players should be able to predict where an activity belongs, how to return from it, and whether they are changing their current workspace or opening a temporary modal decision.
 
+The governing presentation principle is **Legible Complexity**. Frontier should preserve the depth and interconnection of its simulation while presenting the player's immediate situation at a glance. Primary state and available decisions belong in the main view; detailed explanations, histories, and maintenance operations should remain available on demand through clearly named workspaces. Complexity should be organized, not hidden, and the same concept should use consistent language and placement everywhere it appears.
+
+Contextual destinations must remain distinct from ordinary actions. Entering Camp changes the player's workspace and exposes local facilities, so it receives a dedicated contextual area rather than appearing beside wilderness actions. Actions and travel are parallel choices and should remain simultaneously readable when space permits. Equipment receives one authoritative workspace instead of duplicating selection and mutation controls across the exploration interface.
+
 Workspace navigation is therefore a shared rule rather than a behavior each feature invents independently. The implemented Camp navigation foundation gives Overview, Storage, and Crafting stable destinations with consistent Back, keyboard-cancel, and focus behavior. Equipment inspection and irreversible confirmations remain modal layers because they temporarily require attention without replacing the player's underlying workspace.
 
 Future menus should extend the shared navigation, layout, focus, scrolling, and modal conventions instead of adding isolated full-screen visibility logic. This foundation does not yet imply a final visual style, responsive breakpoint system, reorganized HUD, or completed menu hierarchy.
@@ -40,6 +44,8 @@ The extracted Crafting workspace is the first completed replacement built on tha
 Equipment inspection now follows the same workspace model. A meaningful object should remain the same selectable instance whether it is equipped, carried, or stored, and its identity should survive repair, replacement, navigation, and refresh. Destructive confirmation remains modal because it interrupts the workspace for an explicit irreversible choice; routine inspection and maintenance do not.
 
 Storage should present movement between inventories as continuity rather than disappearance and recreation. A transferred resource or equipment instance remains selected on its destination side, helping the player understand where it went. Scene-owned controls and stable identifiers make that continuity explicit while leaving inventory authority with the existing simulation model.
+
+The Exploration Interface Foundation applies these rules to the main play view. Location, survivor, expedition pack, available actions, and travel have explicit visual hierarchy; Actions and Travel remain independently scrollable without competing accordion state; Camp access appears only at the civilization's home location; and the survivor panel summarizes equipped gear while routing inspection and mutation into the Equipment workspace. This is structural refinement rather than a final visual theme or responsive-breakpoint system.
 
 ---
 

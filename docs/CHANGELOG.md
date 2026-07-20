@@ -4,6 +4,37 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.23-alpha1 — Exploration Interface Foundation
+
+### Added
+
+* Clear headings for current location, survivor state, Expedition Pack, available actions, and travel.
+* A dedicated contextual **Enter Camp** area that appears only at the civilization's home location.
+* A single **Open Equipment** entry point from the survivor summary.
+
+### Changed
+
+* Actions and Travel now remain visible together in independently scrolling panels.
+* Camp entry is separated from ordinary wilderness actions and uses the existing Camp routing flow.
+* The survivor panel now summarizes equipped gear instead of duplicating equipment selection, equip, unequip, and inspection controls.
+* The Design Philosophy now defines Legible Complexity as the interface's governing presentation principle.
+
+### Verified
+
+* Manual gameplay testing passed for Camp visibility and entry, travel, world actions, action progress, field and Camp equipment access, and interface fit.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because this milestone changes only interface structure and routing presentation.
+
+### Not Included
+
+* Journal extraction, final visual styling, shared theme tokens, responsive breakpoint switching, and new gameplay systems remain future work.
+
+---
+
 ## v0.5.22-alpha1 — Storage Workspace Refinement
 
 ### Added

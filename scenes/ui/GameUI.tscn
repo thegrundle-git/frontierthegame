@@ -83,6 +83,11 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="LocationHeading" type="Label" parent="ScreenMargin/MainLayout/LocationPanel/LocationLayout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "CURRENT LOCATION"
+
 [node name="LocationLabel" type="Label" parent="ScreenMargin/MainLayout/LocationPanel/LocationLayout" unique_id=1013132934]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 0)
@@ -110,6 +115,11 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 
+[node name="SurvivorHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "SURVIVOR"
+
 [node name="SkillsLabel" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=512558822]
 unique_name_in_owner = true
 layout_mode = 2
@@ -125,36 +135,12 @@ layout_mode = 2
 text = "Equipped Tool:
 None"
 
-[node name="EquipmentControls" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=578007027]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="ToolSelector" type="OptionButton" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout/EquipmentControls" unique_id=1430706833]
+[node name="OpenEquipmentButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-size_flags_horizontal = 3
-tooltip_text = "Choose an accessible tool to equip."
-
-[node name="EquipToolButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout/EquipmentControls" unique_id=2056889999]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(88, 40)
-layout_mode = 2
-tooltip_text = "Equip the selected tool."
-text = "Equip"
-
-[node name="UnequipToolButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout/EquipmentControls" unique_id=145721423]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(96, 40)
-layout_mode = 2
-tooltip_text = "Return the equipped tool to the pack."
-text = "Unequip"
-
-[node name="InspectToolButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-text = "Inspect Selected Tool"
+tooltip_text = "Open the equipment workspace to inspect, equip, and maintain gear."
+text = "Open Equipment"
 
 [node name="InventoryPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn" unique_id=375295770]
 custom_minimum_size = Vector2(320, 150)
@@ -164,6 +150,11 @@ size_flags_vertical = 3
 [node name="InventoryLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel" unique_id=189102175]
 layout_mode = 2
 theme_override_constants/separation = 8
+
+[node name="InventoryHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "EXPEDITION PACK"
 
 [node name="InventoryLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=1901707611]
 unique_name_in_owner = true
@@ -177,9 +168,9 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 theme_override_constants/separation = 6
 
-[node name="UpperRightRegion" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn"]
+[node name="UpperRightRegion" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 160)
+custom_minimum_size = Vector2(0, 190)
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 4.0
@@ -188,21 +179,19 @@ theme_override_constants/separation = 6
 [node name="ActionsPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion" unique_id=1943840883]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ActionsLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel" unique_id=763711668]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="ActionsToggleButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout" unique_id=1942218701]
+[node name="ActionsHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout" unique_id=1942218701]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-tooltip_text = "Collapse Actions"
-text = "Actions ▾"
-alignment = 0
+theme_override_font_sizes/font_size = 14
+text = "AVAILABLE ACTIONS"
 
 [node name="ActionsContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout"]
 unique_name_in_owner = true
@@ -219,25 +208,22 @@ theme_override_constants/separation = 4
 [node name="TravelPanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion" unique_id=1056504366]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="TravelLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel" unique_id=1701085096]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="TravelToggleButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout" unique_id=1896659793]
+[node name="TravelHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout" unique_id=1896659793]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 size_flags_horizontal = 3
-focus_mode = 2
-tooltip_text = "Expand Travel"
-text = "Travel ▸"
-alignment = 0
+theme_override_font_sizes/font_size = 14
+text = "TRAVEL"
 
 [node name="TravelContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
@@ -247,6 +233,28 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
+
+[node name="HomeAccessPanel" type="PanelContainer" parent="ScreenMargin/MainLayout"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HomeAccessLayout" type="HBoxContainer" parent="ScreenMargin/MainLayout/HomeAccessPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HomeAccessText" type="Label" parent="ScreenMargin/MainLayout/HomeAccessPanel/HomeAccessLayout"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Camp is available here. Enter it to use storage, crafting, and equipment facilities."
+autowrap_mode = 3
+
+[node name="EnterCampButton" type="Button" parent="ScreenMargin/MainLayout/HomeAccessPanel/HomeAccessLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 42)
+layout_mode = 2
+tooltip_text = "Enter the camp workspace."
+text = "Enter Camp"
 
 [node name="DetailTabs" type="TabContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=314125264]
 custom_minimum_size = Vector2(0, 260)

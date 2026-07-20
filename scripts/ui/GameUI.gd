@@ -3,7 +3,6 @@ extends Control
 
 const INTERACTIVE_CONTROL_MINIMUM_HEIGHT := 42.0
 const EVENT_SEPARATOR := "────────────────────────"
-const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 
 
 
@@ -21,10 +20,7 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 @onready var inventory_label: RichTextLabel = %InventoryLabel
 @onready var skills_label: Label = %SkillsLabel
 @onready var tool_label: Label = %ToolLabel
-@onready var tool_selector: OptionButton = %ToolSelector
-@onready var equip_tool_button: Button = %EquipToolButton
-@onready var unequip_tool_button: Button = %UnequipToolButton
-@onready var inspect_tool_button: Button = %InspectToolButton
+@onready var open_equipment_button: Button = %OpenEquipmentButton
 @onready var equipment_ui: EquipmentUI = %EquipmentUI
 @onready var location_label: Label = %LocationLabel
 @onready var locations_log: RichTextLabel = %LocationsLog
@@ -39,13 +35,8 @@ const ACCORDION_OPEN_MINIMUM_HEIGHT := 160.0
 
 @onready var action_list: VBoxContainer = %ActionList
 @onready var travel_list: VBoxContainer = %TravelList
-@onready var upper_right_region: VBoxContainer = %UpperRightRegion
-@onready var actions_panel: PanelContainer = %ActionsPanel
-@onready var travel_panel: PanelContainer = %TravelPanel
-@onready var actions_content_scroll: ScrollContainer = %ActionsContentScroll
-@onready var travel_content_scroll: ScrollContainer = %TravelContentScroll
-@onready var actions_toggle_button: Button = %ActionsToggleButton
-@onready var travel_toggle_button: Button = %TravelToggleButton
+@onready var home_access_panel: PanelContainer = %HomeAccessPanel
+@onready var enter_camp_button: Button = %EnterCampButton
 
 @onready var event_overlay: CenterContainer = %EventOverlay
 @onready var event_title: Label = %EventTitle
@@ -61,31 +52,12 @@ var camp_router := UIRouter.new()
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
-var return_home_button: Button
-var actions_expanded: bool = true
-var travel_expanded: bool = false
 
 func _ready() -> void:
 	GameManager.game_ui = self
 
-	actions_toggle_button.pressed.connect(
-		_on_actions_toggle_pressed
-	)
-
-	travel_toggle_button.pressed.connect(
-		_on_travel_toggle_pressed
-	)
-
-	_update_accordion_visual_state()
-
-	equip_tool_button.pressed.connect(
-		_on_equip_tool_pressed
-	)
-
-	unequip_tool_button.pressed.connect(
-		_on_unequip_tool_pressed
-	)
-	inspect_tool_button.pressed.connect(_on_inspect_tool_pressed)
+	open_equipment_button.pressed.connect(_on_open_equipment_pressed)
+	enter_camp_button.pressed.connect(_on_enter_camp_pressed)
 	equipment_ui.equipment_repaired.connect(
 		_on_equipment_repaired
 	)
@@ -233,71 +205,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 
-func _on_actions_toggle_pressed() -> void:
-	actions_expanded = not actions_expanded
-
-	if actions_expanded:
-		travel_expanded = false
-
-	_update_accordion_visual_state()
-
-
-func _on_travel_toggle_pressed() -> void:
-	travel_expanded = not travel_expanded
-
-	if travel_expanded:
-		actions_expanded = false
-
-	_update_accordion_visual_state()
-
-
-func _update_accordion_visual_state() -> void:
-	actions_content_scroll.visible = actions_expanded
-	travel_content_scroll.visible = travel_expanded
-	actions_panel.size_flags_vertical = (
-		Control.SIZE_EXPAND_FILL
-		if actions_expanded
-		else Control.SIZE_SHRINK_BEGIN
-	)
-	travel_panel.size_flags_vertical = (
-		Control.SIZE_EXPAND_FILL
-		if travel_expanded
-		else Control.SIZE_SHRINK_BEGIN
-	)
-
-	actions_toggle_button.text = (
-		"Actions ▾" if actions_expanded else "Actions ▸"
-	)
-	actions_toggle_button.tooltip_text = (
-		"Collapse Actions"
-		if actions_expanded
-		else "Expand Actions"
-	)
-
-	travel_toggle_button.text = (
-		"Travel ▾" if travel_expanded else "Travel ▸"
-	)
-	travel_toggle_button.tooltip_text = (
-		"Collapse Travel"
-		if travel_expanded
-		else "Expand Travel"
-	)
-
-	var has_open_section := (
-		actions_expanded or travel_expanded
-	)
-	upper_right_region.custom_minimum_size.y = (
-		ACCORDION_OPEN_MINIMUM_HEIGHT
-		if has_open_section
-		else 0.0
-	)
-	upper_right_region.size_flags_vertical = (
-		Control.SIZE_EXPAND_FILL
-		if has_open_section
-		else Control.SIZE_SHRINK_BEGIN
-	)
-
-
 func refresh_all() -> void:
 	update_survivor()
 	update_location()
@@ -307,6 +214,7 @@ func refresh_all() -> void:
 		equipment_ui.refresh()
 	update_world_action_buttons()
 	update_travel_buttons()
+	update_home_access()
 	update_locations_journal()
 	update_landmarks_journal()
 	update_history_journal()
@@ -398,40 +306,6 @@ func build_world_action_buttons() -> void:
 		action_list.add_child(button)
 		world_action_buttons[action.id] = button
 
-	return_home_button = Button.new()
-	return_home_button.name = "ReturnHomeButton"
-	return_home_button.text = "Return Home"
-	return_home_button.tooltip_text = (
-		"Return to the safety of home."
-	)
-	return_home_button.custom_minimum_size.y = (
-		INTERACTIVE_CONTROL_MINIMUM_HEIGHT
-	)
-	return_home_button.focus_mode = Control.FOCUS_ALL
-
-	return_home_button.pressed.connect(
-		_on_return_home_pressed
-	)
-
-	var civilization: CivilizationData = (
-		GameManager.current_civilization
-	)
-
-	var current_location: LocationData = (
-		GameManager.current_location
-	)
-
-	return_home_button.visible = (
-		civilization != null
-		and current_location != null
-		and current_location.id
-		== civilization.home_location_id
-	)
-
-	action_list.add_child(
-		return_home_button
-	)
-
 
 func build_travel_buttons() -> void:
 	for child: Node in travel_list.get_children():
@@ -515,6 +389,26 @@ func update_location() -> void:
 	)
 
 
+func update_home_access() -> void:
+	var civilization: CivilizationData = GameManager.current_civilization
+	var location: LocationData = GameManager.current_location
+	var survivor: Survivor = GameManager.current_survivor
+	var is_at_home := (
+		civilization != null
+		and location != null
+		and location.id == civilization.home_location_id
+	)
+
+	home_access_panel.visible = is_at_home
+	enter_camp_button.disabled = (
+		not is_at_home
+		or survivor == null
+		or not survivor.can_act()
+		or ActionManager.is_busy
+		or WorldEventManager.has_pending_event()
+	)
+
+
 func update_world_action_buttons() -> void:
 	var survivor: Survivor = (
 		GameManager.current_survivor
@@ -594,14 +488,6 @@ func update_world_action_buttons() -> void:
 				+ tool_type
 				+ "."
 			)
-
-		if return_home_button != null:
-			return_home_button.disabled = (
-				not survivor_can_act
-				or
-				ActionManager.is_busy
-				or event_pending
-		)
 
 func update_travel_buttons() -> void:
 	var event_pending: bool = (
@@ -709,8 +595,7 @@ func update_tool_display() -> void:
 
 	if survivor == null:
 		tool_label.text = "Equipped Tool: None"
-		_rebuild_tool_selector(null)
-		unequip_tool_button.disabled = true
+		open_equipment_button.disabled = true
 		return
 
 	var tool: ItemData = (
@@ -731,107 +616,20 @@ func update_tool_display() -> void:
 			)
 		)
 
-	_rebuild_tool_selector(
-		survivor
-	)
-
-	unequip_tool_button.disabled = (
-		not survivor.can_act()
-		or
-		ActionManager.is_busy
-		or tool == null
-	)
+	open_equipment_button.disabled = false
 
 
-func _rebuild_tool_selector(
-	survivor: Survivor
-) -> void:
-	tool_selector.clear()
-
-	if survivor == null:
-		tool_selector.disabled = true
-		equip_tool_button.disabled = true
-		inspect_tool_button.disabled = true
-		return
-
-	var available_tools: Array[ItemInstance] = []
-	var inventories: Array[FrontierInventory] = (
-		GameManager.get_accessible_crafting_inventories()
-	)
-	if survivor.equipped_tool_instance != null:
-		available_tools.append(survivor.equipped_tool_instance)
-
-	for inventory: FrontierInventory in inventories:
-		for instance: ItemInstance in inventory.equipment_instances:
-			if instance == null:
-				continue
-			var item: ItemData = instance.get_item_data()
-			if item != null and "tool" in item.tags:
-				available_tools.append(instance)
-
-	available_tools.sort_custom(
-		func(
-			first: ItemInstance,
-			second: ItemInstance
-		) -> bool:
-			var first_item: ItemData = first.get_item_data()
-			var second_item: ItemData = second.get_item_data()
-			if first_item == null or second_item == null:
-				return first.instance_id < second.instance_id
-			if first_item.display_name == second_item.display_name:
-				return first.instance_id < second.instance_id
-			return first_item.display_name < second_item.display_name
-	)
-
-	for instance: ItemInstance in available_tools:
-		var item: ItemData = instance.get_item_data()
-		if item == null:
-			continue
-		tool_selector.add_item(
-			item.display_name + " [" + instance.instance_id + "]"
-		)
-
-		var index := (
-			tool_selector.item_count - 1
-		)
-
-		tool_selector.set_item_metadata(
-			index,
-			instance.instance_id
-		)
-
-	var has_available_tool := (
-		tool_selector.item_count > 0
-	)
-
-	tool_selector.disabled = (
-		not survivor.can_act()
-		or
-		ActionManager.is_busy
-		or not has_available_tool
-	)
-
-	equip_tool_button.disabled = (
-		not survivor.can_act()
-		or
-		ActionManager.is_busy
-		or not has_available_tool
-	)
-	inspect_tool_button.disabled = not has_available_tool
-
-
-func _on_inspect_tool_pressed() -> void:
+func _on_open_equipment_pressed() -> void:
 	var survivor: Survivor = GameManager.current_survivor
-	if survivor == null or tool_selector.selected < 0:
+	if survivor == null:
 		return
-	var instance_id: String = str(
-		tool_selector.get_item_metadata(tool_selector.selected)
-	)
-	var instance: ItemInstance = (
-		survivor.get_accessible_equipment_instance(instance_id)
-	)
-	if instance != null:
-		_open_equipment_workspace(instance.instance_id)
+
+	var preferred_instance_id := ""
+	var equipped_instance: ItemInstance = survivor.get_equipped_tool_instance()
+	if equipped_instance != null:
+		preferred_instance_id = equipped_instance.instance_id
+
+	_open_equipment_workspace(preferred_instance_id)
 
 
 func _on_equipment_repaired(_instance: ItemInstance) -> void:
@@ -889,64 +687,6 @@ func _on_equipment_unequip_requested() -> void:
 	equipment_ui.refresh()
 
 
-func _on_equip_tool_pressed() -> void:
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
-
-	if (
-		survivor == null
-		or tool_selector.selected < 0
-	):
-		return
-
-	var instance_id := str(
-		tool_selector.get_item_metadata(
-			tool_selector.selected
-		)
-	)
-
-	if not survivor.equip_tool(instance_id):
-		return
-
-	var tool: ItemData = survivor.get_equipped_tool()
-
-	if tool != null:
-		add_event(
-			survivor.data.display_name
-			+ " equipped "
-			+ tool.display_name
-			+ "."
-		)
-
-	refresh_all()
-
-
-func _on_unequip_tool_pressed() -> void:
-	var survivor: Survivor = (
-		GameManager.current_survivor
-	)
-
-	if survivor == null:
-		return
-
-	var tool: ItemData = (
-		survivor.get_equipped_tool()
-	)
-
-	if tool == null:
-		return
-
-	survivor.unequip_tool()
-
-	add_event(
-		survivor.data.display_name
-		+ " unequipped "
-		+ tool.display_name
-		+ "."
-	)
-
-	refresh_all()
 func _update_time() -> void:
 	time_label.text = TimeManager.get_time_text()
 
@@ -1529,7 +1269,7 @@ func _request_initial_refresh() -> void:
 	rebuild_location_controls()
 	refresh_all()
 
-func _on_return_home_pressed() -> void:
+func _on_enter_camp_pressed() -> void:
 	if not GameManager.enter_home():
 		return
 
