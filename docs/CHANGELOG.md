@@ -4,6 +4,32 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.31-alpha1 — Vertical Slice Release Readiness
+
+### Changed
+
+* Updated the Windows export target to `builds/v0.5.31-a1/Frontier.exe`.
+* Updated release documentation, expected database counts, known issues, and the vertical-slice validation record.
+
+### Verified
+
+* Exported and launched the Windows build at 1280×720.
+* Completed the full 30–60 minute vertical-slice loop in the exported build.
+* Verified New Game, Continue, version-12-to-13 migration, discoveries, wilderness-search persistence, Track Animals XP, and discovery-gated action refresh.
+* Verified Camp, Storage, Crafting, Equipment, Journal, Skills, death, succession, events, landmarks, and recovered fragments.
+* Confirmed no release-blocking crashes, clipping, broken focus, or navigation traps.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. The exported regression pass confirmed loading and continuing from compatible older data.
+
+### Not Included
+
+* This stabilization milestone adds no new gameplay content. Remaining non-blocking backlog items continue beyond the vertical slice.
+
+---
+
 ## v0.5.30-alpha1 — Anonymous Journal Fragment Foundation
 
 ### Added

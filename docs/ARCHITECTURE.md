@@ -667,15 +667,18 @@ Before publishing a build:
 Expected startup database output currently includes:
 
 ```text
-Loaded 7 items.
-Loaded 2 actions.
+Loaded 10 items.
+Loaded 3 actions.
 Loaded 3 locations.
-Loaded 1 world events.
-Loaded 1 discoveries.
-Loaded 1 recipes.
+Loaded 4 world events.
+Loaded 4 discoveries.
+Loaded 4 recipes.
+Loaded 2 landmarks.
 ```
 
 Counts must be updated as content is added.
+
+The `v0.5.31-alpha1` Windows export completed this checklist at 1280×720, including New Game, Continue, save migration, the full vertical-slice loop, all routed workspaces, death and succession, world events, landmarks, and recovered journal fragments.
 
 ---
 
