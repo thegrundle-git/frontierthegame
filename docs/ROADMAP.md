@@ -4,7 +4,7 @@
 
 ### Vertical Slice
 
-The `v0.5.31-alpha1` exported Windows regression passed. The next milestone packages this verified foundation as `v0.6.0-alpha1`.
+The `v0.5.31-alpha1` exported Windows regression passed, and its verified foundation is now packaged as the `v0.6.0-alpha1` Vertical Slice milestone.
 
 The goal is to create a playable survival experience lasting approximately 30–60 minutes.
 
