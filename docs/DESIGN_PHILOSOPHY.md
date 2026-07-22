@@ -59,6 +59,8 @@ Narrative should interpret confirmed simulation results rather than decide them.
 
 Ambient events should give places identity through grounded situations and meaningful choices, not imply simulations that do not yet exist. Outcomes must state their concrete consequences truthfully, and event prose should reflect the current character rather than assume the civilization is still led by its founder.
 
+Evidence of earlier inhabitants should invite investigation without converting uncertainty into lore prematurely. Landmark records distinguish what the civilization can observe from what it merely suspects, allowing later discoveries to deepen or challenge earlier interpretations.
+
 ---
 
 ## Memory and Moment-to-Moment Narration

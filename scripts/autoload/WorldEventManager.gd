@@ -169,6 +169,7 @@ func _record_matching_landmark(
 
 func _apply_option(option: EventOptionData) -> void:
 	var survivor := GameManager.current_survivor
+	var reward_messages: Array[String] = []
 
 	if survivor == null:
 		return
@@ -185,6 +186,13 @@ func _apply_option(option: EventOptionData) -> void:
 		survivor.inventory.add_item(
 			reward.item.id,
 			reward.amount
+		)
+
+		reward_messages.append(
+			"Received: "
+			+ reward.item.display_name
+			+ " x"
+			+ str(reward.amount)
 		)
 
 		DiscoveryManager.record_item_observation(
@@ -213,6 +221,10 @@ func _apply_option(option: EventOptionData) -> void:
 				option.result_text
 			)
 		)
+		for reward_message: String in reward_messages:
+			GameManager.game_ui.add_event(
+				reward_message
+			)
 
 
 func _is_event_eligible(

@@ -12,7 +12,8 @@ func load_landmarks() -> void:
 	landmarks.clear()
 
 	var landmark_paths: Array[String] = [
-		"res://resources/landmarks/abandoned_campsite.tres"
+		"res://resources/landmarks/abandoned_campsite.tres",
+		"res://resources/landmarks/weathered_river_marker.tres"
 	]
 
 	for landmark_path in landmark_paths:
