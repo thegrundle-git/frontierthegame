@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="LandmarkData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/LandmarkData.gd" id="1_landmark"]
+
+[resource]
+script = ExtResource("1_landmark")
+id = "weathered_river_marker"
+display_name = "Weathered River Marker"
+description = "A waist-high stone stands above the river's flood line. Its sides are flatter than the surrounding rock, and shallow grooves cross one face in a pattern too regular to dismiss as weathering. Whatever the marks once communicated is no longer clear."
+location_ids = Array[String](["river"])
+event_id = "weathered_river_marker"

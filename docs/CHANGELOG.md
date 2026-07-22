@@ -4,6 +4,37 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.29-alpha1 — Weathered River Marker
+
+### Added
+
+* Frontier's second persistent landmark, the Weathered River Marker.
+* One-time River encounter **Marks Above the Flood Line** after successful searches.
+* Study, search, and leave-undisturbed responses with distinct time, XP, knowledge, and item outcomes.
+* Explicit Chronicle reward messages for every item granted by a world-event option.
+
+### Changed
+
+* Registered the new event and landmark through the existing explicit databases.
+* Landmark prose records visible construction evidence while leaving the marker's original meaning unresolved.
+* Event reward narration now follows the outcome with `Received: Item xN` mechanical confirmation.
+
+### Verified
+
+* Manual gameplay testing passed for discovery, contextual narration, choice outcomes, Flint reward reporting, Journal presentation, once-only behavior, and save/load persistence.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12. Existing completed-event and discovered-landmark ID collections support the new content.
+
+### Not Included
+
+* Archaeology, ruins exploration, translation, map markers, NPC history, or a definitive explanation of the marker remain future work.
+
+---
+
 ## v0.5.28-alpha1 — Meadow Ambient Event
 
 ### Added

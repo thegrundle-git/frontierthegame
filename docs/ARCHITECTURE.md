@@ -343,6 +343,8 @@ Each `EventOptionData` may provide:
 * knowledge;
 * game-time cost.
 
+Item rewards remain mutations of the current survivor inventory. After the authored result text, `WorldEventManager` emits one explicit `Received: Item xN` Chronicle line per configured reward so presentation truthfully confirms the mechanical outcome. Item observation and discovery checks continue through their established paths.
+
 `WorldEventManager` tracks pending events and completed one-time events.
 
 `GameManager._complete_world_action()` asks `WorldEventManager` to roll eligible events only after an action's completion script returns success. Eligibility remains data-driven through action and location IDs, and failed actions never create encounters. A pending event continues to block new actions until one option resolves.
@@ -352,6 +354,12 @@ Event descriptions and option outcomes may contain the same contextual tokens us
 The Meadow's **A Change in the Wind** is a one-time `search_area` event with three existing-system outcomes. Completion uses the established `completed_event_ids` save path; no new persistence shape or event manager was added.
 
 Normal actions are disabled while an event choice is unresolved.
+
+### Event-Linked Landmarks
+
+`LandmarkData.event_id` links a durable place record to the one-time event that reveals it. When an event begins, `WorldEventManager` records the first matching landmark in `CivilizationData` before presenting the choice. The Landmarks Journal therefore preserves discovery independently of which option the player selects.
+
+The Weathered River Marker uses this existing link without adding parallel discovery state. Its authored description separates observable facts—worked surfaces, regular grooves, and position above the flood line—from uncertain interpretation. Completed-event and discovered-landmark IDs already persist in save version 12.
 
 ---
 

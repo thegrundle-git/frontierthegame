@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="WorldEventData" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="2_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="3_event"]
+[ext_resource type="Resource" path="res://resources/items/flint.tres" id="4_flint"]
+
+[sub_resource type="Resource" id="FlintReward"]
+script = ExtResource("2_ingredient")
+item = ExtResource("4_flint")
+amount = 1
+
+[sub_resource type="Resource" id="StudyOption"]
+script = ExtResource("1_option")
+id = "study"
+display_text = "Study the grooves"
+result_text = "{actor_name} clears mud from the stone and follows each groove by hand. The pattern proves deliberate, but whether it marked a route, a boundary, or something else remains uncertain."
+skill_id = "exploration"
+xp_reward = 4
+knowledge_reward = 2
+game_minutes = 35
+
+[sub_resource type="Resource" id="SearchOption"]
+script = ExtResource("1_option")
+id = "search_base"
+display_text = "Search around its base"
+result_text = "{actor_name} searches the gravel around the marker and recovers one piece of Flint exposed beside its buried edge."
+rewards = Array[ExtResource("2_ingredient")]([SubResource("FlintReward")])
+skill_id = "gathering"
+xp_reward = 2
+knowledge_reward = 1
+game_minutes = 25
+
+[sub_resource type="Resource" id="LeaveOption"]
+script = ExtResource("1_option")
+id = "leave"
+display_text = "Leave it as it stands"
+result_text = "{actor_name} leaves the marked stone untouched. Its purpose remains unknown, but its position above the flood line will make it easy to find again."
+skill_id = "exploration"
+xp_reward = 1
+
+[resource]
+script = ExtResource("3_event")
+id = "weathered_river_marker"
+display_name = "Marks Above the Flood Line"
+description = "While searching the upper bank, {actor_name} notices a standing stone beyond the reach of the current. Mud obscures its base, but shallow grooves remain visible across one unnaturally flat face."
+trigger_chance_percent = 30.0
+trigger_action_ids = Array[String](["search_area"])
+location_ids = Array[String](["river"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("StudyOption"), SubResource("SearchOption"), SubResource("LeaveOption")])

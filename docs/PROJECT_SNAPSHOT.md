@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.28-alpha1
+v0.5.29-alpha1
 
 ## Project Health
 
-🟢 Stable — Meadow ambient event passed gameplay testing
+🟢 Stable — Weathered River Marker passed gameplay testing
 
 ## Current Milestone
 
@@ -22,8 +22,8 @@ Sprint 3 — The Age of Discovery
 * Items: 10
 * Recipes: 4
 * Discoveries: 4
-* World Events: 2
-* Landmarks: 1
+* World Events: 3
+* Landmarks: 2
 * Registered World Actions: 3
 * External Testers: approximately 5
 
@@ -40,9 +40,10 @@ Sprint 3 — The Age of Discovery
 * River
 * Meadow
 
-## Current Landmark
+## Current Landmarks
 
 * Abandoned Campsite
+* Weathered River Marker
 
 ## Implemented Systems
 
@@ -62,6 +63,8 @@ Sprint 3 — The Age of Discovery
 * Successful-action world-event trigger integration
 * Contextual event narration after succession
 * Meadow ambient event: A Change in the Wind
+* River landmark event: Marks Above the Flood Line
+* Explicit Chronicle confirmation for world-event item rewards
 * Landmarks
 * Location-specific search loot
 * Visited-location tracking
@@ -297,10 +300,9 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Add the next authored landmark and journal-fragment content using the established data-driven foundations.
+Add Finnley's first authored journal fragment using the established discovery and Journal foundations.
 
 ## Next Goals
 
 * Windows export regression pass for the interface foundation
-* Additional landmarks
 * Finnley’s first journal fragment

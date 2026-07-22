@@ -15,7 +15,7 @@
 * [ ] Add Flint item and discovery.
 * [ ] Add first tracking-specific item or observation.
 * [x] Add a Meadow ambient event.
-* [ ] Add a second landmark.
+* [x] Add a second landmark.
 * [ ] Add Finnley’s first anonymous journal fragment.
 * [ ] Add a required discovery field to ActionData.
 * [ ] Replace hardcoded action-unlock matching with resource data.
