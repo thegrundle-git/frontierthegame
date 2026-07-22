@@ -14,7 +14,7 @@
 * [x] Move narrative phrases into NarrativeTemplateData resources.
 * [ ] Add Flint item and discovery.
 * [ ] Add first tracking-specific item or observation.
-* [ ] Add a Meadow ambient event.
+* [x] Add a Meadow ambient event.
 * [ ] Add a second landmark.
 * [ ] Add Finnley’s first anonymous journal fragment.
 * [ ] Add a required discovery field to ActionData.

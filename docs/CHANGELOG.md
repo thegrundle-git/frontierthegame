@@ -4,6 +4,42 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.28-alpha1 — Meadow Ambient Event
+
+### Added
+
+* One-time Meadow event **A Change in the Wind**, triggered by successful searches.
+* Three grounded responses supporting observation, gathering, or continuing onward.
+* Distinct time, skill XP, knowledge, and item outcomes using existing event-option data.
+* Contextual event descriptions and outcomes that resolve the current survivor's name.
+
+### Changed
+
+* Successful world actions now invoke the existing world-event trigger pipeline.
+* Event descriptions and result narration render through the shared contextual narrative boundary.
+* The herb-gathering outcome explicitly reports the two Wild Herbs awarded.
+
+### Fixed
+
+* Connected `WorldEventManager.try_trigger_after_action()` to successful action completion; the existing Abandoned Campsite can now trigger as designed.
+* Failed actions do not roll world events.
+
+### Verified
+
+* Manual gameplay testing passed for Meadow triggering, option resolution, contextual narration, rewards, action blocking, and once-only behavior.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12. Existing completed-event persistence already supports the new once-only event.
+
+### Not Included
+
+* Wildlife simulation, combat, NPC encounters, dialogue, weather systems, and new event architecture remain future work.
+
+---
+
 ## v0.5.27-alpha1 — Data-Driven Narrative Templates
 
 ### Added

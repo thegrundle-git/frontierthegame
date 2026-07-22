@@ -210,6 +210,11 @@ func _complete_world_action(
 		action.xp_reward
 	)
 
+	if result:
+		WorldEventManager.try_trigger_after_action(
+			action.id
+		)
+
 	_refresh_ui()
 func start_travel(
 	destination_id: String

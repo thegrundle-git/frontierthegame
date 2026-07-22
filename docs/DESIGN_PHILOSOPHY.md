@@ -57,6 +57,8 @@ Skills should be readable as capabilities rather than presented as a dense diagn
 
 Narrative should interpret confirmed simulation results rather than decide them. Authored templates may vary tone and respond to known context, but rewards, discoveries, history, and progression remain governed by their existing systems. New prose should be expandable as content without embedding location- and item-specific language throughout gameplay code.
 
+Ambient events should give places identity through grounded situations and meaningful choices, not imply simulations that do not yet exist. Outcomes must state their concrete consequences truthfully, and event prose should reflect the current character rather than assume the civilization is still led by its founder.
+
 ---
 
 ## Memory and Moment-to-Moment Narration

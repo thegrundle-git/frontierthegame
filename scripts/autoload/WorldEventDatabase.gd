@@ -12,7 +12,8 @@ func load_events() -> void:
 	events.clear()
 
 	var event_paths: Array[String] = [
-		"res://resources/events/abandoned_campsite.tres"
+		"res://resources/events/abandoned_campsite.tres",
+		"res://resources/events/meadow_change_in_wind.tres"
 	]
 
 	for event_path in event_paths:
