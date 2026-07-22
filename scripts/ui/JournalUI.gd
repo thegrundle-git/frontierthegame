@@ -16,6 +16,8 @@ signal completed_life_requested(character_id: String)
 @onready var open_completed_life_button: Button = %OpenCompletedLifeButton
 @onready var locations_log: RichTextLabel = %LocationsLog
 @onready var discoveries_log: RichTextLabel = %DiscoveriesLog
+@onready var fragments_log: RichTextLabel = %FragmentsLog
+@onready var fragments_tab: Control = %Fragments
 @onready var landmarks_log: RichTextLabel = %LandmarksLog
 @onready var landmarks_tab: Control = %Landmarks
 @onready var back_button: Button = %BackButton
@@ -37,6 +39,7 @@ func refresh() -> void:
 	_update_completed_lives()
 	_update_locations()
 	_update_discoveries()
+	_update_fragments()
 	_update_landmarks()
 	_update_tab_visibility()
 
@@ -212,8 +215,46 @@ func _update_landmarks() -> void:
 	landmarks_log.text = journal_text
 
 
+func _update_fragments() -> void:
+	var civilization: CivilizationData = GameManager.current_civilization
+	if civilization == null or civilization.recovered_journal_fragments.is_empty():
+		fragments_log.text = "No journal fragments recovered."
+		return
+
+	var journal_text := ""
+	for record: RecoveredJournalFragment in civilization.recovered_journal_fragments:
+		if record == null or not record.is_valid():
+			continue
+		var fragment: JournalFragmentData = (
+			JournalFragmentDatabase.get_fragment(record.fragment_id)
+		)
+		if fragment == null:
+			continue
+		if not journal_text.is_empty():
+			journal_text += "\n\n"
+		journal_text += "[b]" + fragment.display_name + "[/b]"
+		journal_text += "\nAttribution: " + fragment.attribution
+		journal_text += (
+			"\nRecovered by " + record.recovered_by_name
+			+ " at " + record.location_name
+			+ " on Day " + str(record.day)
+			+ " — " + str(record.hour).pad_zeros(2)
+			+ ":" + str(record.minute).pad_zeros(2)
+		)
+		journal_text += "\n\n" + fragment.physical_description
+		journal_text += "\n\n[i]" + fragment.body + "[/i]"
+	fragments_log.text = journal_text
+
+
 func _update_tab_visibility() -> void:
 	var civilization: CivilizationData = GameManager.current_civilization
+	var fragments_index: int = journal_tabs.get_tab_idx_from_control(fragments_tab)
+	if fragments_index >= 0:
+		journal_tabs.set_tab_hidden(
+			fragments_index,
+			civilization == null
+			or civilization.recovered_journal_fragments.is_empty()
+		)
 	var tab_index: int = journal_tabs.get_tab_idx_from_control(landmarks_tab)
 	if tab_index < 0:
 		push_warning("Landmarks tab is not a direct child of JournalTabs.")

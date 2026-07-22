@@ -50,7 +50,6 @@ The goal is to create a playable survival experience lasting approximately 30–
 * Flint discovery and item
 * Meadow ambient event
 * Additional landmarks
-* Finnley’s first anonymous journal fragment
 * Discovery categories
 
 

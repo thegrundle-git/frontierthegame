@@ -105,6 +105,7 @@ func _start_event(
 
 
 	_record_matching_landmark(event)
+	_record_matching_journal_fragment(event)
 
 	if GameManager.game_ui != null:
 		GameManager.game_ui.add_event("")
@@ -113,6 +114,35 @@ func _start_event(
 		)
 
 	event_started.emit(event)
+
+
+func _record_matching_journal_fragment(event: WorldEventData) -> void:
+	var civilization: CivilizationData = GameManager.current_civilization
+	var survivor: Survivor = GameManager.current_survivor
+	if civilization == null or survivor == null or survivor.data == null:
+		return
+
+	for fragment_variant: Variant in JournalFragmentDatabase.get_all():
+		var fragment := fragment_variant as JournalFragmentData
+		if fragment == null or fragment.event_id != event.id:
+			continue
+		var record := RecoveredJournalFragment.new()
+		record.fragment_id = fragment.id
+		if GameManager.current_location != null:
+			record.location_id = GameManager.current_location.id
+			record.location_name = GameManager.current_location.display_name
+		record.recovered_by_id = survivor.data.character_id
+		record.recovered_by_name = survivor.data.display_name
+		record.day = maxi(TimeManager.day, 1)
+		record.hour = clampi(TimeManager.hour, 0, 23)
+		record.minute = clampi(TimeManager.minute, 0, 59)
+		if civilization.record_journal_fragment(record):
+			if GameManager.game_ui != null:
+				GameManager.game_ui.add_event(
+					"JOURNAL FRAGMENT RECOVERED: " + fragment.display_name
+				)
+				GameManager.game_ui.call_deferred("refresh_all")
+		return
 
 
 func _record_matching_landmark(
@@ -237,6 +267,10 @@ func _is_event_eligible(
 		and event.id in completed_event_ids
 	):
 		return false
+
+	for required_event_id: String in event.required_completed_event_ids:
+		if required_event_id not in completed_event_ids:
+			return false
 
 	if (
 		not event.trigger_action_ids.is_empty()

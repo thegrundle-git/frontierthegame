@@ -13,6 +13,7 @@ func load_events() -> void:
 
 	var event_paths: Array[String] = [
 		"res://resources/events/abandoned_campsite.tres",
+		"res://resources/events/fragment_beneath_ashes.tres",
 		"res://resources/events/meadow_change_in_wind.tres",
 		"res://resources/events/weathered_river_marker.tres"
 	]

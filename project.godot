@@ -31,6 +31,7 @@ TimeManager="*uid://bekt6l36bngmd"
 ActionManager="*uid://co7t7p8hapcmt"
 SaveManager="*uid://b8j52iihxbed4"
 NarrativeGenerator="*uid://ce4qf3hkjipjw"
+JournalFragmentDatabase="*res://scripts/autoload/JournalFragmentDatabase.gd"
 
 [display]
 
