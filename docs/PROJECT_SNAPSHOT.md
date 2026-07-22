@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.31-alpha1
+v0.6.0-alpha1
 
 ## Project Health
 
-🟢 Release ready — Complete Windows vertical-slice regression passed
+🟢 Released candidate — v0.6.0-alpha1 Windows package passed its final smoke test
 
 ## Current Milestone
 
@@ -306,8 +306,9 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Prepare the v0.6.0-alpha1 Vertical Slice release milestone.
+Merge and tag the verified v0.6.0-alpha1 Vertical Slice release.
 
 ## Next Goals
 
-* v0.6.0-alpha1 Vertical Slice release
+* Tag the verified v0.6.0-alpha1 release commit
+* Begin post-vertical-slice planning without expanding the release branch

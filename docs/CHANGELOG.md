@@ -4,6 +4,33 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.0-alpha1 — Vertical Slice
+
+### Release
+
+* Promoted the verified vertical-slice foundation to the `v0.6.0-alpha1` milestone.
+* Updated the Windows export target to `builds/v0.6.0-a1/Frontier.exe`.
+* Preserved the gameplay, interface, content, and save behavior validated during the `v0.5.31-alpha1` release-readiness pass.
+
+### Included
+
+* A complete 30–60 minute survival loop spanning exploration, gathering, discovery, crafting, equipment, Camp management, world events, landmarks, and recovered journal fragments.
+* Persistent civilization history, character life records, death, succession, and legacy summaries.
+* Responsive routed workspaces for Expedition, Camp, Storage, Crafting, Equipment, Journal, and Skills.
+
+### Save Compatibility
+
+* Save version remains 13.
+* Compatible older saves continue to use the existing defensive migration path.
+
+### Validation
+
+* The identical gameplay foundation passed the complete exported Windows regression at 1280×720 for `v0.5.31-alpha1`.
+* Exported and launched the final `v0.6.0-alpha1` Windows package successfully.
+* Confirmed New Game, Continue, exploration, Camp, Journal, navigation, and the responsive interface remain operational in the release package.
+
+---
+
 ## v0.5.31-alpha1 — Vertical Slice Release Readiness
 
 ### Changed
