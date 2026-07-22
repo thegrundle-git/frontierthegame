@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.30-alpha1
+v0.5.31-alpha1
 
 ## Project Health
 
-🟢 Stable — Anonymous journal fragment foundation passed gameplay testing
+🟢 Release ready — Complete Windows vertical-slice regression passed
 
 ## Current Milestone
 
@@ -306,8 +306,8 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Complete the Windows export regression and vertical-slice release-readiness pass.
+Prepare the v0.6.0-alpha1 Vertical Slice release milestone.
 
 ## Next Goals
 
-* Windows export regression pass for the interface foundation
+* v0.6.0-alpha1 Vertical Slice release

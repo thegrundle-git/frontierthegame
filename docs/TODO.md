@@ -3,11 +3,11 @@
 ## Critical
 
 * [x] Verify the core v0.5.2-alpha1 gameplay loop in an exported Windows build.
-* [ ] Verify the v0.5.4-alpha1 interface foundation at 1280×720 in an exported Windows build.
-* [ ] Confirm Track Animals awards XP only once.
-* [ ] Confirm wilderness search count persists after loading.
-* [ ] Confirm all four discoveries persist after loading.
-* [ ] Confirm discovery-gated action visibility refreshes correctly after Continue.
+* [x] Verify the current interface foundation at 1280×720 in an exported Windows build.
+* [x] Confirm Track Animals awards XP only once.
+* [x] Confirm wilderness search count persists after loading.
+* [x] Confirm all four discoveries persist after loading.
+* [x] Confirm discovery-gated action visibility refreshes correctly after Continue.
 
 ## High
 
