@@ -851,7 +851,9 @@ func show_world_event(
 	event: WorldEventData
 ) -> void:
 	event_title.text = event.display_name
-	event_body.text = event.description
+	event_body.text = NarrativeGenerator.render_contextual_text(
+		event.description
+	)
 
 	for child: Node in event_options.get_children():
 		child.queue_free()

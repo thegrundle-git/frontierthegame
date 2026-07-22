@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.27-alpha1
+v0.5.28-alpha1
 
 ## Project Health
 
-🟢 Stable — Data-driven narrative templates passed gameplay testing
+🟢 Stable — Meadow ambient event passed gameplay testing
 
 ## Current Milestone
 
@@ -22,7 +22,7 @@ Sprint 3 — The Age of Discovery
 * Items: 10
 * Recipes: 4
 * Discoveries: 4
-* World Events: 1
+* World Events: 2
 * Landmarks: 1
 * Registered World Actions: 3
 * External Testers: approximately 5
@@ -59,6 +59,9 @@ Sprint 3 — The Age of Discovery
 * Discoveries
 * Discoveries Journal
 * World Events
+* Successful-action world-event trigger integration
+* Contextual event narration after succession
+* Meadow ambient event: A Change in the Wind
 * Landmarks
 * Location-specific search loot
 * Visited-location tracking
@@ -294,11 +297,10 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Add the next authored vertical-slice world event and landmark content using the established data-driven foundations.
+Add the next authored landmark and journal-fragment content using the established data-driven foundations.
 
 ## Next Goals
 
 * Windows export regression pass for the interface foundation
-* Meadow ambient event
 * Additional landmarks
 * Finnley’s first journal fragment

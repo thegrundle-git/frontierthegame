@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="WorldEventData" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="2_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="3_event"]
+[ext_resource type="Resource" path="res://resources/items/herb.tres" id="4_herb"]
+
+[sub_resource type="Resource" id="HerbReward"]
+script = ExtResource("2_ingredient")
+item = ExtResource("4_herb")
+amount = 2
+
+[sub_resource type="Resource" id="ObserveOption"]
+script = ExtResource("1_option")
+id = "observe"
+display_text = "Stop and study the meadow"
+result_text = "{actor_name} waits while the wind crosses the grass in long waves. The shifting stems reveal sheltered hollows, animal paths, and the way the open land changes from moment to moment."
+skill_id = "exploration"
+xp_reward = 3
+knowledge_reward = 2
+game_minutes = 30
+
+[sub_resource type="Resource" id="GatherOption"]
+script = ExtResource("1_option")
+id = "gather"
+display_text = "Gather the exposed herbs"
+result_text = "The gusts bend the taller grass aside, and {actor_name} gathers two Wild Herbs that would otherwise have remained hidden."
+rewards = Array[ExtResource("2_ingredient")]([SubResource("HerbReward")])
+skill_id = "gathering"
+xp_reward = 3
+game_minutes = 20
+
+[sub_resource type="Resource" id="ContinueOption"]
+script = ExtResource("1_option")
+id = "continue"
+display_text = "Keep moving"
+result_text = "{actor_name} notes the changing weather and continues across the meadow before the open ground becomes less welcoming."
+skill_id = "exploration"
+xp_reward = 1
+
+[resource]
+script = ExtResource("3_event")
+id = "meadow_change_in_wind"
+display_name = "A Change in the Wind"
+description = "The insects fall quiet as a cool gust moves across the Meadow. Grass bends in widening rings around {actor_name}, briefly exposing paths and plants usually hidden beneath the stems."
+trigger_chance_percent = 30.0
+trigger_action_ids = Array[String](["search_area"])
+location_ids = Array[String](["meadow"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("ObserveOption"), SubResource("GatherOption"), SubResource("ContinueOption")])

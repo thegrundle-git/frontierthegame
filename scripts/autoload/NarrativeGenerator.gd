@@ -56,6 +56,20 @@ func generate_empty_search(
 	return _render_template("search_empty", location.id, context)
 
 
+func render_contextual_text(text: String) -> String:
+	var survivor: Survivor = GameManager.current_survivor
+	var actor_name := "The survivor"
+	if survivor != null and survivor.data != null:
+		actor_name = survivor.data.display_name
+	var context := _build_context(
+		actor_name,
+		GameManager.current_location,
+		null,
+		0
+	)
+	return _render_text(text, context)
+
+
 func _build_template_index() -> void:
 	_templates_by_key.clear()
 
@@ -78,7 +92,18 @@ func _render_template(
 		return ""
 
 	var variant := _pick_string(template.variants)
-	return template.render_variant(variant, context)
+	return _render_text(variant, context)
+
+
+func _render_text(text: String, context: Dictionary) -> String:
+	var rendered := text
+	for key_variant: Variant in context:
+		var key := str(key_variant)
+		rendered = rendered.replace(
+			"{" + key + "}",
+			str(context[key_variant])
+		)
+	return rendered
 
 
 func _get_template(

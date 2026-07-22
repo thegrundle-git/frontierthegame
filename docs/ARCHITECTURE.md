@@ -345,6 +345,12 @@ Each `EventOptionData` may provide:
 
 `WorldEventManager` tracks pending events and completed one-time events.
 
+`GameManager._complete_world_action()` asks `WorldEventManager` to roll eligible events only after an action's completion script returns success. Eligibility remains data-driven through action and location IDs, and failed actions never create encounters. A pending event continues to block new actions until one option resolves.
+
+Event descriptions and option outcomes may contain the same contextual tokens used by authored narration. `GameUI` and `WorldEventManager` request rendering through `NarrativeGenerator`, allowing the active survivor identity to appear correctly after succession without moving rewards or event state into presentation code.
+
+The Meadow's **A Change in the Wind** is a one-time `search_area` event with three existing-system outcomes. Completion uses the established `completed_event_ids` save path; no new persistence shape or event manager was added.
+
 Normal actions are disabled while an event choice is unresolved.
 
 ---

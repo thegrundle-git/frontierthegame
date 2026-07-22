@@ -209,7 +209,9 @@ func _apply_option(option: EventOptionData) -> void:
 
 	if GameManager.game_ui != null:
 		GameManager.game_ui.add_event(
-			option.result_text
+			NarrativeGenerator.render_contextual_text(
+				option.result_text
+			)
 		)
 
 
