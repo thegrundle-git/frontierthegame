@@ -4,6 +4,37 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.27-alpha1 — Data-Driven Narrative Templates
+
+### Added
+
+* Typed `NarrativeTemplateData` Resources with authored variant pools and contextual token substitution.
+* Search-opening templates for Forest, River, Meadow, and unknown-location fallback narration.
+* Location-specific empty-search templates and item-specific discovery text with safe fallbacks.
+* Context tokens for actor, location, item, quantity, day, and time.
+
+### Changed
+
+* Moved existing atmospheric search phrases out of `NarrativeGenerator.gd` and into authored Resources.
+* Kept `NarrativeGenerator` as the centralized authority for indexing, fallback selection, random variation, and rendering.
+* Tightened Chronicle spacing so one action's start, narration, result, and completion remain readable as a compact block.
+
+### Verified
+
+* Manual gameplay testing passed for successful and empty searches, location-appropriate variation, item results, Chronicle blocks, and existing progression behavior.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 12 because narrative templates and Chronicle spacing change presentation without adding persistent state.
+
+### Not Included
+
+* Dialogue, generated biographies, AI-authored prose, relationship narration, event-template migration, and additional gameplay content remain future work.
+
+---
+
 ## v0.5.26-alpha1 — Skills Interface Foundation
 
 ### Added

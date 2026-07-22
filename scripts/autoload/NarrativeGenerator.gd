@@ -1,11 +1,32 @@
 extends Node
 
 
+const DEFAULT_SELECTOR_ID := "default"
+const SEARCH_TEMPLATES: Array[NarrativeTemplateData] = [
+	preload("res://resources/narrative/search/opening_forest.tres"),
+	preload("res://resources/narrative/search/opening_river.tres"),
+	preload("res://resources/narrative/search/opening_meadow.tres"),
+	preload("res://resources/narrative/search/opening_default.tres"),
+	preload("res://resources/narrative/search/empty_forest.tres"),
+	preload("res://resources/narrative/search/empty_river.tres"),
+	preload("res://resources/narrative/search/empty_meadow.tres"),
+	preload("res://resources/narrative/search/empty_default.tres"),
+	preload("res://resources/narrative/search/find_stick.tres"),
+	preload("res://resources/narrative/search/find_stone.tres"),
+	preload("res://resources/narrative/search/find_berry.tres"),
+	preload("res://resources/narrative/search/find_herb.tres"),
+	preload("res://resources/narrative/search/find_flower.tres"),
+	preload("res://resources/narrative/search/find_default.tres")
+]
+
+
 var random := RandomNumberGenerator.new()
+var _templates_by_key: Dictionary = {}
 
 
 func _ready() -> void:
 	random.randomize()
+	_build_template_index()
 
 
 func generate_search_find(
@@ -17,22 +38,11 @@ func generate_search_find(
 	if location == null or item == null:
 		return actor_name + " found something useful."
 
-	var opening := _pick_string(
-		_get_search_openings(location.id)
-	)
+	var context := _build_context(actor_name, location, item, amount)
+	var opening := _render_template("search_opening", location.id, context)
+	var discovery := _render_template("search_find", item.id, context)
 
-	var discovery := _pick_string(
-		_get_item_discoveries(item.id)
-	)
-
-	return (
-		actor_name
-		+ " "
-		+ opening
-		+ " "
-		+ discovery
-		+ _format_amount_suffix(amount)
-	)
+	return opening + " " + discovery + _format_amount_suffix(amount)
 
 
 func generate_empty_search(
@@ -40,149 +50,80 @@ func generate_empty_search(
 	location: LocationData
 ) -> String:
 	if location == null:
-		return (
-			actor_name
-			+ " searched for a while but found nothing useful."
-		)
+		return actor_name + " searched for a while but found nothing useful."
 
-	var empty_result := _pick_string(
-		_get_empty_search_results(location.id)
-	)
-
-	return actor_name + " " + empty_result
+	var context := _build_context(actor_name, location, null, 0)
+	return _render_template("search_empty", location.id, context)
 
 
-func _get_search_openings(
-	location_id: String
-) -> Array[String]:
-	match location_id:
-		"forest":
-			return [
-				"searched beneath the tangled canopy.",
-				"picked carefully through the undergrowth.",
-				"followed a narrow opening between the trees.",
-				"searched among roots, moss, and fallen branches."
-			]
+func _build_template_index() -> void:
+	_templates_by_key.clear()
 
-		"river":
-			return [
-				"searched along the damp riverbank.",
-				"followed the edge of the slow-moving water.",
-				"picked through debris left behind by the current.",
-				"searched where mud and exposed roots met the water."
-			]
-
-		"meadow":
-			return [
-				"moved slowly through the tall grass.",
-				"searched among the sunlit plants.",
-				"followed faint trails through the meadow.",
-				"parted the grass and examined the ground beneath."
-			]
-
-		_:
-			return [
-				"searched the surrounding area.",
-				"looked carefully across the nearby ground."
-			]
+	for template: NarrativeTemplateData in SEARCH_TEMPLATES:
+		if template == null or template.category.is_empty():
+			continue
+		var selector_id := template.selector_id
+		if selector_id.is_empty():
+			selector_id = DEFAULT_SELECTOR_ID
+		_templates_by_key[_template_key(template.category, selector_id)] = template
 
 
-func _get_item_discoveries(
-	item_id: String
-) -> Array[String]:
-	match item_id:
-		"stick":
-			return [
-				"A dry stick lay caught among the vegetation.",
-				"A usable stick had fallen clear of the damp ground.",
-				"Among the debris was a straight piece of wood worth carrying."
-			]
-
-		"stone":
-			return [
-				"A solid stone stood out from the loose earth.",
-				"A smooth stone had been exposed by weather and passing water.",
-				"Among the smaller fragments was a stone with useful weight."
-			]
-
-		"berry":
-			return [
-				"A cluster of Wild Berries remained untouched on a low plant.",
-				"Dark Wild Berries were growing beneath the leaves.",
-				"A small patch of ripe Wild Berries had escaped the animals."
-			]
-
-		"herb":
-			return [
-				"The sharp scent of crushed leaves revealed a patch of Wild Herb.",
-				"Wild Herb grew where the grass had recently been disturbed.",
-				"A hardy patch of Wild Herb stood above the surrounding plants."
-			]
-
-		"flower":
-			return [
-				"A Wild Flower rose above the grass on a narrow green stem.",
-				"Bright petals marked the location of a Wild Flower.",
-				"A single Wild Flower had survived among the taller plants."
-			]
-
-		_:
-			return [
-				"Something useful was found nearby.",
-				"The search uncovered an item worth keeping."
-			]
-
-
-func _get_empty_search_results(
-	location_id: String
-) -> Array[String]:
-	match location_id:
-		"forest":
-			return [
-				"searched beneath the trees but found only damp leaves and rotten wood.",
-				"followed several promising signs, but none led to anything useful.",
-				"searched the undergrowth and returned empty-handed."
-			]
-
-		"river":
-			return [
-				"searched the riverbank but found only mud and waterlogged debris.",
-				"followed the current for a while without finding anything useful.",
-				"searched between the exposed roots and came away empty-handed."
-			]
-
-		"meadow":
-			return [
-				"searched through the tall grass but found nothing worth carrying.",
-				"followed several faint trails that ended without reward.",
-				"searched among the flowers and insects but found nothing useful."
-			]
-
-		_:
-			return [
-				"searched carefully but found nothing useful.",
-				"returned from the search empty-handed."
-			]
-
-
-func _format_amount_suffix(
-	amount: int
+func _render_template(
+	category: String,
+	selector_id: String,
+	context: Dictionary
 ) -> String:
-	if amount <= 1:
+	var template := _get_template(category, selector_id)
+	if template == null or template.variants.is_empty():
 		return ""
 
+	var variant := _pick_string(template.variants)
+	return template.render_variant(variant, context)
+
+
+func _get_template(
+	category: String,
+	selector_id: String
+) -> NarrativeTemplateData:
+	var key := _template_key(category, selector_id)
+	if _templates_by_key.has(key):
+		return _templates_by_key[key] as NarrativeTemplateData
+
+	var fallback_key := _template_key(category, DEFAULT_SELECTOR_ID)
+	if _templates_by_key.has(fallback_key):
+		return _templates_by_key[fallback_key] as NarrativeTemplateData
+
+	return null
+
+
+func _build_context(
+	actor_name: String,
+	location: LocationData,
+	item: ItemData,
+	amount: int
+) -> Dictionary:
+	return {
+		"actor_name": actor_name,
+		"location_name": location.display_name if location != null else "the wilderness",
+		"item_name": item.display_name if item != null else "",
+		"amount": amount,
+		"day": TimeManager.day,
+		"time": TimeManager.get_time_text()
+	}
+
+
+func _template_key(category: String, selector_id: String) -> String:
+	return category + ":" + selector_id
+
+
+func _format_amount_suffix(amount: int) -> String:
+	if amount <= 1:
+		return ""
 	return " Several were gathered."
 
 
-func _pick_string(
-	options: Array[String]
-) -> String:
+func _pick_string(options: Array[String]) -> String:
 	if options.is_empty():
 		return ""
-
-	var index: int = random.randi_range(
-		0,
-		options.size() - 1
-	)
-
+	var index: int = random.randi_range(0, options.size() - 1)
 	return options[index]

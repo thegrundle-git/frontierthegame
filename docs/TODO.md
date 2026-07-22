@@ -11,7 +11,7 @@
 
 ## High
 
-* [ ] Move narrative phrases into NarrativeTemplateData resources.
+* [x] Move narrative phrases into NarrativeTemplateData resources.
 * [ ] Add Flint item and discovery.
 * [ ] Add first tracking-specific item or observation.
 * [ ] Add a Meadow ambient event.
@@ -42,7 +42,7 @@
 * [x] Present Expedition Pack contents in two balanced columns.
 * [x] Expand basic equipment controls into a dedicated multi-slot equipment panel.
 * [x] Refine Equipment with visual slots, hover details, and stronger selection states.
-* [ ] Replace the text-only Skills summary with an icon-and-level grid.
+* [x] Replace the text-only Skills summary with an icon-and-level grid.
 * [x] Add the first modular Stone Axe component-crafting chain.
 * [x] Add unique equipment instances with stable identity and crafting provenance.
 * [x] Preserve complete selected-component history on equipment instances.

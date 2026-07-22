@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="NarrativeTemplateData" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/resources/NarrativeTemplateData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+category = "search_find"
+selector_id = "stick"
+variants = Array[String](["A dry stick lay caught among the vegetation.", "A usable stick had fallen clear of the damp ground.", "Among the debris was a straight piece of wood worth carrying."])

@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://baqm7w2ms734e"]
+[gd_scene format=3 uid="uid://baqm7w2ms734e"]
 
 [ext_resource type="Script" uid="uid://1bobkraw02vv" path="res://scripts/ui/GameUI.gd" id="1_r8hcy"]
 [ext_resource type="PackedScene" uid="uid://dgmcykvgvwvpm" path="res://scenes/ui/HomeUI.tscn" id="2_3pxe2"]
@@ -85,7 +85,7 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="LocationHeading" type="Label" parent="ScreenMargin/MainLayout/LocationPanel/LocationLayout"]
+[node name="LocationHeading" type="Label" parent="ScreenMargin/MainLayout/LocationPanel/LocationLayout" unique_id=1157537139]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "CURRENT LOCATION"
@@ -117,14 +117,13 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="SurvivorHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout"]
+[node name="SurvivorHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=877682073]
 layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "SURVIVOR"
 
-[node name="SkillsPanel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" instance=ExtResource("11_skills")]
+[node name="SkillsPanel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=1215505222 instance=ExtResource("11_skills")]
 unique_name_in_owner = true
-layout_mode = 2
 
 [node name="ToolLabel" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=1304822072]
 unique_name_in_owner = true
@@ -132,7 +131,7 @@ layout_mode = 2
 text = "Equipped Tool:
 None"
 
-[node name="OpenEquipmentButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout"]
+[node name="OpenEquipmentButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=97549561]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
@@ -148,23 +147,23 @@ size_flags_vertical = 3
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="InventoryHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout"]
+[node name="InventoryHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=190677812]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "EXPEDITION PACK"
 
-[node name="InventoryColumns" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout"]
+[node name="InventoryColumns" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=251924023]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="InventoryLeftLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/InventoryColumns"]
+[node name="InventoryLeftLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/InventoryColumns" unique_id=1115231252]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="InventoryRightLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/InventoryColumns"]
+[node name="InventoryRightLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/InventoryColumns" unique_id=279567800]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -176,7 +175,7 @@ size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.5
 theme_override_constants/separation = 6
 
-[node name="UpperRightRegion" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn"]
+[node name="UpperRightRegion" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=1148632449]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 190)
 layout_mode = 2
@@ -201,7 +200,7 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 14
 text = "AVAILABLE ACTIONS"
 
-[node name="ActionsContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout"]
+[node name="ActionsContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/ActionsPanel/ActionsLayout" unique_id=595562885]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -230,7 +229,7 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 14
 text = "TRAVEL"
 
-[node name="TravelContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout"]
+[node name="TravelContentScroll" type="ScrollContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/UpperRightRegion/TravelPanel/TravelLayout" unique_id=1986350873]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
@@ -242,63 +241,63 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
 
-[node name="HomeAccessPanel" type="PanelContainer" parent="ScreenMargin/MainLayout"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="HomeAccessLayout" type="HBoxContainer" parent="ScreenMargin/MainLayout/HomeAccessPanel"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="HomeAccessText" type="Label" parent="ScreenMargin/MainLayout/HomeAccessPanel/HomeAccessLayout"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Camp is available here. Enter it to use storage, crafting, and equipment facilities."
-autowrap_mode = 3
-
-[node name="EnterCampButton" type="Button" parent="ScreenMargin/MainLayout/HomeAccessPanel/HomeAccessLayout"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 42)
-layout_mode = 2
-tooltip_text = "Enter the camp workspace."
-text = "Enter Camp"
-
-[node name="ChroniclePanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn"]
+[node name="ChroniclePanel" type="PanelContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn" unique_id=2024230940]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 6.0
 
-[node name="ChronicleLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel"]
+[node name="ChronicleLayout" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel" unique_id=1500663115]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChronicleHeader" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout"]
+[node name="ChronicleHeader" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout" unique_id=291470082]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChronicleHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout/ChronicleHeader"]
+[node name="ChronicleHeading" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout/ChronicleHeader" unique_id=1928905372]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 text = "CHRONICLE"
 
-[node name="OpenJournalButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout/ChronicleHeader"]
+[node name="OpenJournalButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout/ChronicleHeader" unique_id=1371199083]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 42)
 layout_mode = 2
 tooltip_text = "Open the Journal workspace."
 text = "Open Journal"
 
-[node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout"]
+[node name="EventLog" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/RightColumn/ChroniclePanel/ChronicleLayout" unique_id=1339969167]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 focus_mode = 2
-theme_override_constants/line_separation = 3
+theme_override_constants/line_separation = 1
 scroll_following = true
 selection_enabled = true
+
+[node name="HomeAccessPanel" type="PanelContainer" parent="ScreenMargin/MainLayout" unique_id=1123319201]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="HomeAccessLayout" type="HBoxContainer" parent="ScreenMargin/MainLayout/HomeAccessPanel" unique_id=393920568]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HomeAccessText" type="Label" parent="ScreenMargin/MainLayout/HomeAccessPanel/HomeAccessLayout" unique_id=2125764648]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Camp is available here. Enter it to use storage, crafting, and equipment facilities."
+autowrap_mode = 3
+
+[node name="EnterCampButton" type="Button" parent="ScreenMargin/MainLayout/HomeAccessPanel/HomeAccessLayout" unique_id=2123794229]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 42)
+layout_mode = 2
+tooltip_text = "Enter the camp workspace."
+text = "Enter Camp"
 
 [node name="EventOverlay" type="CenterContainer" parent="." unique_id=1164358211]
 unique_name_in_owner = true
@@ -344,17 +343,17 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CraftingUI" parent="." instance=ExtResource("8_crafting")]
+[node name="CraftingUI" parent="." unique_id=1924735201 instance=ExtResource("8_crafting")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="EquipmentUI" parent="." instance=ExtResource("9_equipment")]
+[node name="EquipmentUI" parent="." unique_id=2106758594 instance=ExtResource("9_equipment")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="JournalUI" parent="." instance=ExtResource("10_journal")]
+[node name="JournalUI" parent="." unique_id=1723118161 instance=ExtResource("10_journal")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -369,22 +368,21 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="CampNavigation" parent="." instance=ExtResource("7_camp_navigation")]
+[node name="CampNavigation" parent="." unique_id=1777287507 instance=ExtResource("7_camp_navigation")]
+unique_name_in_owner = true
+visible = false
+
+[node name="LegacySummaryScreen" parent="." unique_id=826768548 instance=ExtResource("4_legacy")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="LegacySummaryScreen" parent="." instance=ExtResource("4_legacy")]
+[node name="SuccessionScreen" parent="." unique_id=261941330 instance=ExtResource("5_successor")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="SuccessionScreen" parent="." instance=ExtResource("5_successor")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-
-[node name="DebugDeathButton" type="Button" parent="."]
+[node name="DebugDeathButton" type="Button" parent="." unique_id=694317116]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -396,8 +394,8 @@ offset_top = 8.0
 offset_right = -8.0
 offset_bottom = 50.0
 grow_horizontal = 0
-text = "Test Character Death"
 tooltip_text = "Debug only: finalize the current character's life."
+text = "Test Character Death"
 
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="ScreenMargin/MainLayout/HeaderPanel/HeaderLayout/LoadButton" to="." method="_on_load_button_pressed"]
