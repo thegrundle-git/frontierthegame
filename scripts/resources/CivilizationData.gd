@@ -25,8 +25,29 @@ var unlocked_recipe_ids: Array[String] = []
 var history_entries: Array[CivilizationHistoryEntry] = []
 var archived_lives: Array[ArchivedCharacterLife] = []
 var equipment_disassembly_records: Array[EquipmentDisassemblyRecord] = []
+var recovered_journal_fragments: Array[RecoveredJournalFragment] = []
 var next_character_sequence: int = 1
 var next_item_instance_sequence: int = 1
+
+
+func has_recovered_journal_fragment(fragment_id: String) -> bool:
+	if fragment_id.is_empty():
+		return false
+	for record: RecoveredJournalFragment in recovered_journal_fragments:
+		if record != null and record.fragment_id == fragment_id:
+			return true
+	return false
+
+
+func record_journal_fragment(record: RecoveredJournalFragment) -> bool:
+	if (
+		record == null
+		or not record.is_valid()
+		or has_recovered_journal_fragment(record.fragment_id)
+	):
+		return false
+	recovered_journal_fragments.append(record)
+	return true
 
 
 func record_equipment_disassembly(record: EquipmentDisassemblyRecord) -> bool:

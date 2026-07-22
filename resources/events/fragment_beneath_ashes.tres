@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="WorldEventData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="2_event"]
+
+[sub_resource type="Resource" id="ReadOption"]
+script = ExtResource("1_option")
+id = "read"
+display_text = "Read the surviving lines"
+result_text = "{actor_name} carefully unfolds the smoke-darkened fragment. The surviving lines mention rain, a marked river stone, and a crossing the unknown writer hoped to find again."
+skill_id = "exploration"
+xp_reward = 4
+knowledge_reward = 2
+game_minutes = 25
+
+[sub_resource type="Resource" id="PreserveOption"]
+script = ExtResource("1_option")
+id = "preserve"
+display_text = "Preserve it without unfolding it further"
+result_text = "{actor_name} protects the brittle fragment from further damage. Its surviving words can be studied later without risking the last traces of writing."
+skill_id = "exploration"
+xp_reward = 2
+knowledge_reward = 1
+game_minutes = 10
+
+[resource]
+script = ExtResource("2_event")
+id = "fragment_beneath_ashes"
+display_name = "A Page Beneath the Ashes"
+description = "Returning to the abandoned campsite, {actor_name} notices a folded scrap protected beneath the edge of the cold fire ring. Smoke has darkened it, but several lines of writing remain."
+trigger_chance_percent = 40.0
+trigger_action_ids = Array[String](["search_area"])
+location_ids = Array[String](["forest"])
+required_completed_event_ids = Array[String](["abandoned_campsite"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("ReadOption"), SubResource("PreserveOption")])

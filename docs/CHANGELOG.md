@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.5.30-alpha1 — Anonymous Journal Fragment Foundation
+
+### Added
+
+* Typed authored `JournalFragmentData` and civilization-owned `RecoveredJournalFragment` records.
+* **Fragment Beneath the Ashes**, an anonymously attributed recovered writing connected to existing environmental evidence.
+* Follow-up Forest event **A Page Beneath the Ashes**, gated by completion of the Abandoned Campsite encounter.
+* Dedicated Fragments Journal tab showing text, attribution, physical evidence, finder, place, and recovery timestamp.
+* Journal-fragment database and save version 13 serialization.
+
+### Changed
+
+* World events may require completion of earlier event IDs before becoming eligible.
+* Abandoned Campsite narration now resolves the active survivor's name after succession.
+* Fragment recovery records durable evidence without directly identifying its author as Finnley.
+
+### Verified
+
+* Manual gameplay testing passed for prerequisite gating, recovery, Journal rendering, contextual identity, once-only behavior, and save/load persistence.
+* Version 12 saves load without fabricating fragment records and may discover the follow-up event naturally.
+* Godot 4.7 headless validation completed successfully.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version increased from 12 to 13. Versions 1 through 12 remain supported and load with an empty recovered-fragment collection.
+
+### Not Included
+
+* Confirmed authorship, handwriting analysis, translation, fragment combination, lore conclusions, archaeology, or a general document editor remain future work.
+
+---
+
 ## v0.5.29-alpha1 — Weathered River Marker
 
 ### Added

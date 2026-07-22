@@ -26,7 +26,7 @@ Make learning expand the player’s understanding of the world and unlock new po
 * [ ] Add a second tracking-related discovery
 * [ ] Add a Meadow ambient event
 * [ ] Add a second landmark
-* [ ] Add Finnley’s first anonymous journal fragment
+* [x] Add Finnley’s first anonymous journal fragment
 
 ### Stretch Goals
 

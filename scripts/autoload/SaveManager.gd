@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 12
+const SAVE_VERSION := 13
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -184,6 +184,9 @@ func _build_save_data() -> Dictionary:
 			),
 			"equipment_disassembly_records": _serialize_disassembly_records(
 				civilization.equipment_disassembly_records
+			),
+			"recovered_journal_fragments": _serialize_recovered_journal_fragments(
+				civilization.recovered_journal_fragments
 			),
 			"next_character_sequence": civilization.next_character_sequence,
 			"next_item_instance_sequence": civilization.next_item_instance_sequence,
@@ -392,6 +395,26 @@ func _serialize_archived_lives(
 		})
 
 	return archive_data
+
+
+func _serialize_recovered_journal_fragments(
+	records: Array[RecoveredJournalFragment]
+) -> Array[Dictionary]:
+	var data: Array[Dictionary] = []
+	for record: RecoveredJournalFragment in records:
+		if record == null or not record.is_valid():
+			continue
+		data.append({
+			"fragment_id": record.fragment_id,
+			"location_id": record.location_id,
+			"location_name": record.location_name,
+			"recovered_by_id": record.recovered_by_id,
+			"recovered_by_name": record.recovered_by_name,
+			"day": record.day,
+			"hour": record.hour,
+			"minute": record.minute,
+		})
+	return data
 
 
 func _serialize_disassembly_records(
@@ -1172,7 +1195,35 @@ func _apply_civilization_data(
 		civilization_data.get("equipment_disassembly_records", [])
 	)
 
+	_apply_recovered_journal_fragments(
+		civilization,
+		civilization_data.get("recovered_journal_fragments", [])
+	)
+
 	civilization.synchronize_unlocked_recipes()
+
+
+func _apply_recovered_journal_fragments(
+	civilization: CivilizationData,
+	records_data: Variant
+) -> void:
+	civilization.recovered_journal_fragments.clear()
+	if records_data is not Array:
+		return
+	for value: Variant in records_data:
+		if value is not Dictionary:
+			continue
+		var data: Dictionary = value
+		var record := RecoveredJournalFragment.new()
+		record.fragment_id = str(data.get("fragment_id", ""))
+		record.location_id = str(data.get("location_id", ""))
+		record.location_name = str(data.get("location_name", ""))
+		record.recovered_by_id = str(data.get("recovered_by_id", ""))
+		record.recovered_by_name = str(data.get("recovered_by_name", ""))
+		record.day = maxi(int(data.get("day", 1)), 1)
+		record.hour = clampi(int(data.get("hour", 0)), 0, 23)
+		record.minute = clampi(int(data.get("minute", 0)), 0, 59)
+		civilization.record_journal_fragment(record)
 
 
 func _apply_equipment_disassembly_data(

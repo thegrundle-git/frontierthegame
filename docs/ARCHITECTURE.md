@@ -361,6 +361,18 @@ Normal actions are disabled while an event choice is unresolved.
 
 The Weathered River Marker uses this existing link without adding parallel discovery state. Its authored description separates observable facts—worked surfaces, regular grooves, and position above the flood line—from uncertain interpretation. Completed-event and discovered-landmark IDs already persist in save version 12.
 
+### Recovered Journal Fragments
+
+`JournalFragmentData` is immutable authored content resolved through `JournalFragmentDatabase`. It owns the fragment ID, display title, unknown or confirmed attribution, physical description, surviving text, and event link. It does not store player-specific recovery state.
+
+`RecoveredJournalFragment` is the civilization-owned durable record of discovery. It stores the fragment ID, finder identity snapshot, location, and exact in-game timestamp. `CivilizationData` rejects duplicate fragment IDs, while `WorldEventManager` creates the record when the matching event begins and announces recovery through the Chronicle.
+
+`WorldEventData.required_completed_event_ids` supports authored follow-up encounters without hardcoding event chains in `GameManager`. **A Page Beneath the Ashes** requires the Abandoned Campsite event, allowing older saves that already completed the campsite to recover the fragment naturally rather than receiving invented retroactive history.
+
+`JournalUI` renders recovered records in a dedicated Fragments tab that remains hidden until the civilization owns at least one record. Presentation resolves authored text from the database and recovery facts from civilization state without mutating either.
+
+Save version 13 serializes recovered-fragment records in insertion order. Versions 1 through 12 load with an empty collection; no author, finder, place, or date is reconstructed from unrelated state.
+
 ---
 
 ## User Interface

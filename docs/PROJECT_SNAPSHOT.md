@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.29-alpha1
+v0.5.30-alpha1
 
 ## Project Health
 
-🟢 Stable — Weathered River Marker passed gameplay testing
+🟢 Stable — Anonymous journal fragment foundation passed gameplay testing
 
 ## Current Milestone
 
@@ -22,8 +22,9 @@ Sprint 3 — The Age of Discovery
 * Items: 10
 * Recipes: 4
 * Discoveries: 4
-* World Events: 3
+* World Events: 4
 * Landmarks: 2
+* Recovered Journal Fragments: 1
 * Registered World Actions: 3
 * External Testers: approximately 5
 
@@ -65,6 +66,11 @@ Sprint 3 — The Age of Discovery
 * Meadow ambient event: A Change in the Wind
 * River landmark event: Marks Above the Flood Line
 * Explicit Chronicle confirmation for world-event item rewards
+* Authored anonymous journal fragments
+* Civilization-owned fragment recovery records
+* Prerequisite-gated follow-up world events
+* Dedicated Journal Fragments tab
+* Save version 13 fragment serialization and migration
 * Landmarks
 * Location-specific search loot
 * Visited-location tracking
@@ -300,9 +306,8 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Add Finnley's first authored journal fragment using the established discovery and Journal foundations.
+Complete the Windows export regression and vertical-slice release-readiness pass.
 
 ## Next Goals
 
 * Windows export regression pass for the interface foundation
-* Finnley’s first journal fragment

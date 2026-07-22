@@ -13,6 +13,7 @@ var trigger_chance_percent: float = 10.0
 
 @export var trigger_action_ids: Array[String] = []
 @export var location_ids: Array[String] = []
+@export var required_completed_event_ids: Array[String] = []
 
 @export var once_only: bool = false
 
