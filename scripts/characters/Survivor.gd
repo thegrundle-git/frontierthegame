@@ -109,6 +109,17 @@ func gain_skill_xp(
 		skill.add_xp(amount)
 	)
 
+	if levels_gained > 0:
+		AudioFeedbackManager.play_level_up(skill_id)
+	else:
+		AudioFeedbackManager.play_xp_gained(skill_id)
+
+	if GameManager.game_ui != null:
+		GameManager.game_ui.show_xp_popup(
+			amount,
+			skill.display_name
+		)
+
 	if (
 		levels_gained > 0
 		and data != null

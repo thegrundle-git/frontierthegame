@@ -4,6 +4,41 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.1-alpha1 — Living Frontier Presentation Foundation
+
+### Added
+
+* Centralized `AudioFeedbackManager` with original procedurally synthesized progression audio.
+* An adaptive eight-note wilderness melody that advances across consecutive XP awards and resets after ten seconds without progression.
+* Skill-specific natural timbres: birdlike chirps for Exploration, wood knocks for Gathering, stone clacks for Crafting, and low drums for Strength.
+* A distinct organic level-up flourish that replaces the ordinary XP note instead of overlapping it.
+* Mouse-adjacent XP popups showing the real amount and skill, with viewport clamping, vertical stacking, rise, and fade behavior.
+* Original painterly Forest, River, Meadow, and Home interface backgrounds.
+
+### Changed
+
+* Exploration and routed workspaces now select their background from the current location or active Camp context.
+* Former opaque workspace backdrops now display the selected environment artwork directly, preventing the underlying interface from showing through.
+* Standard panels use restrained translucency and subtle borders while modal panels remain more opaque.
+* Camp navigation remains fully opaque so the underlying location header cannot compete with its controls.
+* Track Animals is now available at the River after the existing Animal Tracks discovery requirement is met.
+
+### Validation
+
+* Godot editor import and startup validation passed.
+* Manual testing passed for progression audio, melody timing, stacked XP popups, biome changes, Camp and field workspaces, panel readability, workspace layering, Camp navigation, and River tracking.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. Audio, transient XP feedback, visual themes, and River action availability add no persistent fields.
+
+### Not Included
+
+* Material-family color coding, additional resources, discoveries, recipes, actions, and new world events remain planned follow-up work for the Living Frontier expansion.
+
+---
+
 ## v0.6.0-alpha1 — Vertical Slice
 
 ### Release
