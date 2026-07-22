@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="NarrativeTemplateData" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/resources/NarrativeTemplateData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+category = "search_find"
+selector_id = "stone"
+variants = Array[String](["A solid stone stood out from the loose earth.", "A smooth stone had been exposed by weather and passing water.", "Among the smaller fragments was a stone with useful weight."])

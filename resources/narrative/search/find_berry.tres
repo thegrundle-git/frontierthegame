@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="NarrativeTemplateData" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/resources/NarrativeTemplateData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+category = "search_find"
+selector_id = "berry"
+variants = Array[String](["A cluster of Wild Berries remained untouched on a low plant.", "Dark Wild Berries were growing beneath the leaves.", "A small patch of ripe Wild Berries had escaped the animals."])

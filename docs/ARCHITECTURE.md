@@ -695,7 +695,11 @@ Narration currently varies by:
 
 The clear mechanical reward remains separate from narrative text.
 
-Current implementation stores phrase pools in code. Future versions should move these phrases into authored resource files.
+`NarrativeTemplateData` is the typed authored unit for one narrative category and selector. Search openings and empty results are selected by location ID, while successful find text is selected by item ID. Every category includes a `default` Resource so new locations and items degrade to truthful generic narration instead of requiring code changes.
+
+Templates support explicit context tokens for actor, location, item, quantity, day, and time. `NarrativeGenerator` builds that context, indexes authored Resources, selects a random variant, applies category fallback, and renders tokens. Resources own prose but do not choose rewards, mutate search results, award progression, or write directly to the Chronicle.
+
+`SearchAction` continues to request narration through the existing public generator methods. Its inventory, discovery, history, life-record, and Chronicle paths remain unchanged. Save version remains 12 because authored narration is project content rather than persistent session state.
 
 ## Discovery Sources
 

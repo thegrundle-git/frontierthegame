@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.5.26-alpha1
+v0.5.27-alpha1
 
 ## Project Health
 
-🟢 Stable — Skills interface foundation passed gameplay testing
+🟢 Stable — Data-driven narrative templates passed gameplay testing
 
 ## Current Milestone
 
@@ -115,6 +115,10 @@ Sprint 3 — The Age of Discovery
 * Two-column icon-and-level Skills grid
 * Data-driven skill presentation metadata
 * Skill XP progress bars and bounded near-instant hover details
+* Typed data-driven narrative templates
+* Location- and item-selected search narration with fallback pools
+* Narrative context tokens for actor, place, item, quantity, day, and time
+* Compact Chronicle action blocks
 * Civilization History Ledger
 * Dedicated Journal History tab
 * Unique persistent civilization milestones
@@ -290,12 +294,11 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Validate the completed exploration-interface foundations together and select the next vertical-slice gameplay milestone.
+Add the next authored vertical-slice world event and landmark content using the established data-driven foundations.
 
 ## Next Goals
 
 * Windows export regression pass for the interface foundation
-* Data-driven narrative templates
 * Meadow ambient event
 * Additional landmarks
 * Finnley’s first journal fragment

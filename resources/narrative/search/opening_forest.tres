@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="NarrativeTemplateData" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/resources/NarrativeTemplateData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+category = "search_opening"
+selector_id = "forest"
+variants = Array[String](["{actor_name} searched beneath the tangled canopy.", "{actor_name} picked carefully through the undergrowth.", "{actor_name} followed a narrow opening between the trees.", "{actor_name} searched among roots, moss, and fallen branches."])

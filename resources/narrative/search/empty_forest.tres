@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="NarrativeTemplateData" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/resources/NarrativeTemplateData.gd" id="1"]
+[resource]
+script = ExtResource("1")
+category = "search_empty"
+selector_id = "forest"
+variants = Array[String](["{actor_name} searched beneath the trees but found only damp leaves and rotten wood.", "{actor_name} followed several promising signs, but none led to anything useful.", "{actor_name} searched the undergrowth and returned empty-handed."])

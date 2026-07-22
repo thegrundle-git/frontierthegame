@@ -55,6 +55,8 @@ Immediate narration should remain visible while the player makes moment-to-momen
 
 Skills should be readable as capabilities rather than presented as a dense diagnostic list. Icons, levels, and progress belong at a glance; exact XP and explanations belong on demand. Presentation metadata may clarify what a skill means, but it must not invent effects that the simulation does not implement or become a second authority for progression.
 
+Narrative should interpret confirmed simulation results rather than decide them. Authored templates may vary tone and respond to known context, but rewards, discoveries, history, and progression remain governed by their existing systems. New prose should be expandable as content without embedding location- and item-specific language throughout gameplay code.
+
 ---
 
 ## Memory and Moment-to-Moment Narration

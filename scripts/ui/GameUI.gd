@@ -248,10 +248,10 @@ func add_event(event_text: String) -> void:
 
 	if event_text.is_empty():
 		if has_existing_entries:
-			event_log.append_text("\n\n" + EVENT_SEPARATOR + "\n")
+			event_log.append_text("\n" + EVENT_SEPARATOR + "\n")
 	else:
 		if has_existing_entries and not existing_text.ends_with("\n"):
-			event_log.append_text("\n\n")
+			event_log.append_text("\n")
 		event_log.append_text(event_text)
 
 	var last_line: int = maxi(event_log.get_line_count() - 1, 0)
