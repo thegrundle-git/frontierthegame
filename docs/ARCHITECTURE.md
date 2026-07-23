@@ -513,6 +513,18 @@ Contribution values come from the temporary preview `ItemInstance` through `Equi
 
 The entire template remains inside the existing bounded Crafting details scroll. Save version remains 13 because ordering is static resource metadata and the cards contain presentation state only.
 
+### Drag-and-Drop Assembly
+
+`DraggableComponentItem` is a reusable Button-based presentation unit for one currently accessible component. Its drag payload contains a fixed payload type, stable item ID, and component slot. Display names and quantities are presentation only and are not trusted as crafting identity.
+
+`ComponentChoiceRow` is the validated drop target. It independently verifies the payload type, registered item ID, slot compatibility, required quantity, and current accessible amount before accepting a drop. Compatible and incompatible highlights are temporary presentation state. A successful drop emits the existing `component_selected` signal, so drag-and-drop and the keyboard-accessible dropdown both update the same session preference.
+
+`CraftingUI` builds the Available Components library from components relevant to the selected assembly recipe. It coordinates drag feedback, rebuilds the shared `CraftingPlan` preview after an accepted selection, and restores focus to the affected component selector. Cancelled and invalid drops do not mutate preferences or inventories.
+
+The Crafting workspace presents assembly recipes in two columns. The recipe and result remain on the left, while a dedicated Assembly Workbench on the right owns an independent bounded scroll for the object template. Available components open in a separate bounded window with its own scroll and a fully opaque background, keeping the library readable without obscuring the assembly targets. Non-assembly recipes hide both assembly-specific surfaces.
+
+All drag data, highlights, component preferences, window visibility, and focus are transient UI state. `CraftingPlanningService`, the timed `CraftAction`, and exact inventory consumption remain authoritative. Save version remains 13.
+
 Major areas include:
 
 ```text

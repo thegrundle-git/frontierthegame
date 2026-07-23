@@ -4,6 +4,40 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.9-alpha1 — Drag-and-Drop Assembly
+
+### Added
+
+* Reusable draggable component items with stable item-ID and component-slot payloads.
+* Validated drop targets on visual assembly cards, including compatible and incompatible highlighting.
+* A dedicated Assembly Workbench with its own bounded scrolling area.
+* A separate, fully opaque Available Components window with independent scrolling, drag feedback, and explicit open and close controls.
+
+### Changed
+
+* Successful drops now update the existing component preference and shared `CraftingPlan` pipeline rather than creating a second crafting authority.
+* Assembly previews rebuild immediately after a drop and restore focus to the affected component selector.
+* Invalid and cancelled drops provide readable feedback while the existing dropdown controls remain a complete keyboard-accessible alternative.
+* The component library and assembly template no longer compete for the same scroll space.
+* Non-assembly recipes hide the Assembly Workbench and Available Components controls.
+
+### Validation
+
+* Godot registered the new draggable component class and all changed crafting classes without direct errors after correcting one strict type annotation.
+* Isolated validation passed after the two-column workbench and separate Available Components window refinements.
+* Manual testing passed for dragging, compatibility feedback, component selection, preview updates, independent scrolling, keyboard fallback, exact component consumption, non-assembly recipes, viewport fit, and the final solid window background.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. Drag payloads, component preferences, window visibility, and focus are temporary Crafting workspace state.
+
+### Not Included
+
+* Inventory-to-crafting dragging, touch-specific interaction, freeform component positioning, saved workspace layouts, component traits, and engraving remain outside this milestone.
+
+---
+
 ## v0.6.8-alpha1 — Visual Assembly Template
 
 ### Added
