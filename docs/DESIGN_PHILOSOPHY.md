@@ -47,6 +47,12 @@ Equipment presentation should make identity and present condition visible before
 
 The interface must not imply systems the simulation does not yet support. Frontier can borrow the legibility of familiar equipment grids without displaying fictional armor, accessory, or weapon categories. New slot types should appear only when their underlying gameplay exists.
 
+Complex crafting should reveal information in layers. The result and its primary properties come first; component calculations and comparisons are available for inspection; material references provide deeper understanding; and construction or maintenance history remains available when the player wants context. Each panel should have one clear job, and basic crafting should not require mastery of every underlying calculation.
+
+Material-family colors and semantic stat colors serve different purposes and must remain visually distinct. Color always supplements readable labels, symbols, and text. Named material, craftsmanship, or historical traits should appear only when supported by real mechanics or durable evidence.
+
+Before an irreversible crafting or maintenance choice consumes resources, the player should be able to preview the finished result and understand the important changes. Preview and gameplay must share the same authoritative calculator so the interface cannot promise a result the simulation will not produce.
+
 Storage should present movement between inventories as continuity rather than disappearance and recreation. A transferred resource or equipment instance remains selected on its destination side, helping the player understand where it went. Scene-owned controls and stable identifiers make that continuity explicit while leaving inventory authority with the existing simulation model.
 
 The Exploration Interface Foundation applies these rules to the main play view. Location, survivor, expedition pack, available actions, and travel have explicit visual hierarchy; Actions and Travel remain independently scrollable without competing accordion state; Camp access appears only at the civilization's home location; and the survivor panel summarizes equipped gear while routing inspection and mutation into the Equipment workspace. This is structural refinement rather than a final visual theme or responsive-breakpoint system.
@@ -62,6 +68,10 @@ Skills should be readable as capabilities rather than presented as a dense diagn
 Narrative should interpret confirmed simulation results rather than decide them. Authored templates may vary tone and respond to known context, but rewards, discoveries, history, and progression remain governed by their existing systems. New prose should be expandable as content without embedding location- and item-specific language throughout gameplay code.
 
 Ambient events should give places identity through grounded situations and meaningful choices, not imply simulations that do not yet exist. Outcomes must state their concrete consequences truthfully, and event prose should reflect the current character rather than assume the civilization is still led by its founder.
+
+The player may be uncertain about an outcome, but should rarely be uncertain about what they are choosing to attempt. Ordinary choices should surface intent, likely reward category, known costs or risks, and the nature of any remaining uncertainty before commitment. Mystery is valuable when it is deliberate—especially around strange, wondrous, or poorly understood situations—not when the interface merely withholds the meaning of a routine choice.
+
+Future knowledge, skills, tools, traits, and companions may improve the clarity or specificity of choice guidance. They should help the player reason without reducing every decision to exact percentages or removing the possibility of surprise.
 
 Events may connect consequences across time when the relationship is supported by durable evidence. A later situation can respond to a discovered landmark, a previously exposed trail, or a different successful action, but prerequisite chains must remain understandable rather than serving as arbitrary content locks. Event text can preserve uncertainty; it should not convert a plausible observation into confirmed ecology, weather behavior, danger, or history merely to make a choice sound dramatic.
 

@@ -960,3 +960,17 @@ Debris Below the Marker requires the completed `weathered_river_marker` event. A
 Every option uses existing `EventOptionData` fields for rewards, skill XP, knowledge, and elapsed game minutes. Item rewards are standard `IngredientData` references and pass through the established inventory, observation, discovery, narration, and explicit reward-message paths. Leave options retain minor Exploration XP without fabricating material consequences.
 
 All four events are once-only. Save version remains 13 because completed event IDs were already persisted, unknown new IDs require no migration, and no pending-event or new simulation state is introduced.
+
+---
+
+## Informed Event Choices
+
+`EventOptionData` owns four static presentation fields: intent, likely reward, known cost or risk, and uncertainty. These fields describe the authored choice but do not resolve it, modify its probability, or become a second source of gameplay truth.
+
+`EventChoiceCard` is the reusable UI unit for one option. It renders all four guidance categories without requiring hover, provides equivalent tooltip text, and emits only the selected option ID. `GameUI` instantiates cards in authored order, focuses the first choice, and forwards the selected ID to the existing `WorldEventManager` resolution boundary.
+
+The event title and description remain bounded while the choice collection scrolls independently. This keeps large decision sets usable without allowing the modal to exceed the supported viewport.
+
+All 22 current options contain complete authored guidance. Guaranteed consequences are described clearly, while genuine environmental, historical, or investigative uncertainty remains unresolved. Exact probabilities and unsupported risks are not invented.
+
+Save version remains 13 because this guidance is static resource metadata. No pending choice, new outcome state, or migration is introduced.

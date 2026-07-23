@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/EventChoiceCard.gd" id="1_card"]
+
+[node name="EventChoiceCard" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 156)
+size_flags_horizontal = 3
+script = ExtResource("1_card")
+
+[node name="CardMargin" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="CardLayout" type="VBoxContainer" parent="CardMargin"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="ChooseButton" type="Button" parent="CardMargin/CardLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Choose"
+alignment = 0
+
+[node name="IntentLabel" type="Label" parent="CardMargin/CardLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Intent:"
+autowrap_mode = 3
+
+[node name="RewardLabel" type="Label" parent="CardMargin/CardLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.72, 0.48, 1)
+text = "Likely reward:"
+autowrap_mode = 3
+
+[node name="CostOrRiskLabel" type="Label" parent="CardMargin/CardLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84, 0.64, 0.42, 1)
+text = "Known cost or risk:"
+autowrap_mode = 3
+
+[node name="UncertaintyLabel" type="Label" parent="CardMargin/CardLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.68, 0.65, 1)
+text = "Uncertainty:"
+autowrap_mode = 3

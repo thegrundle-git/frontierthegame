@@ -2,6 +2,9 @@ extends Control
 
 
 const INTERACTIVE_CONTROL_MINIMUM_HEIGHT := 42.0
+const EVENT_CHOICE_CARD_SCENE: PackedScene = preload(
+	"res://scenes/ui/EventChoiceCard.tscn"
+)
 const JOURNAL_WORKSPACE_ID := "exploration.journal"
 const EVENT_SEPARATOR := "────────────────────────"
 const XP_POPUP_COLOR := Color(0.96, 0.80, 0.32, 1.0)
@@ -954,28 +957,29 @@ func show_world_event(
 	for child: Node in event_options.get_children():
 		child.queue_free()
 
+	var first_focus_target: Control
+
 	for option: EventOptionData in event.options:
 		if option == null:
 			continue
 
-		var button := Button.new()
+		var card := EVENT_CHOICE_CARD_SCENE.instantiate() as EventChoiceCard
+		if card == null:
+			continue
 
-		button.text = option.display_text
-		button.custom_minimum_size.y = (
-			INTERACTIVE_CONTROL_MINIMUM_HEIGHT
-		)
-		button.focus_mode = Control.FOCUS_ALL
-
-		button.pressed.connect(
-			_on_event_option_pressed.bind(
-				option.id
-			)
+		event_options.add_child(card)
+		card.configure(option)
+		card.choice_requested.connect(
+			_on_event_option_pressed
 		)
 
-		event_options.add_child(button)
+		if first_focus_target == null:
+			first_focus_target = card.get_focus_target()
 
 	event_overlay.visible = true
 	refresh_all()
+	if first_focus_target != null:
+		first_focus_target.call_deferred("grab_focus")
 
 
 func hide_world_event() -> void:
