@@ -4,6 +4,37 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.2-alpha1 — Material Identity and Color Language
+
+### Added
+
+* Explicit authored material-family metadata for every existing item, component, and finished tool.
+* A centralized `ItemPresentation` authority with a restrained, reusable palette for food, plant, wood, stone, animal, metal, and unspecified materials.
+* Material-family text in relevant item and equipment tooltips so color is never the only identifier.
+
+### Changed
+
+* Expedition Pack names now communicate material identity while preserving alphabetical order and the existing two-column layout.
+* Camp Storage, equipment slots, equipment details, and Crafting details now use the same material color language.
+* Crafted components and tools retain the family of their physical material rather than receiving a separate crafting-tier color.
+* Chronicle narration remains plain text so immediate prose is not confused with item identity.
+
+### Validation
+
+* Godot editor import and startup validation passed.
+* Manual testing passed for the Expedition Pack, Camp Storage, Crafting, equipment presentation, tooltips, ordering, readability, and unchanged Chronicle narration.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. Material families are static authored `ItemData` metadata and add no runtime persistence fields.
+
+### Not Included
+
+* Quality, rarity, durability, discovery state, and material tier remain separate concepts and do not yet receive this color treatment.
+
+---
+
 ## v0.6.1-alpha1 — Living Frontier Presentation Foundation
 
 ### Added

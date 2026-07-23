@@ -8,6 +8,7 @@ id = "stone"
 display_name = "Stone"
 description = "A common piece of weathered rock, shaped only by time and the elements. It lacks any obvious value, but even the most ordinary stone can become a tool, a weapon, or the foundation of something greater in the hands of a determined survivor."
 category = "Resource"
+material_family = "stone"
 weight = 0.75
 tags = Array[String](["stone", "gathering", "crafting"])
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

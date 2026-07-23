@@ -630,10 +630,15 @@ func update_inventory(
 		var display_name := item_id
 		if item_data != null:
 			display_name = item_data.display_name
-		stack_entries.append(display_name + ": " + str(amount))
+		stack_entries.append(
+			display_name + "\t"
+			+ ItemPresentation.colorize_name(item_data, display_name)
+			+ ": " + str(amount)
+		)
 
 	stack_entries.sort()
-	entries.append_array(stack_entries)
+	for stack_entry: String in stack_entries:
+		entries.append(stack_entry.get_slice("\t", 1))
 
 	var equipment_entries: Array[String] = []
 	for instance: ItemInstance in inventory.equipment_instances:
@@ -643,10 +648,15 @@ func update_inventory(
 		var display_name := instance.item_id
 		if item_data != null:
 			display_name = item_data.display_name
-		equipment_entries.append(display_name + " [" + instance.instance_id + "]")
+		equipment_entries.append(
+			display_name + "\t"
+			+ ItemPresentation.colorize_name(item_data, display_name)
+			+ " [" + instance.instance_id + "]"
+		)
 
 	equipment_entries.sort()
-	entries.append_array(equipment_entries)
+	for equipment_entry: String in equipment_entries:
+		entries.append(equipment_entry.get_slice("\t", 1))
 
 	var split_index: int = ceili(float(entries.size()) / 2.0)
 	var left_entries: PackedStringArray = PackedStringArray(entries.slice(0, split_index))

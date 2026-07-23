@@ -10,6 +10,9 @@ var description: String = ""
 
 @export var category: String = ""
 
+@export_enum("unspecified", "food", "plant", "wood", "stone", "animal", "metal")
+var material_family: String = "unspecified"
+
 @export var weight: float = 0.0
 @export var stack_size: int = 99
 

@@ -8,6 +8,7 @@ id = "herb"
 display_name = "Wild Herb"
 description = "A hardy plant with a sharp, earthy scent. Its exact uses remain uncertain, but plants like this rarely grow without purpose."
 category = "Resource"
+material_family = "plant"
 weight = 0.05
 tags = Array[String](["gathering", "plant"])
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

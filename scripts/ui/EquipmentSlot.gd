@@ -29,6 +29,10 @@ func configure(instance: ItemInstance, source: String) -> void:
 		display_name = item.display_name
 
 	name_label.text = display_name
+	name_label.add_theme_color_override(
+		"font_color",
+		ItemPresentation.get_material_color(item)
+	)
 	if item != null and item.icon != null:
 		icon_rect.texture = item.icon
 		icon_rect.visible = true
@@ -54,6 +58,8 @@ func configure(instance: ItemInstance, source: String) -> void:
 	tooltip_text = (
 		display_name
 		+ "\nSource: " + source
+		+ "\nMaterial family: "
+		+ ItemPresentation.get_material_family_label(item)
 		+ "\nMaterial: " + _display_value(instance.material_id)
 		+ "\nCondition: " + str(condition_percent) + "%"
 		+ "\nUsable: " + ("Yes" if is_usable else "No")

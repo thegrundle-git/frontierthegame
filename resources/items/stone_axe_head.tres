@@ -8,6 +8,7 @@ id = "stone_axe_head"
 display_name = "Stone Axe Head"
 description = "A broad wedge of stone shaped by repeated, deliberate strikes. The edge is crude and uneven, but the weight behind it promises a useful bite once mounted to a handle."
 category = "component"
+material_family = "stone"
 weight = 1.75
 stack_size = 10
 tags = Array[String](["tool_component", "axe_head", "stone"])

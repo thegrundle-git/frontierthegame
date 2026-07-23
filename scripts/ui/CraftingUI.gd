@@ -7,7 +7,7 @@ signal back_requested
 
 
 @onready var recipe_selector: OptionButton = %RecipeSelector
-@onready var recipe_label: Label = %RecipeLabel
+@onready var recipe_label: RichTextLabel = %RecipeLabel
 @onready var craft_button: Button = %CraftButton
 @onready var back_button: Button = %BackButton
 
@@ -90,7 +90,7 @@ func _populate_recipe_selector(civilization: CivilizationData) -> void:
 
 func _build_recipe_text(recipe: RecipeData) -> String:
 	var recipe_text := (
-		recipe.display_name
+		_build_result_heading(recipe)
 		+ "\n\n"
 		+ recipe.description
 		+ "\n\nRequires:\n"
@@ -110,7 +110,7 @@ func _build_recipe_text(recipe: RecipeData) -> String:
 				+ " (best available)"
 			)
 		else:
-			ingredient_name = ingredient.item.display_name
+			ingredient_name = ItemPresentation.colorize_name(ingredient.item)
 
 		recipe_text += (
 			ingredient_name
@@ -122,6 +122,13 @@ func _build_recipe_text(recipe: RecipeData) -> String:
 		)
 
 	return recipe_text
+
+
+func _build_result_heading(recipe: RecipeData) -> String:
+	for result: IngredientData in recipe.results:
+		if result != null and result.is_valid() and result.item != null:
+			return ItemPresentation.colorize_name(result.item, recipe.display_name)
+	return recipe.display_name
 
 
 func _show_unavailable(message: String) -> void:

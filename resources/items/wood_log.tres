@@ -8,6 +8,7 @@ id = "wood_log"
 display_name = "Wood Log"
 description = "Nature's leftover. Heavy, awkward, and covered in dirt, but still holding the last usefulness of a tree that refused to disappear quietly. In a world where everything is scarce, even dead wood has a purpose."
 category = "Resource"
+material_family = "wood"
 weight = 5.0
 stack_size = 20
 tags = Array[String](["wood", "building", "crafting", "fuel"])

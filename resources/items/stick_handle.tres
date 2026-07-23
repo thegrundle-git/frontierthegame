@@ -8,6 +8,7 @@ id = "stick_handle"
 display_name = "Stick Handle"
 description = "A straight length of wood stripped of bark and smoothed where a hand will close around it. Little more than a prepared stick, but preparation is what separates a tool from debris."
 category = "component"
+material_family = "wood"
 weight = 0.45
 stack_size = 10
 tags = Array[String](["tool_component", "handle", "wood"])
