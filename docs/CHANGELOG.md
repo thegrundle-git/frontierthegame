@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.5-alpha1 — Informed Event Choices
+
+### Added
+
+* Authored intent, likely reward, known cost or risk, and uncertainty guidance for all 22 world-event choices.
+* A reusable `EventChoiceCard` that keeps decision guidance visible without requiring hover.
+* Independent scrolling for event choices and automatic keyboard focus on the first option.
+* Accessible tooltips that repeat each choice's guidance.
+
+### Changed
+
+* Event choices now explain what the character will attempt before the player commits.
+* Guaranteed consequences are distinguished from unresolved uncertainty without exposing exact probabilities.
+* The event window remains bounded and usable at the supported 1280x720 viewport.
+* Existing outcome resolution remains authoritative and occurs only after the player chooses an action.
+
+### Validation
+
+* Godot editor import and startup validation passed.
+* Static validation confirmed complete guidance on all 22 authored choices.
+* Manual testing passed for event layout, scrolling, focus, tooltips, choice resolution, and existing outcomes.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. Choice guidance is static authored metadata and requires no migration.
+
+### Not Included
+
+* Knowledge-sensitive hints, skill-, tool-, trait-, or companion-based guidance, exact probabilities, hidden choices, and new outcome mechanics remain outside this milestone.
+
+---
+
 ## v0.6.4-alpha1 — Grounded Location Event Pack
 
 ### Added

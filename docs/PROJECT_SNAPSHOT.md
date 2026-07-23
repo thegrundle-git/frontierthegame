@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.4-alpha1
+v0.6.5-alpha1
 
 ## Project Health
 
-🟢 Stable — Grounded location event pack passed manual testing
+🟢 Stable — Informed event choices passed manual testing
 
 ## Current Milestone
 
@@ -62,6 +62,7 @@ Sprint 3 — The Age of Discovery
 * Discoveries
 * Discoveries Journal
 * World Events
+* Informed world-event choice guidance
 * Successful-action world-event trigger integration
 * Contextual event narration after succession
 * Meadow ambient event: A Change in the Wind
@@ -332,6 +333,14 @@ Four new once-only events extend location identity beyond ordinary search result
 Each event offers explicit outcomes through the established reward, XP, knowledge, and time systems. The two follow-ups use persistent completed-event prerequisites, while all descriptions preserve uncertainty and avoid implying unsupported ecological, weather, combat, or historical simulation.
 
 Manual testing passed for action and location triggers, prerequisite gating, all choices, reward quantities, contextual successor narration, one-time completion, and save/load persistence. Save version remains 13.
+
+## Informed Event Choices
+
+All 22 authored world-event choices now show the action's intent, likely reward category, known cost or risk, and remaining uncertainty before commitment.
+
+`EventChoiceCard` presents that guidance directly, repeats it through accessible tooltips, preserves authored ordering, and gives keyboard focus to the first choice. The event description remains bounded while choices scroll independently, keeping the decision usable at 1280x720.
+
+Manual testing passed for layout, scrolling, focus, tooltips, choice resolution, and existing outcomes. Save version remains 13 because the guidance is static resource metadata.
 
 ## Next Goals
 
