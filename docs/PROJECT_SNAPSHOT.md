@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.7-alpha1
+v0.6.8-alpha1
 
 ## Project Health
 
-🟢 Stable — Guided component selection passed manual testing
+🟢 Stable — Visual assembly template passed manual testing
 
 ## Current Milestone
 
@@ -357,6 +357,14 @@ Assembly recipes now expose keyboard-accessible Head, Handle, and Binding select
 Selections immediately rebuild the shared Crafting plan, finished material variant, derived statistics, duration, and equipped comparison. Explicit choices are copied into the timed action and revalidated at completion, so an unavailable chosen component causes a truthful failure instead of an invisible substitution.
 
 Preferences exist only for the current Crafting session and safely return to Automatic when they become invalid. Manual testing passed for automatic and explicit selection, exact component consumption, result variants, previews, invalid-selection recovery, keyboard navigation, scrolling, and viewport fit. Save version remains 13.
+
+## Visual Assembly Template
+
+The axe recipe now presents Head, Binding, and Handle as connected visual slot cards rather than an undifferentiated form. The finished result remains above the assembly, while each card exposes its resolved component, material, quality, available quantity, Automatic or Explicit status, and actual Efficiency, Stability, or Handling contribution.
+
+Components at the finished tool's lowest quality display a weakest-link warning. Each card retains the same keyboard-accessible dropdown used by Guided Component Selection, so the visual arrangement adds legibility without creating a parallel interaction path.
+
+`RecipeData.component_display_order` provides authored presentation order without affecting ingredient authority or consumption. Non-assembly recipes omit the template. Manual testing passed for ordering, connectors, card data, selection, warnings, scrolling, viewport fit, and finished-result consistency. Save version remains 13.
 
 ## Next Goals
 

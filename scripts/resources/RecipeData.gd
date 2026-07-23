@@ -21,6 +21,7 @@ class_name RecipeData
 @export_group("Presentation")
 @export_multiline
 var description: String = ""
+@export var component_display_order: Array[String] = []
 
 
 func get_results_for_components(

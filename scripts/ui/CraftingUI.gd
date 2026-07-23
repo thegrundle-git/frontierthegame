@@ -13,6 +13,7 @@ const COMPONENT_CHOICE_ROW_SCENE := preload(
 
 @onready var recipe_selector: OptionButton = %RecipeSelector
 @onready var recipe_label: RichTextLabel = %RecipeLabel
+@onready var assembly_heading: Label = %AssemblyHeading
 @onready var component_choices: VBoxContainer = %ComponentChoices
 @onready var requirements_toggle: Button = %RequirementsToggle
 @onready var requirements_label: RichTextLabel = %RequirementsLabel
@@ -62,12 +63,12 @@ func refresh() -> void:
 	recipe_selector.disabled = false
 	craft_button.visible = true
 	_sanitize_component_preferences(recipe)
-	_rebuild_component_choices(recipe)
 	var preferences := _get_component_preferences(recipe.id)
 	var plan: CraftingPlan = GameManager.build_crafting_plan(
 		recipe,
 		preferences
 	)
+	_rebuild_component_choices(recipe, plan)
 	var primary_result: IngredientData = _get_preview_result(recipe, plan)
 	var result_name := recipe.display_name
 	if primary_result != null and primary_result.item != null:
@@ -296,6 +297,7 @@ func _show_unavailable(message: String) -> void:
 	recipe_selector.disabled = false
 	recipe_label.text = message
 	_clear_component_choices()
+	assembly_heading.visible = false
 	component_choices.visible = false
 	requirements_label.text = ""
 	details_label.text = ""
@@ -321,29 +323,109 @@ func _on_craft_pressed() -> void:
 	)
 
 
-func _rebuild_component_choices(recipe: RecipeData) -> void:
+func _rebuild_component_choices(
+	recipe: RecipeData,
+	plan: CraftingPlan
+) -> void:
 	_clear_component_choices()
 	var preferences := _get_component_preferences(recipe.id)
-	var seen_slots: Array[String] = []
-	for ingredient: IngredientData in recipe.ingredients:
-		if (
-			ingredient == null
-			or not ingredient.uses_component_slot()
-			or ingredient.component_slot in seen_slots
-		):
-			continue
-		seen_slots.append(ingredient.component_slot)
+	var ingredients := _get_ordered_component_ingredients(recipe)
+	var preview: ItemInstance = plan.build_preview_instance()
+	var overall_quality := EquipmentStatCalculator.get_overall_quality(preview)
+	for index: int in range(ingredients.size()):
+		var ingredient: IngredientData = ingredients[index]
 		var row := COMPONENT_CHOICE_ROW_SCENE.instantiate() as ComponentChoiceRow
 		if row == null:
 			continue
 		component_choices.add_child(row)
+		var resolved_component := (
+			plan.selected_components.get(ingredient.component_slot) as ItemData
+		)
+		var limits_quality := (
+			resolved_component != null
+			and overall_quality > 0
+			and maxi(resolved_component.material_quality, 0) + 1
+				== overall_quality
+		)
 		row.configure(
 			ingredient.component_slot,
 			ItemDatabase.get_components_for_slot(ingredient.component_slot),
-			str(preferences.get(ingredient.component_slot, ""))
+			str(preferences.get(ingredient.component_slot, "")),
+			resolved_component,
+			_get_component_contribution_text(
+				preview,
+				ingredient.component_slot
+			),
+			limits_quality
 		)
 		row.component_selected.connect(_on_component_selected)
-	component_choices.visible = not seen_slots.is_empty()
+		if index < ingredients.size() - 1:
+			var connector := Label.new()
+			connector.text = "│"
+			connector.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			connector.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			component_choices.add_child(connector)
+	assembly_heading.visible = not ingredients.is_empty()
+	component_choices.visible = not ingredients.is_empty()
+
+
+func _get_ordered_component_ingredients(
+	recipe: RecipeData
+) -> Array[IngredientData]:
+	var by_slot: Dictionary = {}
+	var recipe_order: Array[String] = []
+	for ingredient: IngredientData in recipe.ingredients:
+		if (
+			ingredient == null
+			or not ingredient.uses_component_slot()
+			or by_slot.has(ingredient.component_slot)
+		):
+			continue
+		by_slot[ingredient.component_slot] = ingredient
+		recipe_order.append(ingredient.component_slot)
+
+	var ordered: Array[IngredientData] = []
+	for slot: String in recipe.component_display_order:
+		if by_slot.has(slot):
+			ordered.append(by_slot[slot] as IngredientData)
+	for slot: String in recipe_order:
+		if slot not in recipe.component_display_order:
+			ordered.append(by_slot[slot] as IngredientData)
+	return ordered
+
+
+func _get_component_contribution_text(
+	preview: ItemInstance,
+	component_slot: String
+) -> String:
+	if preview == null:
+		return "Contribution unavailable"
+	match component_slot:
+		"head":
+			return (
+				"Contributes Efficiency "
+				+ str(EquipmentStatCalculator.get_tool_efficiency(preview))
+			)
+		"handle":
+			return (
+				"Contributes Handling "
+				+ str(EquipmentStatCalculator.get_handling_rating(preview))
+			)
+		"binding":
+			return (
+				"Contributes Stability "
+				+ str(EquipmentStatCalculator.get_stability_rating(preview))
+			)
+		_:
+			return (
+				"Contributes Quality "
+				+ str(
+					EquipmentStatCalculator.get_quality_rating_for_slot(
+						preview,
+						component_slot
+					)
+				)
+			)
 
 
 func _clear_component_choices() -> void:

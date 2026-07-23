@@ -501,6 +501,18 @@ Plans are session-local calculations and are never saved. Save version remains 1
 
 Preferences are UI-session state and are not serialized. Save version remains 13.
 
+### Visual Assembly Template
+
+`RecipeData.component_display_order` is optional static presentation metadata. It orders component-slot ingredients for visual reading but does not change recipe requirements, planning, selection, result variants, or consumption. Slots omitted from the authored order follow their original recipe order.
+
+The axe recipe authors Head, Binding, and Handle order. `CraftingUI` builds the authoritative `CraftingPlan` first, then instantiates one `ComponentChoiceRow` card per ordered slot with centered connector labels between cards. Recipes without component-slot ingredients hide both the heading and template.
+
+`ComponentChoiceRow.tscn` and `ComponentChoiceRow.gd` share a `PanelContainer` root contract. Each card has one `OptionButton`, preserving the existing selection signal and keyboard path while adding resolved-component identity, material color and label, normalized quality, accessible quantity, Automatic or Explicit mode, and a mechanical-contribution label.
+
+Contribution values come from the temporary preview `ItemInstance` through `EquipmentStatCalculator`. The weakest-link indicator compares each resolved component's normalized quality with the calculator's overall quality. The template does not calculate or persist independent equipment statistics.
+
+The entire template remains inside the existing bounded Crafting details scroll. Save version remains 13 because ordering is static resource metadata and the cards contain presentation state only.
+
 Major areas include:
 
 ```text
