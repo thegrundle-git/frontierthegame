@@ -25,6 +25,10 @@ func load_items() -> void:
 		"res://resources/items/flint.tres",
 		"res://resources/items/flint_axe_head.tres",
 		"res://resources/items/flint_axe.tres",
+		"res://resources/items/hardwood_branch.tres",
+		"res://resources/items/river_reed.tres",
+		"res://resources/items/hardwood_handle.tres",
+		"res://resources/items/reed_binding.tres",
 	]
 
 	for item_path: String in item_paths:

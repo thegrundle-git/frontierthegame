@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="DiscoveryData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/DiscoveryData.gd" id="1_discovery"]
+[ext_resource type="Script" path="res://scripts/resources/RecipeData.gd" id="2_recipe"]
+[ext_resource type="Resource" path="res://resources/recipes/hardwood_handle_recipe.tres" id="3_handle"]
+[ext_resource type="Resource" path="res://resources/recipes/reed_binding_recipe.tres" id="4_binding"]
+
+[resource]
+script = ExtResource("1_discovery")
+id = "refined_hafting"
+display_name = "Refined Hafting"
+description = "Hardwood carries force without splitting, while braided reeds tighten into a stable lashing. Choosing and preparing each part deliberately can make a primitive tool faster, steadier, and more durable."
+knowledge_required = 18
+required_item_ids = Array[String](["hardwood_branch", "river_reed"])
+unlocked_recipes = Array[ExtResource("2_recipe")]([ExtResource("3_handle"), ExtResource("4_binding")])

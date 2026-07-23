@@ -16,6 +16,8 @@ const SEARCH_TEMPLATES: Array[NarrativeTemplateData] = [
 	preload("res://resources/narrative/search/find_berry.tres"),
 	preload("res://resources/narrative/search/find_herb.tres"),
 	preload("res://resources/narrative/search/find_flower.tres"),
+	preload("res://resources/narrative/search/find_hardwood_branch.tres"),
+	preload("res://resources/narrative/search/find_river_reed.tres"),
 	preload("res://resources/narrative/search/find_default.tres")
 ]
 

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+id = "reed_binding"
+display_name = "Braided Reed Binding"
+description = "Split river reeds braided into a broad, tight lashing. The layered fibers hold their shape better than hurried cordage and keep a tool head seated under repeated strain."
+category = "component"
+material_family = "plant"
+weight = 0.2
+stack_size = 20
+tags = Array[String](["tool_component", "binding", "plant", "reed"])
+component_slot = "binding"
+material_id = "reed_fiber"
+material_quality = 1

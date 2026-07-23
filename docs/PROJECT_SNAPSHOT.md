@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.2-alpha1
+v0.6.3-alpha1
 
 ## Project Health
 
-🟢 Stable — Material identity and color language passed manual testing
+🟢 Stable — Interconnected foraging expansion passed manual testing
 
 ## Current Milestone
 
@@ -19,9 +19,9 @@ Sprint 3 — The Age of Discovery
 ## Content
 
 * Locations: 3
-* Items: 13
-* Recipes: 5
-* Discoveries: 4
+* Items: 17
+* Recipes: 7
+* Discoveries: 5
 * World Events: 4
 * Landmarks: 2
 * Recovered Journal Fragments: 1
@@ -34,6 +34,7 @@ Sprint 3 — The Age of Discovery
 * Wild Flora
 * Fresh Water
 * Animal Tracks
+* Refined Hafting
 
 ## Current Locations
 
@@ -306,7 +307,7 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Expand the vertical slice with more interconnected materials, discoveries, recipes, actions, and location-aware events.
+Expand the vertical slice with additional actions and grounded location-aware events.
 
 ## Material Identity and Color Language
 
@@ -316,8 +317,15 @@ Food, plant, wood, and stone identities are currently visible; animal and metal 
 
 Manual interface testing and Godot editor/startup validation passed. Save version remains 13 because the new identity is static item metadata.
 
+## Interconnected Foraging Expansion
+
+Forest searches can now produce Hardwood Branches, while River searches can produce River Reeds. Observing both resources with sufficient knowledge unlocks Refined Hafting and recipes for improved handles and bindings.
+
+Hardwood Handles provide Handling 2 and increased condition capacity. Braided Reed Bindings provide Stability 2 and increased condition capacity. Axe assembly now selects the best available compatible head, handle, and binding, preserving each chosen component on the finished equipment instance.
+
+An axe assembled with both improved supporting components reduces Chop Tree from 5.0 to 4.0 real seconds and removes the primitive handle-and-binding overall-quality bottleneck. Manual gathering, discovery, crafting, assembly, equipment-stat, action-duration, and save/load testing passed.
+
 ## Next Goals
 
-* Add interconnected forageable resources and practical recipes
 * Add four to six grounded location-aware events
 * Continue collecting and resolving focused playtester feedback

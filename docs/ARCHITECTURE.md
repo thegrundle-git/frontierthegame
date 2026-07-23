@@ -934,3 +934,17 @@ Save version remains 12 because every added value derives from existing persiste
 Color communicates material family only. Quality, rarity, durability, usability, discovery state, and value remain independent data and presentation concepts. Tooltips state the family in text where practical, preserving meaning for players who cannot distinguish the colors. Chronicle narration remains unformatted because it presents immediate prose rather than structured item identity.
 
 Material family is loaded from registered item resources and is not mutable civilization state. Save version therefore remains 13, and no migration or retroactive save reconstruction is required.
+
+---
+
+## Interconnected Foraging Expansion
+
+Hardwood Branch and River Reed are ordinary registered `ItemData` resources attached directly to the Forest and River weighted `LocationData.search_loot` collections. `SearchAction` therefore uses its existing selection, inventory, observation, life-record, discovery-checking, narration, and save paths without content-specific gameplay code.
+
+Refined Hafting is a standard `DiscoveryData` resource requiring both item observations and 18 civilization knowledge. It unlocks the Hardwood Handle and Braided Reed Binding recipes through the existing discovery-to-recipe relationship.
+
+Both improved components use the established `handle` and `binding` component slots with material quality 1. `ItemDatabase.get_components_for_slot()` already ranks compatible candidates by material quality, so the existing accessible-inventory consumption path naturally chooses these parts before quality-0 Stick Handles and Fiber Bindings.
+
+The Axe assembly recipe now represents head, handle, and binding as alternative component-slot ingredients. Head selection continues to determine the Stone or Flint finished-item result, while `CraftAction` records every consumed component on the created `ItemInstance`. `EquipmentStatCalculator` then derives Handling 2, Stability 2, improved overall quality, and the existing 20-percent real-duration reduction from those records.
+
+The new resources use authored `NarrativeTemplateData` selected by item ID and automatically consume the shared material presentation language. Save version remains 13 because all persistent values use existing item IDs, observed-item IDs, unlocked discovery and recipe IDs, inventory stacks, and equipment component records.

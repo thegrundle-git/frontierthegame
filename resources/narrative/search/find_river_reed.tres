@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="NarrativeTemplateData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/NarrativeTemplateData.gd" id="1_template"]
+
+[resource]
+script = ExtResource("1_template")
+category = "search_find"
+selector_id = "river_reed"
+variants = Array[String](["River Reeds bent above the shallows, their long fibers intact beneath the outer skin.", "{actor_name} found a stand of tough River Reeds where silt had gathered beside the current.", "At the water's edge, several mature River Reeds pulled free with their useful fibers unbroken."])

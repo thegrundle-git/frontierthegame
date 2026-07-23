@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="RecipeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="1_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/RecipeData.gd" id="2_recipe"]
+[ext_resource type="Resource" path="res://resources/items/river_reed.tres" id="3_reed"]
+[ext_resource type="Resource" path="res://resources/items/reed_binding.tres" id="4_binding"]
+
+[sub_resource type="Resource" id="Ingredient_reed"]
+script = ExtResource("1_ingredient")
+item = ExtResource("3_reed")
+amount = 2
+
+[sub_resource type="Resource" id="Result_binding"]
+script = ExtResource("1_ingredient")
+item = ExtResource("4_binding")
+
+[resource]
+script = ExtResource("2_recipe")
+id = "reed_binding_recipe"
+display_name = "Braid Reed Binding"
+ingredients = Array[ExtResource("1_ingredient")]([SubResource("Ingredient_reed")])
+results = Array[ExtResource("1_ingredient")]([SubResource("Result_binding")])
+craft_time = 20
+xp_reward = 3
+description = "Split the reeds into long fibers, overlap the strongest strands, and braid them into a broad lashing that tightens under strain."
