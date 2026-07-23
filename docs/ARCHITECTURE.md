@@ -948,3 +948,15 @@ Both improved components use the established `handle` and `binding` component sl
 The Axe assembly recipe now represents head, handle, and binding as alternative component-slot ingredients. Head selection continues to determine the Stone or Flint finished-item result, while `CraftAction` records every consumed component on the created `ItemInstance`. `EquipmentStatCalculator` then derives Handling 2, Stability 2, improved overall quality, and the existing 20-percent real-duration reduction from those records.
 
 The new resources use authored `NarrativeTemplateData` selected by item ID and automatically consume the shared material presentation language. Save version remains 13 because all persistent values use existing item IDs, observed-item IDs, unlocked discovery and recipe IDs, inventory stacks, and equipment component records.
+
+---
+
+## Grounded Location Event Pack
+
+The four added `WorldEventData` resources use the existing data model without event-specific scripts. `trigger_action_ids` and `location_ids` connect A Clean Break to Forest tree chopping, Reeds in Still Water to River searching, and A Trail Through the Grass to Meadow tracking.
+
+Debris Below the Marker requires the completed `weathered_river_marker` event. A Trail Through the Grass requires `meadow_change_in_wind`. `WorldEventManager._is_event_eligible()` enforces these prerequisites through the existing persistent `completed_event_ids` collection before evaluating the restrained trigger chance.
+
+Every option uses existing `EventOptionData` fields for rewards, skill XP, knowledge, and elapsed game minutes. Item rewards are standard `IngredientData` references and pass through the established inventory, observation, discovery, narration, and explicit reward-message paths. Leave options retain minor Exploration XP without fabricating material consequences.
+
+All four events are once-only. Save version remains 13 because completed event IDs were already persisted, unknown new IDs require no migration, and no pending-event or new simulation state is introduced.

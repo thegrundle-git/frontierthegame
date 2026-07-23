@@ -15,7 +15,11 @@ func load_events() -> void:
 		"res://resources/events/abandoned_campsite.tres",
 		"res://resources/events/fragment_beneath_ashes.tres",
 		"res://resources/events/meadow_change_in_wind.tres",
-		"res://resources/events/weathered_river_marker.tres"
+		"res://resources/events/weathered_river_marker.tres",
+		"res://resources/events/forest_clean_break.tres",
+		"res://resources/events/river_reeds_still_water.tres",
+		"res://resources/events/river_debris_below_marker.tres",
+		"res://resources/events/meadow_trail_through_grass.tres"
 	]
 
 	for event_path in event_paths:

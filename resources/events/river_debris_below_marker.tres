@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="WorldEventData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="2_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="3_event"]
+[ext_resource type="Resource" path="res://resources/items/hardwood_branch.tres" id="4_hardwood"]
+[ext_resource type="Resource" path="res://resources/items/river_reed.tres" id="5_reed"]
+
+[sub_resource type="Resource" id="HardwoodReward"]
+script = ExtResource("2_ingredient")
+item = ExtResource("4_hardwood")
+
+[sub_resource type="Resource" id="ReedReward"]
+script = ExtResource("2_ingredient")
+item = ExtResource("5_reed")
+
+[sub_resource type="Resource" id="RecoverOption"]
+script = ExtResource("1_option")
+id = "recover"
+display_text = "Recover the useful debris"
+result_text = "Among the flood debris, {actor_name} recovers one sound Hardwood Branch and one intact River Reed."
+rewards = Array[ExtResource("2_ingredient")]([SubResource("HardwoodReward"), SubResource("ReedReward")])
+skill_id = "gathering"
+xp_reward = 3
+game_minutes = 25
+
+[sub_resource type="Resource" id="StudyOption"]
+script = ExtResource("1_option")
+id = "study"
+display_text = "Study the deposit line"
+result_text = "{actor_name} traces the debris along the bank. Its height and direction show how far the River had spread and where the strongest current returned to its channel."
+skill_id = "exploration"
+xp_reward = 4
+knowledge_reward = 3
+game_minutes = 30
+
+[sub_resource type="Resource" id="LeaveOption"]
+script = ExtResource("1_option")
+id = "leave"
+display_text = "Leave the debris in place"
+result_text = "{actor_name} leaves the flood line intact as evidence of the River's earlier reach."
+skill_id = "exploration"
+xp_reward = 1
+
+[resource]
+script = ExtResource("3_event")
+id = "river_debris_below_marker"
+display_name = "Debris Below the Marker"
+description = "Below the weathered marker, {actor_name} notices a narrow line of branches, reeds, and silt caught well above the present water. The deposit records a stronger current without explaining the stone itself."
+trigger_chance_percent = 20.0
+trigger_action_ids = Array[String](["search_area"])
+location_ids = Array[String](["river"])
+required_completed_event_ids = Array[String](["weathered_river_marker"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("RecoverOption"), SubResource("StudyOption"), SubResource("LeaveOption")])

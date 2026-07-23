@@ -63,6 +63,8 @@ Narrative should interpret confirmed simulation results rather than decide them.
 
 Ambient events should give places identity through grounded situations and meaningful choices, not imply simulations that do not yet exist. Outcomes must state their concrete consequences truthfully, and event prose should reflect the current character rather than assume the civilization is still led by its founder.
 
+Events may connect consequences across time when the relationship is supported by durable evidence. A later situation can respond to a discovered landmark, a previously exposed trail, or a different successful action, but prerequisite chains must remain understandable rather than serving as arbitrary content locks. Event text can preserve uncertainty; it should not convert a plausible observation into confirmed ecology, weather behavior, danger, or history merely to make a choice sound dramatic.
+
 Evidence of earlier inhabitants should invite investigation without converting uncertainty into lore prematurely. Landmark records distinguish what the civilization can observe from what it merely suspects, allowing later discoveries to deepen or challenge earlier interpretations.
 
 Recovered writings are artifacts with two distinct truths: what the authored fragment physically contains, and how the current civilization encountered it. Attribution remains unknown until evidence supports a conclusion. Recovery records preserve finder, place, and time without rewriting the surviving text or treating player knowledge as authorial certainty.
