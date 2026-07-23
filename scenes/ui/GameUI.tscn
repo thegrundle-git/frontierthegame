@@ -184,12 +184,14 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+bbcode_enabled = true
 
 [node name="InventoryRightLabel" type="RichTextLabel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/InventoryColumns" unique_id=279567800]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+bbcode_enabled = true
 
 [node name="RightColumn" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow" unique_id=2073829759]
 layout_mode = 2

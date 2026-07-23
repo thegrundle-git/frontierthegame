@@ -8,6 +8,7 @@ id = "stick"
 display_name = "Stick"
 description = "A small piece of broken timber stripped from the wild. Crude, lightweight, and barely worth noticing, but a survivor knows better than to ignore what the land provides. Useful for simple tools, kindling, or whatever desperate purpose it can be forced to serve."
 category = "Resource"
+material_family = "wood"
 weight = 0.25
 tags = Array[String](["wood", "gathering", "fuel"])
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

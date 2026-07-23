@@ -123,6 +123,13 @@ func _populate_inventory_list(
 
 		var index: int = item_list.add_item(item_text)
 		item_list.set_item_metadata(index, ITEM_PREFIX + item_id)
+		ItemPresentation.apply_item_list_color(item_list, index, item_data)
+		if item_data != null:
+			item_list.set_item_tooltip(
+				index,
+				display_name + "\nMaterial family: "
+				+ ItemPresentation.get_material_family_label(item_data)
+			)
 
 	var has_equipment := false
 	for instance: ItemInstance in inventory.equipment_instances:
@@ -163,9 +170,12 @@ func _add_equipment_entry(
 		display_name = item_data.display_name
 	var index: int = item_list.add_item(display_name)
 	item_list.set_item_metadata(index, prefix + instance.instance_id)
+	ItemPresentation.apply_item_list_color(item_list, index, item_data)
 	item_list.set_item_tooltip(
 		index,
 		display_name + " [" + instance.instance_id + "]"
+		+ "\nMaterial family: "
+		+ ItemPresentation.get_material_family_label(item_data)
 	)
 
 

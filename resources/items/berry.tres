@@ -8,6 +8,7 @@ id = "berry"
 display_name = "Wild Berry"
 description = "A handful of small berries gathered from untamed shrubs. Tart, bruised, and never guaranteed to be plentiful, they offer only a fleeting reprieve from hunger. For those with empty stomachs, even a mouthful of wild fruit is worth the search."
 category = "Food"
+material_family = "food"
 weight = 0.05
 tags = Array[String](["food", "gathering", "plant"])
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

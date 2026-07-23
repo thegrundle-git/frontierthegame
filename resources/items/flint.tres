@@ -8,6 +8,7 @@ id = "flint"
 display_name = "Flint"
 description = "A hard, glassy stone that breaks along sharp, predictable edges. Scarcer than ordinary rock, but exceptionally suited to cutting tools and points."
 category = "Resource"
+material_family = "stone"
 weight = 0.5
 tags = Array[String](["stone", "flint", "gathering", "crafting"])
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

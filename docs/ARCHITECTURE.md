@@ -922,3 +922,15 @@ Handling reduces real duration by 10 percent per rating, capped at 25 percent. `
 `EquipmentDetailsScreen` uses the same calculator to identify each contributing component, display actual duration, and preview replacement outcomes. Unknown component history falls back to base item efficiency and unmodified duration without invented handling, stability, or overall quality.
 
 Save version remains 12 because every added value derives from existing persisted component records. Simulated-time reduction, random craftsmanship, wear probability, persistent use counters, maker bonuses, combat statistics, and new component materials remain outside this milestone.
+
+---
+
+## Material Identity and Color Language
+
+`ItemData.material_family` is explicit static metadata authored on every item resource. The initial vocabulary is `food`, `plant`, `wood`, `stone`, `animal`, `metal`, and `unspecified`. Systems do not infer material family from tags, category, recipe position, item ID, or technological tier.
+
+`ItemPresentation` is a stateless UI authority for material colors, readable family labels, BBCode item-name formatting, and `ItemList` foreground treatment. The Expedition Pack, Camp Storage, Equipment, and Crafting interfaces consume this authority so the same object has the same material identity wherever it appears.
+
+Color communicates material family only. Quality, rarity, durability, usability, discovery state, and value remain independent data and presentation concepts. Tooltips state the family in text where practical, preserving meaning for players who cannot distinguish the colors. Chronicle narration remains unformatted because it presents immediate prose rather than structured item identity.
+
+Material family is loaded from registered item resources and is not mutable civilization state. Save version therefore remains 13, and no migration or retroactive save reconstruction is required.

@@ -8,6 +8,7 @@ id = "fiber_binding"
 display_name = "Fiber Binding"
 description = "Tough plant fibers twisted into a short length of primitive cordage. Weak strands become stubborn when wound together, strong enough to hold a tool head against its haft."
 category = "component"
+material_family = "plant"
 weight = 0.15
 stack_size = 20
 tags = Array[String](["tool_component", "binding", "plant_fiber"])

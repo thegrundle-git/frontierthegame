@@ -125,6 +125,10 @@ func show_instance(instance: ItemInstance) -> void:
 		_previous_focus = get_viewport().gui_get_focus_owner()
 	_instance = instance
 	title_label.text = item.display_name
+	title_label.add_theme_color_override(
+		"font_color",
+		ItemPresentation.get_material_color(item)
+	)
 	var condition_percent: int = (
 		EquipmentDurabilityCalculator.get_overall_condition_percent(instance)
 	)
@@ -185,6 +189,10 @@ func set_embedded_mode(is_embedded: bool) -> void:
 func clear_instance() -> void:
 	_instance = null
 	title_label.text = "No equipment selected"
+	title_label.add_theme_color_override(
+		"font_color",
+		ItemPresentation.FALLBACK_COLOR
+	)
 	condition_bar.value = 0.0
 	usability_label.text = "NO SELECTION"
 	identity_label.text = "Select accessible equipment to inspect it."

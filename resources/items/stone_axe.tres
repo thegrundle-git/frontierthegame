@@ -8,6 +8,7 @@ id = "stone_axe"
 display_name = "Stone Axe"
 description = "A crude axe fashioned from sharpened stone lashed to a sturdy wooden haft. Primitive by any standard, but dependable enough to bite into wood, flesh, or bone. It's a reminder that survival begins long before craftsmanship."
 category = "tool"
+material_family = "stone"
 weight = 2.5
 stack_size = 1
 tags = Array[String](["tool", "axe", "crafting"])

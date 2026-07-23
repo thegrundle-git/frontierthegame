@@ -109,6 +109,8 @@ Remembering completed lives is not yet genealogy or memorial culture. The archiv
 
 Meaningful equipment should be capable of becoming part of the civilization's history. A finished tool is therefore not merely another interchangeable unit in a stack: it has a stable identity that can survive storage, use, saving, loading, death, and succession.
 
+Material identity should be recognizable wherever an object appears. A restrained shared color language may help players distinguish food, plants, wood, stone, animal products, and metal at a glance, but color supplements the authored item name and accessible material label rather than replacing them. Material family is a physical property, not a synonym for rarity, quality, durability, value, or technological tier. A crafted tool retains the identity of the material that physically defines it, and every interface should consume the same presentation authority instead of inventing local colors.
+
 The implemented Unique Equipment Instance foundation gives crafted tools individual IDs and records their base item, material, maker, and creation time. Stackable materials and components remain fungible resources, while completed tools become distinct objects. Equipping, storing, and continuing across generations all preserve the exact instance rather than silently substituting an equivalent tool.
 
 The implemented Equipment Component History foundation records the exact meaningful parts consumed when a tool is assembled. Head, handle, and binding records retain their item, material, quality, and quantity as durable facts. Migrated tools acknowledge when that history is unavailable rather than receiving a plausible but fictional past.

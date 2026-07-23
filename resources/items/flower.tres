@@ -8,6 +8,7 @@ id = "flower"
 display_name = "Wild Flower"
 description = "A small flower rising above the grass. Its bright petals seem almost wasteful in a place where everything else struggles to survive."
 category = "Resource"
+material_family = "plant"
 weight = 0.05
 tags = Array[String](["gathering", "plant"])
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

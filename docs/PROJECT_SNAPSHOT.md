@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.1-alpha1
+v0.6.2-alpha1
 
 ## Project Health
 
-🟢 Stable — Living Frontier presentation foundation passed manual testing
+🟢 Stable — Material identity and color language passed manual testing
 
 ## Current Milestone
 
@@ -308,9 +308,16 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 Expand the vertical slice with more interconnected materials, discoveries, recipes, actions, and location-aware events.
 
+## Material Identity and Color Language
+
+Every current item now carries an explicit authored material family. `ItemPresentation` provides the shared color and readable label used by the Expedition Pack, Camp Storage, Crafting, and Equipment interfaces.
+
+Food, plant, wood, and stone identities are currently visible; animal and metal families are reserved for future content. Color represents physical material only and does not imply quality, rarity, durability, value, or progression tier. Relevant tooltips repeat the family in text, and Chronicle narration remains unformatted.
+
+Manual interface testing and Godot editor/startup validation passed. Save version remains 13 because the new identity is static item metadata.
+
 ## Next Goals
 
-* Add accessible material-family color coding
 * Add interconnected forageable resources and practical recipes
 * Add four to six grounded location-aware events
 * Continue collecting and resolving focused playtester feedback

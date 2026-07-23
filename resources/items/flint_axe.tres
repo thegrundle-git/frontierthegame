@@ -8,6 +8,7 @@ id = "flint_axe"
 display_name = "Flint Axe"
 description = "A sharp flint head secured to a prepared wooden handle. Its keen edge bites deeper and wastes less effort than a common stone axe."
 category = "tool"
+material_family = "stone"
 weight = 2.0
 stack_size = 1
 tags = Array[String](["tool", "axe", "crafting", "flint"])
