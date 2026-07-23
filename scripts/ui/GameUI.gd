@@ -938,8 +938,11 @@ func _on_busy_changed(
 	refresh_all()
 
 
-func _on_craft_requested(recipe_id: String) -> void:
-	GameManager.craft_recipe(recipe_id)
+func _on_craft_requested(
+	recipe_id: String,
+	preferred_component_ids: Dictionary
+) -> void:
+	GameManager.craft_recipe(recipe_id, preferred_component_ids)
 
 
 # -------------------------------------------------------------------

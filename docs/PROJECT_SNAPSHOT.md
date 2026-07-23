@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.6-alpha1
+v0.6.7-alpha1
 
 ## Project Health
 
-🟢 Stable — Layered crafting preview passed manual testing
+🟢 Stable — Guided component selection passed manual testing
 
 ## Current Milestone
 
@@ -349,6 +349,14 @@ The Crafting workspace now previews the finished result before committing resour
 `CraftingPlan` and `CraftingPlanningService` provide one deterministic selection path for both preview and execution. Material-dependent results therefore use the same chosen components that the completed craft consumes, while unavailable defining components leave the result honestly unresolved.
 
 Requirements and selected components remain immediately available, while detailed calculations and comparisons expand on demand inside the bounded workspace. Manual testing passed for material variants, improved components, shortages, comparisons, actual results, consumption, and layout. Save version remains 13 because plans are temporary.
+
+## Guided Component Selection
+
+Assembly recipes now expose keyboard-accessible Head, Handle, and Binding selectors. Each slot defaults to Automatic, preserving the convenient best-available behavior, while allowing the player to choose any compatible component currently accessible from the Expedition Pack or Camp Storage.
+
+Selections immediately rebuild the shared Crafting plan, finished material variant, derived statistics, duration, and equipped comparison. Explicit choices are copied into the timed action and revalidated at completion, so an unavailable chosen component causes a truthful failure instead of an invisible substitution.
+
+Preferences exist only for the current Crafting session and safely return to Automatic when they become invalid. Manual testing passed for automatic and explicit selection, exact component consumption, result variants, previews, invalid-selection recovery, keyboard navigation, scrolling, and viewport fit. Save version remains 13.
 
 ## Next Goals
 
