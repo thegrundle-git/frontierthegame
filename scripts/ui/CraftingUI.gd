@@ -9,10 +9,21 @@ signal back_requested
 const COMPONENT_CHOICE_ROW_SCENE := preload(
 	"res://scenes/ui/ComponentChoiceRow.tscn"
 )
+const DRAGGABLE_COMPONENT_ITEM_SCENE := preload(
+	"res://scenes/ui/DraggableComponentItem.tscn"
+)
 
 
 @onready var recipe_selector: OptionButton = %RecipeSelector
 @onready var recipe_label: RichTextLabel = %RecipeLabel
+@onready var component_tray_window: PanelContainer = %ComponentTrayWindow
+@onready var open_component_tray_button: Button = %OpenComponentTrayButton
+@onready var close_component_tray_button: Button = %CloseComponentTrayButton
+@onready var component_tray_heading: Label = %ComponentTrayHeading
+@onready var component_tray: FlowContainer = %ComponentTray
+@onready var drag_status: Label = %DragStatus
+@onready var assembly_separator: VSeparator = %AssemblySeparator
+@onready var assembly_workbench: PanelContainer = %AssemblyWorkbench
 @onready var assembly_heading: Label = %AssemblyHeading
 @onready var component_choices: VBoxContainer = %ComponentChoices
 @onready var requirements_toggle: Button = %RequirementsToggle
@@ -24,12 +35,17 @@ const COMPONENT_CHOICE_ROW_SCENE := preload(
 
 var selected_recipe_id: String = ""
 var component_preferences_by_recipe: Dictionary = {}
+var _pending_focus_slot: String = ""
+var _pending_drag_status: String = ""
+var _component_tray_is_open: bool = false
 
 
 func _ready() -> void:
 	recipe_selector.item_selected.connect(_on_recipe_selected)
 	requirements_toggle.toggled.connect(_on_requirements_toggled)
 	details_toggle.toggled.connect(_on_details_toggled)
+	open_component_tray_button.pressed.connect(_open_component_tray)
+	close_component_tray_button.pressed.connect(_close_component_tray)
 	craft_button.pressed.connect(_on_craft_pressed)
 	back_button.pressed.connect(back_requested.emit)
 	requirements_toggle.button_pressed = true
@@ -297,6 +313,15 @@ func _show_unavailable(message: String) -> void:
 	recipe_selector.disabled = false
 	recipe_label.text = message
 	_clear_component_choices()
+	_clear_component_tray()
+	_component_tray_is_open = false
+	component_tray_window.visible = false
+	open_component_tray_button.visible = false
+	component_tray_heading.visible = false
+	component_tray.visible = false
+	drag_status.visible = false
+	assembly_separator.visible = false
+	assembly_workbench.visible = false
 	assembly_heading.visible = false
 	component_choices.visible = false
 	requirements_label.text = ""
@@ -330,6 +355,7 @@ func _rebuild_component_choices(
 	_clear_component_choices()
 	var preferences := _get_component_preferences(recipe.id)
 	var ingredients := _get_ordered_component_ingredients(recipe)
+	_rebuild_component_tray(ingredients)
 	var preview: ItemInstance = plan.build_preview_instance()
 	var overall_quality := EquipmentStatCalculator.get_overall_quality(preview)
 	for index: int in range(ingredients.size()):
@@ -356,7 +382,8 @@ func _rebuild_component_choices(
 				preview,
 				ingredient.component_slot
 			),
-			limits_quality
+			limits_quality,
+			ingredient.amount
 		)
 		row.component_selected.connect(_on_component_selected)
 		if index < ingredients.size() - 1:
@@ -367,6 +394,11 @@ func _rebuild_component_choices(
 			component_choices.add_child(connector)
 	assembly_heading.visible = not ingredients.is_empty()
 	component_choices.visible = not ingredients.is_empty()
+	assembly_separator.visible = not ingredients.is_empty()
+	assembly_workbench.visible = not ingredients.is_empty()
+	if not _pending_focus_slot.is_empty():
+		_focus_component_slot.call_deferred(_pending_focus_slot)
+		_pending_focus_slot = ""
 
 
 func _get_ordered_component_ingredients(
@@ -434,6 +466,134 @@ func _clear_component_choices() -> void:
 		child.queue_free()
 
 
+func _rebuild_component_tray(
+	ingredients: Array[IngredientData]
+) -> void:
+	_clear_component_tray()
+	var relevant_slots: Array[String] = []
+	for ingredient: IngredientData in ingredients:
+		if ingredient.component_slot not in relevant_slots:
+			relevant_slots.append(ingredient.component_slot)
+
+	var added_item_ids: Array[String] = []
+	for component_slot: String in relevant_slots:
+		for component: ItemData in ItemDatabase.get_components_for_slot(
+			component_slot
+		):
+			if (
+				component == null
+				or component.id in added_item_ids
+				or GameManager.get_accessible_crafting_item_amount(component.id)
+					<= 0
+			):
+				continue
+			var tray_item := (
+				DRAGGABLE_COMPONENT_ITEM_SCENE.instantiate()
+				as DraggableComponentItem
+			)
+			if tray_item == null:
+				continue
+			component_tray.add_child(tray_item)
+			tray_item.configure(component)
+			tray_item.component_drag_started.connect(
+				_on_component_drag_started
+			)
+			tray_item.component_drag_finished.connect(
+				_on_component_drag_finished
+			)
+			added_item_ids.append(component.id)
+
+	var has_components := component_tray.get_child_count() > 0
+	if not has_components:
+		_component_tray_is_open = false
+	component_tray_heading.visible = has_components
+	component_tray.visible = has_components
+	drag_status.visible = has_components
+	open_component_tray_button.visible = has_components
+	component_tray_window.visible = has_components and _component_tray_is_open
+	open_component_tray_button.text = (
+		"Available Components Window Open"
+		if component_tray_window.visible
+		else "Open Available Components"
+	)
+	if has_components:
+		drag_status.text = (
+			_pending_drag_status
+			if not _pending_drag_status.is_empty()
+			else "Drag a component onto a compatible assembly slot."
+		)
+	_pending_drag_status = ""
+
+
+func _open_component_tray() -> void:
+	if component_tray.get_child_count() <= 0:
+		return
+	_component_tray_is_open = true
+	component_tray_window.visible = true
+	open_component_tray_button.text = "Available Components Window Open"
+	for child: Node in component_tray.get_children():
+		if child is Control:
+			(child as Control).grab_focus()
+			return
+	close_component_tray_button.grab_focus()
+
+
+func _close_component_tray() -> void:
+	_component_tray_is_open = false
+	component_tray_window.visible = false
+	open_component_tray_button.text = "Open Available Components"
+	open_component_tray_button.grab_focus()
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if (
+		component_tray_window.visible
+		and event.is_action_pressed("ui_cancel")
+	):
+		_close_component_tray()
+		get_viewport().set_input_as_handled()
+
+
+func _clear_component_tray() -> void:
+	for child: Node in component_tray.get_children():
+		component_tray.remove_child(child)
+		child.queue_free()
+
+
+func _on_component_drag_started(item_id: String) -> void:
+	if not ItemDatabase.has_item(item_id):
+		return
+	var item: ItemData = ItemDatabase.get_item(item_id)
+	if item == null:
+		return
+	drag_status.text = (
+		"Dragging "
+		+ item.display_name
+		+ ". Highlighted slots show compatibility."
+	)
+	for child: Node in component_choices.get_children():
+		if child is ComponentChoiceRow:
+			(child as ComponentChoiceRow).set_drag_candidate(item)
+
+
+func _on_component_drag_finished(successful: bool) -> void:
+	for child: Node in component_choices.get_children():
+		if child is ComponentChoiceRow:
+			(child as ComponentChoiceRow).clear_drag_candidate()
+	if not successful:
+		drag_status.text = "Drop cancelled or incompatible component."
+
+
+func _focus_component_slot(component_slot: String) -> void:
+	for child: Node in component_choices.get_children():
+		if (
+			child is ComponentChoiceRow
+			and (child as ComponentChoiceRow).component_slot == component_slot
+		):
+			(child as ComponentChoiceRow).get_default_focus_target().grab_focus()
+			return
+
+
 func _get_component_preferences(recipe_id: String) -> Dictionary:
 	if not component_preferences_by_recipe.has(recipe_id):
 		component_preferences_by_recipe[recipe_id] = {}
@@ -477,6 +637,16 @@ func _on_component_selected(component_slot: String, item_id: String) -> void:
 		preferences.erase(component_slot)
 	else:
 		preferences[component_slot] = item_id
+	_pending_focus_slot = component_slot
+	_pending_drag_status = (
+		component_slot.capitalize()
+		+ " returned to Automatic selection."
+		if item_id.is_empty()
+		else ItemDatabase.get_item(item_id).display_name
+			+ " placed in "
+			+ component_slot.capitalize()
+			+ "."
+	)
 	refresh()
 
 

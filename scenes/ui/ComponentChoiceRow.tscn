@@ -8,6 +8,7 @@ script = ExtResource("1_component_row")
 
 [node name="CardMargin" type="MarginContainer" parent="."]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 12
@@ -15,16 +16,19 @@ theme_override_constants/margin_bottom = 10
 
 [node name="CardLayout" type="VBoxContainer" parent="CardMargin"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 6
 
 [node name="Header" type="HBoxContainer" parent="CardMargin/CardLayout"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_constants/separation = 10
 
 [node name="SlotLabel" type="Label" parent="CardMargin/CardLayout/Header"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 theme_override_font_sizes/font_size = 18
 text = "Component"
 vertical_alignment = 1
@@ -32,6 +36,7 @@ vertical_alignment = 1
 [node name="ModeLabel" type="Label" parent="CardMargin/CardLayout/Header"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.72, 0.74, 0.76, 1)
 text = "Automatic"
 
@@ -39,17 +44,20 @@ text = "Automatic"
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.88, 0.65, 0.34, 1)
 text = "LIMITS QUALITY"
 
 [node name="SelectedComponentLabel" type="Label" parent="CardMargin/CardLayout"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 text = "No component available"
 
 [node name="ContributionLabel" type="Label" parent="CardMargin/CardLayout"]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
 theme_override_colors/font_color = Color(0.72, 0.82, 0.72, 1)
 text = "Contribution unavailable"
 

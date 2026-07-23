@@ -2,6 +2,18 @@
 
 [ext_resource type="Script" path="res://scripts/ui/CraftingUI.gd" id="1_crafting"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBox_component_window"]
+bg_color = Color(0.065, 0.075, 0.08, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.33, 0.38, 0.40, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="CraftingUI" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -39,7 +51,7 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 
 [node name="CraftingPanel" type="PanelContainer" parent="WorkspaceMargin/WorkspaceCenter"]
-custom_minimum_size = Vector2(640, 500)
+custom_minimum_size = Vector2(1050, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -51,27 +63,33 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="CraftingLayout" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin"]
+[node name="WorkspaceColumns" type="HBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin"]
 layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="RecipeColumn" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns"]
+custom_minimum_size = Vector2(390, 0)
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+[node name="Title" type="Label" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Crafting"
 horizontal_alignment = 1
 
-[node name="RecipeSelector" type="OptionButton" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+[node name="RecipeSelector" type="OptionButton" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="OutcomeScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+[node name="OutcomeScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="RecipeLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/OutcomeScroll"]
+[node name="RecipeLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn/OutcomeScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -81,31 +99,18 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="DetailsScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+[node name="DetailsScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn"]
 custom_minimum_size = Vector2(0, 190)
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="DetailsLayout" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll"]
+[node name="DetailsLayout" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn/DetailsScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="AssemblyHeading" type="Label" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Assembly"
-horizontal_alignment = 1
-
-[node name="ComponentChoices" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="RequirementsToggle" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+[node name="RequirementsToggle" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn/DetailsScroll/DetailsLayout"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
@@ -114,7 +119,7 @@ button_pressed = true
 text = "Requirements and components ▼"
 alignment = 0
 
-[node name="RequirementsLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+[node name="RequirementsLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn/DetailsScroll/DetailsLayout"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -123,7 +128,7 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="DetailsToggle" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+[node name="DetailsToggle" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn/DetailsScroll/DetailsLayout"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
@@ -131,7 +136,7 @@ toggle_mode = true
 text = "Statistics and comparison ▶"
 alignment = 0
 
-[node name="DetailsLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+[node name="DetailsLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn/DetailsScroll/DetailsLayout"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -141,14 +146,137 @@ fit_content = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="CraftButton" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+[node name="CraftButton" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Craft"
 
-[node name="BackButton" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+[node name="BackButton" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/RecipeColumn"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 text = "Back"
+
+[node name="AssemblySeparator" type="VSeparator" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="AssemblyWorkbench" type="PanelContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(570, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WorkbenchMargin" type="MarginContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="WorkbenchLayout" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench/WorkbenchMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="WorkbenchTitle" type="Label" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench/WorkbenchMargin/WorkbenchLayout"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Assembly Workbench"
+horizontal_alignment = 1
+
+[node name="OpenComponentTrayButton" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench/WorkbenchMargin/WorkbenchLayout"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Open Available Components"
+
+[node name="WorkbenchScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench/WorkbenchMargin/WorkbenchLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="WorkbenchContent" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench/WorkbenchMargin/WorkbenchLayout/WorkbenchScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="AssemblyHeading" type="Label" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench/WorkbenchMargin/WorkbenchLayout/WorkbenchScroll/WorkbenchContent"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Component Template"
+horizontal_alignment = 1
+
+[node name="ComponentChoices" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/WorkspaceColumns/AssemblyWorkbench/WorkbenchMargin/WorkbenchLayout/WorkbenchScroll/WorkbenchContent"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ComponentTrayWindow" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 34.0
+offset_top = 28.0
+offset_right = 474.0
+offset_bottom = 478.0
+modulate = Color(1, 1, 1, 1)
+self_modulate = Color(1, 1, 1, 1)
+theme_override_styles/panel = SubResource("StyleBox_component_window")
+
+[node name="SolidBackground" type="ColorRect" parent="ComponentTrayWindow"]
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.045, 0.052, 0.056, 1)
+
+[node name="WindowMargin" type="MarginContainer" parent="ComponentTrayWindow"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="WindowLayout" type="VBoxContainer" parent="ComponentTrayWindow/WindowMargin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="WindowHeader" type="HBoxContainer" parent="ComponentTrayWindow/WindowMargin/WindowLayout"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ComponentTrayHeading" type="Label" parent="ComponentTrayWindow/WindowMargin/WindowLayout/WindowHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+text = "Available Components"
+
+[node name="CloseComponentTrayButton" type="Button" parent="ComponentTrayWindow/WindowMargin/WindowLayout/WindowHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(88, 36)
+layout_mode = 2
+text = "Close"
+
+[node name="ComponentTrayScroll" type="ScrollContainer" parent="ComponentTrayWindow/WindowMargin/WindowLayout"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ComponentTray" type="FlowContainer" parent="ComponentTrayWindow/WindowMargin/WindowLayout/ComponentTrayScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="DragStatus" type="Label" parent="ComponentTrayWindow/WindowMargin/WindowLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.74, 0.76, 1)
+text = "Drag a component onto a compatible assembly slot."
+autowrap_mode = 2

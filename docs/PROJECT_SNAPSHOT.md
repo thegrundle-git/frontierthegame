@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.8-alpha1
+v0.6.9-alpha1
 
 ## Project Health
 
-🟢 Stable — Visual assembly template passed manual testing
+🟢 Stable — Drag-and-drop assembly passed manual testing
 
 ## Current Milestone
 
@@ -365,6 +365,14 @@ The axe recipe now presents Head, Binding, and Handle as connected visual slot c
 Components at the finished tool's lowest quality display a weakest-link warning. Each card retains the same keyboard-accessible dropdown used by Guided Component Selection, so the visual arrangement adds legibility without creating a parallel interaction path.
 
 `RecipeData.component_display_order` provides authored presentation order without affecting ingredient authority or consumption. Non-assembly recipes omit the template. Manual testing passed for ordering, connectors, card data, selection, warnings, scrolling, viewport fit, and finished-result consistency. Save version remains 13.
+
+## Drag-and-Drop Assembly
+
+Assembly recipes now provide a dedicated right-side Assembly Workbench and a separate, fully opaque Available Components window. Both surfaces scroll independently, so the component library no longer compresses the connected Head, Binding, and Handle template or competes with its explanatory text.
+
+Draggable component items carry stable item IDs and component slots. Every assembly card revalidates compatibility and accessible quantity before accepting a drop, then routes the choice through the same preference signal and shared `CraftingPlan` used by the existing dropdown controls. Compatible and incompatible highlights, cancellation feedback, preview rebuilding, and focus restoration keep the interaction understandable without creating a second crafting authority.
+
+The dropdowns remain a complete keyboard-accessible alternative. Non-assembly recipes hide the workbench and component window. Manual testing passed for drag selection, exact component consumption, feedback, independent scrolling, keyboard fallback, viewport fit, non-assembly recipes, and the final solid window background. Save version remains 13 because all drag and window state is transient.
 
 ## Next Goals
 

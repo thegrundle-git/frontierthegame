@@ -13,6 +13,8 @@ signal component_selected(component_slot: String, item_id: String)
 @onready var component_selector: OptionButton = %ComponentSelector
 
 var component_slot: String = ""
+var required_amount: int = 1
+var _drag_component: ItemData
 
 
 func _ready() -> void:
@@ -25,9 +27,11 @@ func configure(
 	preferred_item_id: String,
 	resolved_component: ItemData,
 	contribution_text: String,
-	limits_quality: bool
+	limits_quality: bool,
+	required_quantity: int = 1
 ) -> void:
 	component_slot = slot
+	required_amount = maxi(required_quantity, 1)
 	slot_label.text = slot.capitalize()
 	mode_label.text = (
 		"Explicit choice"
@@ -78,6 +82,83 @@ func configure(
 		+ slot.capitalize()
 		+ " or allow Frontier to use the best available option."
 	)
+
+
+func set_drag_candidate(item: ItemData) -> void:
+	_drag_component = item
+	if item == null:
+		_clear_drag_highlight()
+		return
+	_apply_drag_highlight(item.component_slot == component_slot)
+
+
+func clear_drag_candidate() -> void:
+	_drag_component = null
+	_clear_drag_highlight()
+
+
+func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
+	var item: ItemData = _get_valid_drop_item(data)
+	var accepted := item != null
+	_apply_drag_highlight(accepted)
+	return accepted
+
+
+func _drop_data(_at_position: Vector2, data: Variant) -> void:
+	var item: ItemData = _get_valid_drop_item(data)
+	if item == null:
+		return
+	component_selected.emit(component_slot, item.id)
+
+
+func _get_valid_drop_item(data: Variant) -> ItemData:
+	if data is not Dictionary:
+		return null
+	var payload := data as Dictionary
+	if str(payload.get("type", "")) != DraggableComponentItem.PAYLOAD_TYPE:
+		return null
+	var item_id := str(payload.get("item_id", ""))
+	if (
+		item_id.is_empty()
+		or str(payload.get("component_slot", "")) != component_slot
+		or not ItemDatabase.has_item(item_id)
+	):
+		return null
+	var item: ItemData = ItemDatabase.get_item(item_id)
+	if (
+		item == null
+		or item.component_slot != component_slot
+		or GameManager.get_accessible_crafting_item_amount(item_id)
+			< required_amount
+	):
+		return null
+	return item
+
+
+func _apply_drag_highlight(compatible: bool) -> void:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.12, 0.17, 0.14, 0.98) if compatible else Color(
+		0.19,
+		0.12,
+		0.12,
+		0.98
+	)
+	style.border_color = Color(0.38, 0.78, 0.48, 1.0) if compatible else Color(
+		0.72,
+		0.34,
+		0.30,
+		1.0
+	)
+	style.set_border_width_all(2)
+	style.corner_radius_top_left = 4
+	style.corner_radius_top_right = 4
+	style.corner_radius_bottom_left = 4
+	style.corner_radius_bottom_right = 4
+	add_theme_stylebox_override("panel", style)
+
+
+func _clear_drag_highlight() -> void:
+	remove_theme_stylebox_override("panel")
 
 
 func _set_resolved_component(component: ItemData) -> void:
