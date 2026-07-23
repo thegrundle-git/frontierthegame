@@ -307,7 +307,8 @@ func _complete_travel(
 	_refresh_ui()
 
 func craft_recipe(
-	recipe_id: String
+	recipe_id: String,
+	preferred_component_ids: Dictionary = {}
 ) -> bool:
 	if not _can_start_survivor_action():
 		return false
@@ -330,13 +331,15 @@ func craft_recipe(
 		)
 		return false
 
-	if not can_afford_recipe_from_accessible_inventories(
-	recipe
-):
+	var plan: CraftingPlan = build_crafting_plan(
+		recipe,
+		preferred_component_ids
+	)
+	if not plan.can_craft:
 		_add_event(
-		"Not enough materials to craft "
-		+ recipe.display_name
-		+ "."
+			plan.unavailable_reason
+			if not plan.unavailable_reason.is_empty()
+			else "Unable to craft " + recipe.display_name + "."
 		)
 		return false
 
@@ -347,12 +350,16 @@ func craft_recipe(
 		Callable(
 			self,
 			"_complete_craft"
-		).bind(recipe_id)
+		).bind(
+			recipe_id,
+			preferred_component_ids.duplicate(true)
+		)
 	)
 
 
 func _complete_craft(
-	recipe_id: String
+	recipe_id: String,
+	preferred_component_ids: Dictionary = {}
 ) -> void:
 	if current_survivor == null:
 		return
@@ -368,7 +375,8 @@ func _complete_craft(
 
 	var succeeded := craft_action.perform(
 		current_survivor,
-		recipe
+		recipe,
+		preferred_component_ids
 	)
 
 	if succeeded:
@@ -935,10 +943,14 @@ func can_afford_recipe_from_accessible_inventories(
 	return build_crafting_plan(recipe).can_craft
 
 
-func build_crafting_plan(recipe: RecipeData) -> CraftingPlan:
+func build_crafting_plan(
+	recipe: RecipeData,
+	preferred_component_ids: Dictionary = {}
+) -> CraftingPlan:
 	return CraftingPlanningService.build_plan(
 		recipe,
-		get_accessible_crafting_inventories()
+		get_accessible_crafting_inventories(),
+		preferred_component_ids
 	)
 
 

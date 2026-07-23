@@ -4,7 +4,8 @@ class_name CraftAction
 
 func perform(
 	survivor: Survivor,
-	recipe: RecipeData
+	recipe: RecipeData,
+	preferred_component_ids: Dictionary = {}
 ) -> bool:
 	if survivor == null:
 		return false
@@ -27,7 +28,10 @@ func perform(
 		)
 		return false
 
-	var plan: CraftingPlan = GameManager.build_crafting_plan(recipe)
+	var plan: CraftingPlan = GameManager.build_crafting_plan(
+		recipe,
+		preferred_component_ids
+	)
 	if plan == null or not plan.can_craft:
 		_add_event(
 			plan.unavailable_reason

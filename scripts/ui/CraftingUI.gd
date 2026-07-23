@@ -2,12 +2,18 @@ extends Control
 class_name CraftingUI
 
 
-signal craft_requested(recipe_id: String)
+signal craft_requested(recipe_id: String, preferred_component_ids: Dictionary)
 signal back_requested
+
+
+const COMPONENT_CHOICE_ROW_SCENE := preload(
+	"res://scenes/ui/ComponentChoiceRow.tscn"
+)
 
 
 @onready var recipe_selector: OptionButton = %RecipeSelector
 @onready var recipe_label: RichTextLabel = %RecipeLabel
+@onready var component_choices: VBoxContainer = %ComponentChoices
 @onready var requirements_toggle: Button = %RequirementsToggle
 @onready var requirements_label: RichTextLabel = %RequirementsLabel
 @onready var details_toggle: Button = %DetailsToggle
@@ -16,6 +22,7 @@ signal back_requested
 @onready var back_button: Button = %BackButton
 
 var selected_recipe_id: String = ""
+var component_preferences_by_recipe: Dictionary = {}
 
 
 func _ready() -> void:
@@ -54,7 +61,13 @@ func refresh() -> void:
 	recipe_selector.visible = true
 	recipe_selector.disabled = false
 	craft_button.visible = true
-	var plan: CraftingPlan = GameManager.build_crafting_plan(recipe)
+	_sanitize_component_preferences(recipe)
+	_rebuild_component_choices(recipe)
+	var preferences := _get_component_preferences(recipe.id)
+	var plan: CraftingPlan = GameManager.build_crafting_plan(
+		recipe,
+		preferences
+	)
 	var primary_result: IngredientData = _get_preview_result(recipe, plan)
 	var result_name := recipe.display_name
 	if primary_result != null and primary_result.item != null:
@@ -282,6 +295,8 @@ func _show_unavailable(message: String) -> void:
 	recipe_selector.visible = true
 	recipe_selector.disabled = false
 	recipe_label.text = message
+	_clear_component_choices()
+	component_choices.visible = false
 	requirements_label.text = ""
 	details_label.text = ""
 	craft_button.disabled = true
@@ -300,7 +315,87 @@ func _on_craft_pressed() -> void:
 	if selected_recipe_id.is_empty():
 		return
 
-	craft_requested.emit(selected_recipe_id)
+	craft_requested.emit(
+		selected_recipe_id,
+		_get_component_preferences(selected_recipe_id).duplicate(true)
+	)
+
+
+func _rebuild_component_choices(recipe: RecipeData) -> void:
+	_clear_component_choices()
+	var preferences := _get_component_preferences(recipe.id)
+	var seen_slots: Array[String] = []
+	for ingredient: IngredientData in recipe.ingredients:
+		if (
+			ingredient == null
+			or not ingredient.uses_component_slot()
+			or ingredient.component_slot in seen_slots
+		):
+			continue
+		seen_slots.append(ingredient.component_slot)
+		var row := COMPONENT_CHOICE_ROW_SCENE.instantiate() as ComponentChoiceRow
+		if row == null:
+			continue
+		component_choices.add_child(row)
+		row.configure(
+			ingredient.component_slot,
+			ItemDatabase.get_components_for_slot(ingredient.component_slot),
+			str(preferences.get(ingredient.component_slot, ""))
+		)
+		row.component_selected.connect(_on_component_selected)
+	component_choices.visible = not seen_slots.is_empty()
+
+
+func _clear_component_choices() -> void:
+	for child: Node in component_choices.get_children():
+		component_choices.remove_child(child)
+		child.queue_free()
+
+
+func _get_component_preferences(recipe_id: String) -> Dictionary:
+	if not component_preferences_by_recipe.has(recipe_id):
+		component_preferences_by_recipe[recipe_id] = {}
+	return component_preferences_by_recipe[recipe_id] as Dictionary
+
+
+func _sanitize_component_preferences(recipe: RecipeData) -> void:
+	var preferences := _get_component_preferences(recipe.id)
+	var valid_slots: Array[String] = []
+	for ingredient: IngredientData in recipe.ingredients:
+		if ingredient == null or not ingredient.uses_component_slot():
+			continue
+		valid_slots.append(ingredient.component_slot)
+		var selected_id := str(
+			preferences.get(ingredient.component_slot, "")
+		)
+		if selected_id.is_empty():
+			continue
+		if not ItemDatabase.has_item(selected_id):
+			preferences.erase(ingredient.component_slot)
+			continue
+		var component: ItemData = ItemDatabase.get_item(selected_id)
+		if (
+			component == null
+			or component.component_slot != ingredient.component_slot
+			or GameManager.get_accessible_crafting_item_amount(selected_id)
+				< ingredient.amount
+		):
+			preferences.erase(ingredient.component_slot)
+
+	for slot_value: Variant in preferences.keys():
+		if str(slot_value) not in valid_slots:
+			preferences.erase(slot_value)
+
+
+func _on_component_selected(component_slot: String, item_id: String) -> void:
+	if selected_recipe_id.is_empty():
+		return
+	var preferences := _get_component_preferences(selected_recipe_id)
+	if item_id.is_empty():
+		preferences.erase(component_slot)
+	else:
+		preferences[component_slot] = item_id
+	refresh()
 
 
 func _on_requirements_toggled(expanded: bool) -> void:

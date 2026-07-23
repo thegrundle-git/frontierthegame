@@ -92,6 +92,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+[node name="ComponentChoices" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
 [node name="RequirementsToggle" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 38)

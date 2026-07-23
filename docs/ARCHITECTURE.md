@@ -489,6 +489,18 @@ The selected recipe remains presentation state for the current UI session and is
 
 Plans are session-local calculations and are never saved. Save version remains 13.
 
+### Guided Component Selection
+
+`ComponentChoiceRow` is a reusable, keyboard-accessible presentation unit for one component slot. It lists Automatic first, then compatible currently available `ItemData` choices with authored names, quality, quantity, material tooltips, and stable item-ID metadata.
+
+`CraftingUI` owns a dictionary of per-recipe component preferences for the current workspace session. It removes selections that no longer identify a compatible available component, rebuilds rows from recipe slot ingredients, and passes the remaining preferences into `GameManager.build_crafting_plan()`. Changing a row immediately refreshes the same result and statistic preview used by Automatic selection.
+
+`CraftingPlanningService` accepts optional preferred component IDs. An absent preference retains quality-ranked automatic selection. An explicit preference must match the required slot and satisfy the full required quantity; failure produces an unavailable plan instead of falling back to another component.
+
+`craft_requested` carries a copied preference dictionary through `GameUI` and `GameManager`. The timed action snapshots that dictionary, and `CraftAction` rebuilds the authoritative plan at completion. If the chosen component disappeared during the action, crafting fails without consuming an alternative. Successful execution consumes the plan's exact item IDs and preserves those components in equipment history.
+
+Preferences are UI-session state and are not serialized. Save version remains 13.
+
 Major areas include:
 
 ```text

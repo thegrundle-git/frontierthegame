@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.7-alpha1 — Guided Component Selection
+
+### Added
+
+* Reusable component-choice rows for assembly recipe slots.
+* Automatic best-available selection as the default for Head, Handle, and Binding.
+* Explicit compatible-component choices with quality and available quantity.
+* Immediate result, statistic, duration, and equipped-comparison updates after selection.
+
+### Changed
+
+* Explicit component preferences now travel through the timed crafting action.
+* Craft completion revalidates every selected component instead of silently substituting another part.
+* Invalid session selections safely return to Automatic when the Crafting workspace refreshes.
+* Actual crafting consumes the exact explicit components shown by the preview.
+
+### Validation
+
+* Godot registered `ComponentChoiceRow` and all changed crafting classes.
+* A strict typing issue found during isolated validation was corrected.
+* Manual testing passed for automatic selection, explicit Stone and Flint heads, handle and binding choices, live previews, exact consumption, invalid-selection recovery, keyboard navigation, scrolling, and viewport fit.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. Component preferences are temporary Crafting workspace state.
+
+### Not Included
+
+* Drag-and-drop assembly, saved preferences, custom components, randomized craftsmanship, engraving, component traits, and extracting legacy parts from existing equipment remain outside this milestone.
+
+---
+
 ## v0.6.6-alpha1 — Layered Crafting Preview
 
 ### Added

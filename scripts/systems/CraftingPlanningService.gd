@@ -4,7 +4,8 @@ class_name CraftingPlanningService
 
 static func build_plan(
 	recipe: RecipeData,
-	inventories: Array[FrontierInventory]
+	inventories: Array[FrontierInventory],
+	preferred_component_ids: Dictionary = {}
 ) -> CraftingPlan:
 	var plan := CraftingPlan.new()
 	if recipe == null:
@@ -20,7 +21,17 @@ static func build_plan(
 			return plan
 
 		if ingredient.uses_component_slot():
-			_plan_component_ingredient(plan, ingredient, remaining_by_item)
+			_plan_component_ingredient(
+				plan,
+				ingredient,
+				remaining_by_item,
+				str(
+					preferred_component_ids.get(
+						ingredient.component_slot,
+						""
+					)
+				)
+			)
 		else:
 			_plan_item_ingredient(plan, ingredient, remaining_by_item)
 
@@ -82,8 +93,18 @@ static func _plan_item_ingredient(
 static func _plan_component_ingredient(
 	plan: CraftingPlan,
 	ingredient: IngredientData,
-	remaining_by_item: Dictionary
+	remaining_by_item: Dictionary,
+	preferred_item_id: String
 ) -> void:
+	if not preferred_item_id.is_empty():
+		_plan_preferred_component(
+			plan,
+			ingredient,
+			remaining_by_item,
+			preferred_item_id
+		)
+		return
+
 	var remaining := ingredient.amount
 	for component: ItemData in ItemDatabase.get_components_for_slot(
 		ingredient.component_slot
@@ -114,6 +135,40 @@ static func _plan_component_ingredient(
 			+ ingredient.component_slot.capitalize()
 			+ " component."
 		)
+
+
+static func _plan_preferred_component(
+	plan: CraftingPlan,
+	ingredient: IngredientData,
+	remaining_by_item: Dictionary,
+	preferred_item_id: String
+) -> void:
+	var component: ItemData = ItemDatabase.get_item(preferred_item_id)
+	if component == null or component.component_slot != ingredient.component_slot:
+		plan.unavailable_reason = (
+			"The selected "
+			+ ingredient.component_slot.capitalize()
+			+ " is not compatible with this recipe."
+		)
+		return
+
+	var available := int(remaining_by_item.get(component.id, 0))
+	if available < ingredient.amount:
+		plan.unavailable_reason = (
+			component.display_name
+			+ " is no longer available in the required quantity."
+		)
+		return
+
+	remaining_by_item[component.id] = available - ingredient.amount
+	_add_required_amount(plan, component.id, ingredient.amount)
+	_add_component_record(
+		plan,
+		component,
+		ingredient.component_slot,
+		ingredient.amount
+	)
+	plan.selected_components[ingredient.component_slot] = component
 
 
 static func _add_required_amount(
