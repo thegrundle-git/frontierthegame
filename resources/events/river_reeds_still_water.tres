@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="WorldEventData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="2_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="3_event"]
+[ext_resource type="Resource" path="res://resources/items/river_reed.tres" id="4_reed"]
+
+[sub_resource type="Resource" id="ReedReward"]
+script = ExtResource("2_ingredient")
+item = ExtResource("4_reed")
+amount = 2
+
+[sub_resource type="Resource" id="GatherOption"]
+script = ExtResource("1_option")
+id = "gather"
+display_text = "Gather the mature reeds"
+result_text = "{actor_name} cuts two mature River Reeds above the wet roots, preserving their longest fibers."
+rewards = Array[ExtResource("2_ingredient")]([SubResource("ReedReward")])
+skill_id = "gathering"
+xp_reward = 3
+game_minutes = 20
+
+[sub_resource type="Resource" id="StudyOption"]
+script = ExtResource("1_option")
+id = "study"
+display_text = "Study the sheltered water"
+result_text = "{actor_name} watches the slow eddy carry silt around the reed roots and learns why the plants thrive in this protected bend."
+skill_id = "exploration"
+xp_reward = 3
+knowledge_reward = 2
+game_minutes = 20
+
+[sub_resource type="Resource" id="LeaveOption"]
+script = ExtResource("1_option")
+id = "leave"
+display_text = "Leave the bank undisturbed"
+result_text = "{actor_name} leaves the sheltered stand intact and returns to the firmer bank."
+skill_id = "exploration"
+xp_reward = 1
+
+[resource]
+script = ExtResource("3_event")
+id = "river_reeds_still_water"
+display_name = "Reeds in Still Water"
+description = "Beside a slow bend in the River, {actor_name} finds a sheltered stand of mature reeds. The current barely moves here, and long fibers show beneath several weathered outer stems."
+trigger_chance_percent = 15.0
+trigger_action_ids = Array[String](["search_area"])
+location_ids = Array[String](["river"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("GatherOption"), SubResource("StudyOption"), SubResource("LeaveOption")])

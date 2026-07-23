@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="WorldEventData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="2_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="3_event"]
+[ext_resource type="Resource" path="res://resources/items/hardwood_branch.tres" id="4_hardwood"]
+
+[sub_resource type="Resource" id="HardwoodReward"]
+script = ExtResource("2_ingredient")
+item = ExtResource("4_hardwood")
+amount = 2
+
+[sub_resource type="Resource" id="TrimOption"]
+script = ExtResource("1_option")
+id = "trim"
+display_text = "Trim the sound hardwood"
+result_text = "The fall split away the softer growth. {actor_name} trims two dense Hardwood Branches from the unbroken wood."
+rewards = Array[ExtResource("2_ingredient")]([SubResource("HardwoodReward")])
+skill_id = "gathering"
+xp_reward = 3
+game_minutes = 20
+
+[sub_resource type="Resource" id="StudyOption"]
+script = ExtResource("1_option")
+id = "study"
+display_text = "Study the exposed grain"
+result_text = "{actor_name} compares the clean break with the twisted outer branches, learning where the dense grain carried the strain and where it failed."
+skill_id = "exploration"
+xp_reward = 3
+knowledge_reward = 2
+game_minutes = 20
+
+[sub_resource type="Resource" id="LeaveOption"]
+script = ExtResource("1_option")
+id = "leave"
+display_text = "Leave the broken crown"
+result_text = "{actor_name} leaves the broken crown where it fell and returns to the prepared timber."
+skill_id = "exploration"
+xp_reward = 1
+
+[resource]
+script = ExtResource("3_event")
+id = "forest_clean_break"
+display_name = "A Clean Break"
+description = "As the tree settles, part of its crown strikes another trunk and splits. Beneath the torn bark, {actor_name} sees several lengths of unusually dense, straight-grained wood."
+trigger_chance_percent = 15.0
+trigger_action_ids = Array[String](["chop_tree"])
+location_ids = Array[String](["forest"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("TrimOption"), SubResource("StudyOption"), SubResource("LeaveOption")])

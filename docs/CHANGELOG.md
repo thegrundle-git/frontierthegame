@@ -4,6 +4,40 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.4-alpha1 — Grounded Location Event Pack
+
+### Added
+
+* **A Clean Break**, a Forest event triggered by successful tree chopping.
+* **Reeds in Still Water**, a River search event offering mature River Reeds or environmental study.
+* **Debris Below the Marker**, a River follow-up requiring Marks Above the Flood Line.
+* **A Trail Through the Grass**, a Meadow tracking follow-up requiring A Change in the Wind.
+* Explicit reward, skill, knowledge, time, and leave-undisturbed choices across the four events.
+
+### Changed
+
+* World events now respond to Chop Tree and Track Animals in addition to Search Area.
+* Existing River and Meadow events now support grounded follow-up situations through persistent completed-event prerequisites.
+* Location-aware events reuse Hardwood Branches, River Reeds, and Wild Herbs as truthful rewards with explicit quantity messages.
+* Trigger chances remain restrained and every new event is once-only.
+
+### Validation
+
+* Godot editor import and startup validation passed.
+* Startup registered all 8 world events.
+* Manual testing passed for action and location triggers, prerequisite gating, choices, rewards, XP, knowledge, time costs, contextual survivor narration, one-time completion, and save/load persistence.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. New events use the existing persistent completed-event ID collection and require no migration.
+
+### Not Included
+
+* Combat, health, negative status effects, continuous weather, ecological simulation, and new conclusions about earlier inhabitants remain outside this milestone.
+
+---
+
 ## v0.6.3-alpha1 — Interconnected Foraging Expansion
 
 ### Added

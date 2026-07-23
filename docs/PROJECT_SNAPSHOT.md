@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.3-alpha1
+v0.6.4-alpha1
 
 ## Project Health
 
-🟢 Stable — Interconnected foraging expansion passed manual testing
+🟢 Stable — Grounded location event pack passed manual testing
 
 ## Current Milestone
 
@@ -22,7 +22,7 @@ Sprint 3 — The Age of Discovery
 * Items: 17
 * Recipes: 7
 * Discoveries: 5
-* World Events: 4
+* World Events: 8
 * Landmarks: 2
 * Recovered Journal Fragments: 1
 * Registered World Actions: 3
@@ -307,7 +307,7 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Expand the vertical slice with additional actions and grounded location-aware events.
+Expand the vertical slice with additional actions and practical survival uses for gathered resources.
 
 ## Material Identity and Color Language
 
@@ -325,7 +325,14 @@ Hardwood Handles provide Handling 2 and increased condition capacity. Braided Re
 
 An axe assembled with both improved supporting components reduces Chop Tree from 5.0 to 4.0 real seconds and removes the primitive handle-and-binding overall-quality bottleneck. Manual gathering, discovery, crafting, assembly, equipment-stat, action-duration, and save/load testing passed.
 
+## Grounded Location Event Pack
+
+Four new once-only events extend location identity beyond ordinary search results. A Clean Break responds to tree chopping in the Forest, Reeds in Still Water responds to River searching, Debris Below the Marker follows the existing River landmark event, and A Trail Through the Grass follows the Meadow wind event through Track Animals.
+
+Each event offers explicit outcomes through the established reward, XP, knowledge, and time systems. The two follow-ups use persistent completed-event prerequisites, while all descriptions preserve uncertainty and avoid implying unsupported ecological, weather, combat, or historical simulation.
+
+Manual testing passed for action and location triggers, prerequisite gating, all choices, reward quantities, contextual successor narration, one-time completion, and save/load persistence. Save version remains 13.
+
 ## Next Goals
 
-* Add four to six grounded location-aware events
 * Continue collecting and resolving focused playtester feedback

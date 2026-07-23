@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="WorldEventData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="2_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="3_event"]
+[ext_resource type="Resource" path="res://resources/items/herb.tres" id="4_herb"]
+
+[sub_resource type="Resource" id="HerbReward"]
+script = ExtResource("2_ingredient")
+item = ExtResource("4_herb")
+amount = 2
+
+[sub_resource type="Resource" id="StudyOption"]
+script = ExtResource("1_option")
+id = "study"
+display_text = "Study the crossing tracks"
+result_text = "{actor_name} separates overlapping impressions in the softened ground and follows how several animals crossed the same sheltered strip at different times."
+skill_id = "exploration"
+xp_reward = 4
+knowledge_reward = 2
+game_minutes = 30
+
+[sub_resource type="Resource" id="GatherOption"]
+script = ExtResource("1_option")
+id = "gather"
+display_text = "Gather the exposed herbs"
+result_text = "Along the disturbed edge of the trail, {actor_name} gathers two Wild Herbs no longer hidden beneath the taller grass."
+rewards = Array[ExtResource("2_ingredient")]([SubResource("HerbReward")])
+skill_id = "gathering"
+xp_reward = 3
+game_minutes = 20
+
+[sub_resource type="Resource" id="AvoidOption"]
+script = ExtResource("1_option")
+id = "avoid"
+display_text = "Avoid disturbing the trail"
+result_text = "{actor_name} steps away from the crossing and leaves the tracks undisturbed."
+skill_id = "exploration"
+xp_reward = 1
+
+[resource]
+script = ExtResource("3_event")
+id = "meadow_trail_through_grass"
+display_name = "A Trail Through the Grass"
+description = "Following the signs across the Meadow, {actor_name} reaches a strip of flattened grass first exposed by the changing wind. Several sets of tracks overlap where the ground holds more moisture."
+trigger_chance_percent = 20.0
+trigger_action_ids = Array[String](["track_animals"])
+location_ids = Array[String](["meadow"])
+required_completed_event_ids = Array[String](["meadow_change_in_wind"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("StudyOption"), SubResource("GatherOption"), SubResource("AvoidOption")])
