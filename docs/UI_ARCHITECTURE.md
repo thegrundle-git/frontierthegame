@@ -72,6 +72,14 @@ Workspace content must remain below the persistent Header and Camp navigation re
 
 New workspaces should reuse shared navigation and content bounds. They should not introduce another independent full-screen background, Back convention, or keyboard-cancel implementation without an architectural reason.
 
+## Environmental Presentation
+
+`GameUI` owns one environment-background selection boundary. Forest, River, and Meadow resolve from `GameManager.current_location`; any active Camp route resolves to Home. Routed workspaces reuse that selected texture in their scene-owned `Background` node rather than inventing independent location logic or allowing the exploration interface to show through.
+
+Standard content panels may use restrained translucency over the artwork. Modal decisions remain more opaque, and `CampNavigation` is fully opaque because navigation labels must not compete with the underlying location header. Backgrounds and translucent surfaces never carry gameplay state, alter navigation, or reduce text opacity.
+
+XP notifications are transient notification-layer controls. They ignore mouse input, remain viewport-clamped, stack when multiple skills gain XP together, and free themselves after their rise-and-fade animation. Exact Chronicle messages and skill state remain authoritative.
+
 ## Current Boundary and Future Migration
 
 This foundation currently routes Camp Overview, Storage, Crafting, Equipment, and the exploration Journal. Storage, Crafting, Equipment, and Journal are scene-owned workspaces rather than runtime-built or embedded `GameUI` panels. Chronicle narration deliberately remains on the exploration surface while durable and reference-oriented records live in `JournalUI`.

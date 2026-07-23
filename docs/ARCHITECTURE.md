@@ -395,6 +395,18 @@ Skill detail is demand-driven through a bounded, opaque hover card rather than a
 
 This foundation changes only scene composition and presentation orchestration. World actions, travel, timing, equipment authority, Camp routing, persistence, and save version 12 remain unchanged.
 
+### Environmental Theme and Progression Feedback
+
+`GameUI` is the presentation boundary for environment artwork. It maps the current location to Forest, River, or Meadow and uses Home whenever the local Camp router owns an active workspace. Scene-owned workspace `Background` texture nodes receive the same selected texture, replacing their former solid black backdrops without exposing the exploration controls beneath them.
+
+Panel opacity is applied recursively as presentation styling after the composed UI is ready. Standard content panels use a translucent dark surface, modal panels use a stronger opacity, and `CampNavigation` remains fully opaque. This styling changes no node ownership, focus behavior, gameplay authority, or saved state.
+
+`AudioFeedbackManager` is the centralized autoload for non-diegetic progression feedback. `Survivor.gain_skill_xp()` remains the single authoritative mutation point and requests one sound only after a positive award is accepted. Ordinary awards advance an eight-note pentatonic phrase; a ten-second inactivity window resets it. Level gains request a distinct flourish instead of layering a second cue.
+
+Audio streams are generated as short 16-bit mono `AudioStreamWAV` data at runtime. Skill ID selects an intentionally natural synthesized timbre without adding licensed audio dependencies. `GameUI.show_xp_popup()` independently presents the exact amount and skill as transient, non-interactive, stacked text near the pointer. Neither system stores state in the save file; save version remains 13.
+
+Track Animals remains gated by the Animal Tracks discovery through `GameManager.get_available_actions()`. Forest, Meadow, and River now include the same `ActionData`, so a learned tracking ability remains available across every current wilderness location.
+
 ### Journal Workspace
 
 `JournalUI.tscn` is the scene-owned presentation authority for durable and reference-oriented Journal views: History, Legacy Preview, Completed Lives, Locations, Discoveries, and Landmarks. It owns their rendering, tab visibility, completed-life selection, bounded scrolling, and Back intent.
@@ -667,12 +679,12 @@ Before publishing a build:
 Expected startup database output currently includes:
 
 ```text
-Loaded 10 items.
+Loaded 13 items.
 Loaded 3 actions.
 Loaded 3 locations.
 Loaded 4 world events.
 Loaded 4 discoveries.
-Loaded 4 recipes.
+Loaded 5 recipes.
 Loaded 2 landmarks.
 ```
 

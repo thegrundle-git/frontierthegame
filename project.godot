@@ -32,6 +32,7 @@ ActionManager="*uid://co7t7p8hapcmt"
 SaveManager="*uid://b8j52iihxbed4"
 NarrativeGenerator="*uid://ce4qf3hkjipjw"
 JournalFragmentDatabase="*res://scripts/autoload/JournalFragmentDatabase.gd"
+AudioFeedbackManager="*res://scripts/autoload/AudioFeedbackManager.gd"
 
 [display]
 

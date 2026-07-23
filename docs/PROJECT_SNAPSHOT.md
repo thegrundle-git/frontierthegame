@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.0-alpha1
+v0.6.1-alpha1
 
 ## Project Health
 
-🟢 Released candidate — v0.6.0-alpha1 Windows package passed its final smoke test
+🟢 Stable — Living Frontier presentation foundation passed manual testing
 
 ## Current Milestone
 
@@ -19,8 +19,8 @@ Sprint 3 — The Age of Discovery
 ## Content
 
 * Locations: 3
-* Items: 10
-* Recipes: 4
+* Items: 13
+* Recipes: 5
 * Discoveries: 4
 * World Events: 4
 * Landmarks: 2
@@ -306,9 +306,11 @@ Equipment Details and replacement previews use the same stateless calculator as 
 
 ## Current Focus
 
-Merge and tag the verified v0.6.0-alpha1 Vertical Slice release.
+Expand the vertical slice with more interconnected materials, discoveries, recipes, actions, and location-aware events.
 
 ## Next Goals
 
-* Tag the verified v0.6.0-alpha1 release commit
-* Begin post-vertical-slice planning without expanding the release branch
+* Add accessible material-family color coding
+* Add interconnected forageable resources and practical recipes
+* Add four to six grounded location-aware events
+* Continue collecting and resolving focused playtester feedback

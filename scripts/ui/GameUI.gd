@@ -4,11 +4,24 @@ extends Control
 const INTERACTIVE_CONTROL_MINIMUM_HEIGHT := 42.0
 const JOURNAL_WORKSPACE_ID := "exploration.journal"
 const EVENT_SEPARATOR := "────────────────────────"
+const XP_POPUP_COLOR := Color(0.96, 0.80, 0.32, 1.0)
+const XP_POPUP_RISE_DISTANCE := 44.0
+const XP_POPUP_DURATION := 0.9
+const XP_POPUP_STACK_SPACING := 28.0
+const FOREST_BACKGROUND: Texture2D = preload("res://assets/backgrounds/forest.png")
+const RIVER_BACKGROUND: Texture2D = preload("res://assets/backgrounds/river.png")
+const MEADOW_BACKGROUND: Texture2D = preload("res://assets/backgrounds/meadow.png")
+const HOME_BACKGROUND: Texture2D = preload("res://assets/backgrounds/home.png")
+const PANEL_BACKGROUND_COLOR := Color(0.045, 0.052, 0.046, 0.78)
+const MODAL_BACKGROUND_COLOR := Color(0.04, 0.045, 0.04, 0.94)
+const CAMP_NAVIGATION_BACKGROUND_COLOR := Color(0.04, 0.045, 0.04, 1.0)
+const PANEL_BORDER_COLOR := Color(0.42, 0.47, 0.38, 0.58)
 
 
 
 
 @onready var legacy_summary_screen: LegacySummaryScreen = %LegacySummaryScreen
+@onready var environment_background: TextureRect = %EnvironmentBackground
 @onready var succession_screen: SuccessionScreen = %SuccessionScreen
 @onready var debug_death_button: Button = %DebugDeathButton
 @onready var journal_ui: JournalUI = %JournalUI
@@ -46,9 +59,81 @@ var exploration_router := UIRouter.new()
 
 var world_action_buttons: Dictionary = {}
 var travel_buttons: Dictionary = {}
+var _active_xp_popups: Array[Label] = []
+
+
+func show_xp_popup(amount: int, skill_name: String) -> void:
+	if amount <= 0:
+		return
+	for popup_index: int in range(_active_xp_popups.size() - 1, -1, -1):
+		if not is_instance_valid(_active_xp_popups[popup_index]):
+			_active_xp_popups.remove_at(popup_index)
+
+	var popup := Label.new()
+	popup.text = "+" + str(amount) + " " + skill_name + " XP"
+	popup.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	popup.z_index = 100
+	popup.add_theme_color_override("font_color", XP_POPUP_COLOR)
+	popup.add_theme_color_override("font_outline_color", Color(0.08, 0.07, 0.05, 0.95))
+	popup.add_theme_constant_override("outline_size", 4)
+	popup.add_theme_font_size_override("font_size", 18)
+	add_child(popup)
+
+	popup.reset_size()
+	var viewport_size: Vector2 = get_viewport_rect().size
+	var mouse_position: Vector2 = get_viewport().get_mouse_position()
+	var stack_index: int = _active_xp_popups.size()
+	var stack_above: bool = (
+		mouse_position.y
+		> 36.0 + float(stack_index) * XP_POPUP_STACK_SPACING
+	)
+	var vertical_offset: float = (
+		-28.0 - float(stack_index) * XP_POPUP_STACK_SPACING
+		if stack_above
+		else 18.0 + float(stack_index) * XP_POPUP_STACK_SPACING
+	)
+	var popup_position := mouse_position + Vector2(14.0, vertical_offset)
+	popup_position.x = clampf(
+		popup_position.x,
+		8.0,
+		maxf(viewport_size.x - popup.size.x - 8.0, 8.0)
+	)
+	popup_position.y = clampf(
+		popup_position.y,
+		8.0,
+		maxf(viewport_size.y - popup.size.y - 8.0, 8.0)
+	)
+	popup.position = popup_position
+	_active_xp_popups.append(popup)
+
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(
+		popup,
+		"position:y",
+		popup.position.y - XP_POPUP_RISE_DISTANCE,
+		XP_POPUP_DURATION
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(
+		popup,
+		"modulate:a",
+		0.0,
+		XP_POPUP_DURATION
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(
+		_remove_xp_popup.bind(popup)
+	)
+
+
+func _remove_xp_popup(popup: Label) -> void:
+	_active_xp_popups.erase(popup)
+	if is_instance_valid(popup):
+		popup.queue_free()
 
 func _ready() -> void:
 	GameManager.game_ui = self
+	_apply_environment_surface_styles(self)
+	_update_environment_background()
 
 	open_equipment_button.pressed.connect(_on_open_equipment_pressed)
 	enter_camp_button.pressed.connect(_on_enter_camp_pressed)
@@ -213,6 +298,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func refresh_all() -> void:
+	_update_environment_background()
 	update_survivor()
 	update_location()
 	update_tool_display()
@@ -1006,6 +1092,7 @@ func _open_camp_screen(
 
 	camp_navigation.visible = true
 	camp_navigation.set_current_screen(screen_id)
+	_update_environment_background()
 	if screen_id == CampNavigation.EQUIPMENT_SCREEN_ID:
 		equipment_ui.focus_selected_slot()
 
@@ -1020,3 +1107,70 @@ func _back_in_camp() -> void:
 func _close_camp_workspace() -> void:
 	camp_router.close_all()
 	camp_navigation.visible = false
+	_update_environment_background()
+
+
+func _update_environment_background() -> void:
+	if environment_background == null:
+		return
+
+	var selected_texture: Texture2D = FOREST_BACKGROUND
+	if not camp_router.get_current_screen_id().is_empty():
+		selected_texture = HOME_BACKGROUND
+	else:
+		var location: LocationData = GameManager.current_location
+		if location != null:
+			match location.id:
+				"river":
+					selected_texture = RIVER_BACKGROUND
+				"meadow":
+					selected_texture = MEADOW_BACKGROUND
+
+	environment_background.texture = selected_texture
+	_update_workspace_backgrounds(selected_texture)
+
+
+func _update_workspace_backgrounds(texture: Texture2D) -> void:
+	for workspace: Control in [
+		home_ui,
+		crafting_ui,
+		storage_ui,
+		equipment_ui,
+		journal_ui
+	]:
+		if workspace == null:
+			continue
+		var background := workspace.get_node_or_null("Background") as TextureRect
+		if background != null:
+			background.texture = texture
+
+
+func _apply_environment_surface_styles(node: Node) -> void:
+	if node is PanelContainer:
+		var panel := node as PanelContainer
+		var panel_style := StyleBoxFlat.new()
+		if panel.name == "CampNavigation":
+			panel_style.bg_color = CAMP_NAVIGATION_BACKGROUND_COLOR
+		elif _is_modal_panel(panel):
+			panel_style.bg_color = MODAL_BACKGROUND_COLOR
+		else:
+			panel_style.bg_color = PANEL_BACKGROUND_COLOR
+		panel_style.border_color = PANEL_BORDER_COLOR
+		panel_style.set_border_width_all(1)
+		panel_style.set_corner_radius_all(4)
+		panel.add_theme_stylebox_override("panel", panel_style)
+	elif node is ColorRect and node.name == "Background":
+		var background := node as ColorRect
+		background.color.a = 0.16
+
+	for child: Node in node.get_children():
+		_apply_environment_surface_styles(child)
+
+
+func _is_modal_panel(panel: PanelContainer) -> bool:
+	return panel.name in [
+		"EventPanel",
+		"SummaryPanel",
+		"Panel",
+		"DisassemblyConfirmation"
+	]

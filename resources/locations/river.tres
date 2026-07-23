@@ -9,6 +9,7 @@
 [ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="6_8y3ha"]
 [ext_resource type="Resource" uid="uid://ctwviw0tgrfik" path="res://resources/items/berry.tres" id="7_5txsx"]
 [ext_resource type="Resource" path="res://resources/items/flint.tres" id="8_flint"]
+[ext_resource type="Resource" uid="uid://ch2jabciak2g1" path="res://resources/actions/track_animals.tres" id="9_track"]
 
 [sub_resource type="Resource" id="Resource_xsfm0"]
 script = ExtResource("5_77xmv")
@@ -48,6 +49,6 @@ id = "river"
 display_name = "River"
 description = "A natural freshwater watercourse that supports the surrounding environment. A dependable source of water and a common place to find useful resources."
 first_visit_text = "The trees break around a ribbon of cold, moving water. Smooth stones line the bank, while broken branches and dark silt collect where the current slows. For the first time, the wilderness seems to offer a path rather than a wall."
-available_actions = Array[ExtResource("1_tisep")]([ExtResource("2_lq47s")])
+available_actions = Array[ExtResource("1_tisep")]([ExtResource("2_lq47s"), ExtResource("9_track")])
 travel_connections = Array[ExtResource("3_lq47s")]([SubResource("Resource_b71gb")])
 search_loot = Array[ExtResource("5_77xmv")]([SubResource("Resource_xsfm0"), SubResource("Resource_rv83x"), SubResource("Resource_627l5"), SubResource("Loot_flint")])
