@@ -477,6 +477,18 @@ The workspace changes no persistent state shape. Save version remains 12.
 
 The selected recipe remains presentation state for the current UI session and is not saved. This extraction changes no gameplay data or save format.
 
+### Layered Crafting Plans
+
+`CraftingPlan` is a temporary typed description of one recipe against the currently accessible Pack and Camp inventories. It records exact item quantities, selected component resources, component snapshots, material-dependent results, readiness, and the first truthful unavailable reason.
+
+`CraftingPlanningService` is stateless and owns deterministic planning. It follows the existing material-quality ordering from `ItemDatabase`, reserves available quantities while walking recipe requirements, and resolves `RecipeData` result variants from the same selected components. It does not mutate inventories.
+
+`CraftingUI` builds a plan for presentation. The result and readiness remain primary; requirements and selected components are visible in one expandable layer; derived statistics and equipped-tool comparisons occupy a second layer. Preview equipment is a temporary `ItemInstance` assembled from plan component snapshots and passed through the existing `EquipmentStatCalculator`.
+
+`CraftAction` builds a fresh authoritative plan when the timed action completes. `GameManager.consume_recipe_ingredients_from_accessible_inventories()` validates and removes the exact item quantities described by that plan, then copies its selected components and component records into the established equipment-creation path. Preview and execution therefore share selection rules without persisting or trusting stale UI state.
+
+Plans are session-local calculations and are never saved. Save version remains 13.
+
 Major areas include:
 
 ```text
