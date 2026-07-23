@@ -92,6 +92,14 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+[node name="AssemblyHeading" type="Label" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Assembly"
+horizontal_alignment = 1
+
 [node name="ComponentChoices" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
 unique_name_in_owner = true
 layout_mode = 2

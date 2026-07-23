@@ -42,4 +42,5 @@ xp_reward = 5
 variant_component_slot = "head"
 material_result_variants = Array[ExtResource("7_variant")]([SubResource("Variant_flint")])
 description = "Seat the best available shaped head against the best prepared handle, then secure the joint with the strongest available binding. The head determines the finished axe, while every component contributes to its performance."
+component_display_order = Array[String](["head", "binding", "handle"])
 metadata/_custom_type_script = "uid://ck8q7c4l76io2"

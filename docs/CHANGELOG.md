@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.8-alpha1 — Visual Assembly Template
+
+### Added
+
+* A spatial Head → Binding → Handle assembly presentation for the axe recipe.
+* Visual connector marks that present component slots as one constructed object.
+* At-a-glance material, quality, quantity, selection-mode, and mechanical-contribution information on every component card.
+* Weakest-link warnings for components that limit the finished tool's overall quality.
+* Authored presentation-only component ordering on `RecipeData`.
+
+### Changed
+
+* `ComponentChoiceRow` is now a visual `PanelContainer` slot card while retaining its single keyboard-accessible dropdown.
+* Assembly cards are built after the shared crafting plan resolves, so Automatic and Explicit states reflect the exact previewed components.
+* Non-assembly recipes continue using the ordinary crafting presentation without empty component slots.
+
+### Validation
+
+* Godot registered the changed `RecipeData`, `ComponentChoiceRow`, and `CraftingUI` classes without direct errors.
+* The component-card scene root and script base were validated together as `PanelContainer`.
+* Manual testing passed for authored slot order, connectors, component information, selection mode, mechanical contributions, weakest-link warnings, keyboard selection, non-assembly recipes, scrolling, viewport fit, and finished-result accuracy.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. Component display order is static recipe metadata and the visual template adds no persistent state.
+
+### Not Included
+
+* Drag-and-drop assembly, freeform slot positioning, custom templates, component traits, engraving, and legacy-component extraction remain outside this milestone.
+
+---
+
 ## v0.6.7-alpha1 — Guided Component Selection
 
 ### Added

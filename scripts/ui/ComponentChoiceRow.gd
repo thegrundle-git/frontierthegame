@@ -1,4 +1,4 @@
-extends HBoxContainer
+extends PanelContainer
 class_name ComponentChoiceRow
 
 
@@ -6,6 +6,10 @@ signal component_selected(component_slot: String, item_id: String)
 
 
 @onready var slot_label: Label = %SlotLabel
+@onready var mode_label: Label = %ModeLabel
+@onready var limiting_label: Label = %LimitingLabel
+@onready var selected_component_label: Label = %SelectedComponentLabel
+@onready var contribution_label: Label = %ContributionLabel
 @onready var component_selector: OptionButton = %ComponentSelector
 
 var component_slot: String = ""
@@ -18,10 +22,21 @@ func _ready() -> void:
 func configure(
 	slot: String,
 	available_components: Array[ItemData],
-	selected_item_id: String
+	preferred_item_id: String,
+	resolved_component: ItemData,
+	contribution_text: String,
+	limits_quality: bool
 ) -> void:
 	component_slot = slot
 	slot_label.text = slot.capitalize()
+	mode_label.text = (
+		"Explicit choice"
+		if not preferred_item_id.is_empty()
+		else "Automatic"
+	)
+	limiting_label.visible = limits_quality
+	contribution_label.text = contribution_text
+	_set_resolved_component(resolved_component)
 	component_selector.clear()
 	component_selector.add_item("Automatic — best available")
 	component_selector.set_item_metadata(0, "")
@@ -54,7 +69,7 @@ func configure(
 			+ "\nAvailable: "
 			+ str(amount)
 		)
-		if component.id == selected_item_id:
+		if component.id == preferred_item_id:
 			selected_index = index
 
 	component_selector.select(selected_index)
@@ -62,6 +77,27 @@ func configure(
 		"Choose a specific "
 		+ slot.capitalize()
 		+ " or allow Frontier to use the best available option."
+	)
+
+
+func _set_resolved_component(component: ItemData) -> void:
+	if component == null:
+		selected_component_label.text = "No compatible component available"
+		selected_component_label.remove_theme_color_override("font_color")
+		return
+	selected_component_label.text = (
+		component.display_name
+		+ "  •  "
+		+ ItemPresentation.get_material_family_label(component)
+		+ "  •  Quality "
+		+ str(maxi(component.material_quality, 0) + 1)
+		+ "  •  "
+		+ str(GameManager.get_accessible_crafting_item_amount(component.id))
+		+ " available"
+	)
+	selected_component_label.add_theme_color_override(
+		"font_color",
+		ItemPresentation.get_material_color(component)
 	)
 
 
