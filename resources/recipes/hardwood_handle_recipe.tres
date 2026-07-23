@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="RecipeData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/IngredientData.gd" id="1_ingredient"]
+[ext_resource type="Script" path="res://scripts/resources/RecipeData.gd" id="2_recipe"]
+[ext_resource type="Resource" path="res://resources/items/hardwood_branch.tres" id="3_branch"]
+[ext_resource type="Resource" path="res://resources/items/hardwood_handle.tres" id="4_handle"]
+
+[sub_resource type="Resource" id="Ingredient_branch"]
+script = ExtResource("1_ingredient")
+item = ExtResource("3_branch")
+amount = 2
+
+[sub_resource type="Resource" id="Result_handle"]
+script = ExtResource("1_ingredient")
+item = ExtResource("4_handle")
+
+[resource]
+script = ExtResource("2_recipe")
+id = "hardwood_handle_recipe"
+display_name = "Carve Hardwood Handle"
+ingredients = Array[ExtResource("1_ingredient")]([SubResource("Ingredient_branch")])
+results = Array[ExtResource("1_ingredient")]([SubResource("Result_handle")])
+craft_time = 20
+xp_reward = 3
+description = "Select the soundest grain, carve away knots and weak edges, then smooth the haft until its balance can be felt in the hand."

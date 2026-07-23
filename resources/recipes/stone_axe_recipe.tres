@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dgx01py1umnc5" path="res://scripts/resources/IngredientData.gd" id="1_ingredient"]
 [ext_resource type="Script" uid="uid://ck8q7c4l76io2" path="res://scripts/resources/RecipeData.gd" id="2_recipe"]
-[ext_resource type="Resource" uid="uid://bb1lc7b6hufp8" path="res://resources/items/stick_handle.tres" id="3_handle"]
-[ext_resource type="Resource" uid="uid://ix1x1geo5cdn" path="res://resources/items/fiber_binding.tres" id="4_binding"]
 [ext_resource type="Resource" uid="uid://cmkt2vm4y7xsa" path="res://resources/items/stone_axe.tres" id="5_stone_axe"]
 [ext_resource type="Resource" uid="uid://ct1vs6uxllyca" path="res://resources/items/flint_axe.tres" id="6_flint_axe"]
 [ext_resource type="Script" uid="uid://c0xuh20fcib35" path="res://scripts/resources/MaterialResultVariantData.gd" id="7_variant"]
@@ -14,11 +12,11 @@ component_slot = "head"
 
 [sub_resource type="Resource" id="Ingredient_handle"]
 script = ExtResource("1_ingredient")
-item = ExtResource("3_handle")
+component_slot = "handle"
 
 [sub_resource type="Resource" id="Ingredient_binding"]
 script = ExtResource("1_ingredient")
-item = ExtResource("4_binding")
+component_slot = "binding"
 
 [sub_resource type="Resource" id="Result_flint_axe"]
 script = ExtResource("1_ingredient")
@@ -43,5 +41,5 @@ craft_time = 30
 xp_reward = 5
 variant_component_slot = "head"
 material_result_variants = Array[ExtResource("7_variant")]([SubResource("Variant_flint")])
-description = "Seat the best available shaped head against the prepared handle, then lash the joint tightly with twisted fiber. The head material determines the finished axe."
+description = "Seat the best available shaped head against the best prepared handle, then secure the joint with the strongest available binding. The head determines the finished axe, while every component contributes to its performance."
 metadata/_custom_type_script = "uid://ck8q7c4l76io2"

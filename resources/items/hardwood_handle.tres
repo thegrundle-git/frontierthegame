@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+id = "hardwood_handle"
+display_name = "Hardwood Handle"
+description = "A dense hardwood branch carved, smoothed, and balanced into a durable haft. Its firmer grain carries force cleanly without twisting in the hand."
+category = "component"
+material_family = "wood"
+weight = 0.6
+stack_size = 10
+tags = Array[String](["tool_component", "handle", "wood", "hardwood"])
+component_slot = "handle"
+material_id = "hardwood"
+material_quality = 1

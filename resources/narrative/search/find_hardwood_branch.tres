@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="NarrativeTemplateData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/NarrativeTemplateData.gd" id="1_template"]
+
+[resource]
+script = ExtResource("1_template")
+category = "search_find"
+selector_id = "hardwood_branch"
+variants = Array[String](["Beneath an older tree, {actor_name} found a Hardwood Branch with dense, straight grain.", "A fallen limb had split around a sound length of hardwood suitable for careful shaping.", "Among the soft deadfall, one heavy Hardwood Branch remained firm and unrotted."])

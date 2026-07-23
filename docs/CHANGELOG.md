@@ -4,6 +4,40 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.3-alpha1 — Interconnected Foraging Expansion
+
+### Added
+
+* Hardwood Branches as a distinct Forest forageable and River Reeds as a distinct River forageable.
+* Hardwood Handles with improved handling and durability.
+* Braided Reed Bindings with improved stability and durability.
+* The Refined Hafting discovery, unlocked by observing both new resources with sufficient knowledge.
+* Data-driven recipes for carving Hardwood Handles and braiding Reed Bindings.
+* Authored search narration for both new forageables.
+
+### Changed
+
+* Axe assembly now accepts the best available compatible handle and binding in addition to the best available head.
+* An axe assembled with improved components records those exact parts and derives Handling 2, Stability 2, improved condition capacity, and a four-second Chop Tree duration.
+* Forest and River search tables now offer location-specific materials with direct crafting uses.
+
+### Validation
+
+* Godot editor import and startup validation passed.
+* Startup registered 17 items, 5 discoveries, and 7 recipes.
+* Manual testing passed for gathering, Refined Hafting discovery, recipe unlocking, improved component crafting, best-component assembly, derived equipment statistics, action duration, and save/load persistence.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. New content uses existing item, discovery, recipe, observation, inventory, and component-history persistence.
+
+### Not Included
+
+* Eating, cooking, medicine, spoilage, mushrooms, and expanded field crafting remain future systems.
+
+---
+
 ## v0.6.2-alpha1 — Material Identity and Color Language
 
 ### Added

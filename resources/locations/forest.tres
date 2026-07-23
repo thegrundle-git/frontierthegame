@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://c3lxm4ibtebmo" path="res://scripts/resources/SearchLootEntryData.gd" id="5_ov7sf"]
 [ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="6_mnpna"]
 [ext_resource type="Resource" uid="uid://clcyx5iqp0lgl" path="res://resources/items/stone.tres" id="7_im3hc"]
+[ext_resource type="Resource" path="res://resources/items/hardwood_branch.tres" id="8_hardwood"]
 
 [sub_resource type="Resource" id="Resource_r8hcy"]
 script = ExtResource("5_ov7sf")
@@ -29,6 +30,12 @@ metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
 script = ExtResource("5_ov7sf")
 item = ExtResource("7_im3hc")
 weight = 30
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Loot_hardwood"]
+script = ExtResource("5_ov7sf")
+item = ExtResource("8_hardwood")
+weight = 12
 metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
 
 [sub_resource type="Resource" id="Resource_mqbdk"]
@@ -53,5 +60,5 @@ description = "A region dominated by dense tree cover. Rich in renewable resourc
 first_visit_text = "The wilderness closes around Finnley beneath a roof of tangled branches. The forest offers shelter, timber, and food, but nothing freely. Every useful thing will have to be found, understood, and earned."
 available_actions = Array[ExtResource("1_ov7sf")]([ExtResource("2_36u8b"), ExtResource("3_7q3hv"), ExtResource("4_mnpna")])
 travel_connections = Array[ExtResource("5_e2bfc")]([SubResource("Resource_mqbdk"), SubResource("Resource_36u8b"), null])
-search_loot = Array[ExtResource("5_ov7sf")]([SubResource("Resource_r8hcy"), SubResource("Resource_3pxe2"), SubResource("Resource_jwej7")])
+search_loot = Array[ExtResource("5_ov7sf")]([SubResource("Resource_r8hcy"), SubResource("Resource_3pxe2"), SubResource("Resource_jwej7"), SubResource("Loot_hardwood")])
 metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

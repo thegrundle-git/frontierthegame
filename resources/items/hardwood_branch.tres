@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+id = "hardwood_branch"
+display_name = "Hardwood Branch"
+description = "A dense, straight branch shed from an old forest tree. Its close grain resists splitting and offers a stronger foundation for a worked handle than common deadfall."
+category = "Resource"
+material_family = "wood"
+weight = 0.7
+stack_size = 20
+tags = Array[String](["gathering", "wood", "hardwood"])
