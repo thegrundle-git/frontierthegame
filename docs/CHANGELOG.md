@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.6-alpha1 — Layered Crafting Preview
+
+### Added
+
+* A typed `CraftingPlan` describing exact ingredient consumption, selected components, material-dependent results, readiness, and shortages.
+* A stateless `CraftingPlanningService` shared by the Crafting interface and actual crafting execution.
+* Finished-result previews for discovered recipes before resources are consumed.
+* Expandable requirements, selected-component, statistic, and equipped-comparison sections.
+* Specific disabled-state explanations when a recipe cannot currently be crafted.
+
+### Changed
+
+* Crafting previews and completed crafts now use the same deterministic component-selection plan.
+* Material-dependent recipes no longer promise a result until the defining component is available.
+* Equipment previews use `EquipmentStatCalculator` for efficiency, handling, stability, overall quality, and action duration.
+* The Crafting workspace is larger but remains viewport-bounded and independently scrollable.
+
+### Validation
+
+* New global crafting-plan classes registered successfully in Godot 4.7.
+* Manual testing passed for recipe selection, expandable sections, material variants, component selection, shortages, equipped comparisons, crafting results, ingredient consumption, and viewport fit.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 13. Crafting plans are temporary calculations rebuilt from existing recipe and inventory state.
+
+### Not Included
+
+* Manual component selection, randomized craftsmanship, component traits, material encyclopedias, persistent plans, and new recipes remain outside this milestone.
+
+---
+
 ## v0.6.5-alpha1 — Informed Event Choices
 
 ### Added

@@ -932,33 +932,29 @@ func disassemble_equipment(instance: ItemInstance) -> bool:
 func can_afford_recipe_from_accessible_inventories(
 	recipe: RecipeData
 ) -> bool:
-	if recipe == null:
-		return false
+	return build_crafting_plan(recipe).can_craft
 
-	for ingredient: IngredientData in recipe.ingredients:
-		if (
-			ingredient == null
-			or not ingredient.is_valid()
-		):
-			return false
 
-		var available := _get_accessible_ingredient_amount(
-			ingredient
-		)
-
-		if available < ingredient.amount:
-			return false
-
-	return true
+func build_crafting_plan(recipe: RecipeData) -> CraftingPlan:
+	return CraftingPlanningService.build_plan(
+		recipe,
+		get_accessible_crafting_inventories()
+	)
 
 
 func consume_recipe_ingredients_from_accessible_inventories(
 	recipe: RecipeData,
 	consumed_components: Dictionary = {},
-	component_records: Array[EquipmentComponentRecord] = []
+	component_records: Array[EquipmentComponentRecord] = [],
+	plan: CraftingPlan = null
 ) -> bool:
-	if not can_afford_recipe_from_accessible_inventories(
-		recipe
+	var active_plan: CraftingPlan = plan
+	if active_plan == null:
+		active_plan = build_crafting_plan(recipe)
+	if (
+		active_plan == null
+		or active_plan.recipe_id != recipe.id
+		or not active_plan.can_craft
 	):
 		return false
 
@@ -966,85 +962,39 @@ func consume_recipe_ingredients_from_accessible_inventories(
 		get_accessible_crafting_inventories()
 	)
 
-	for ingredient: IngredientData in recipe.ingredients:
-		var remaining: int = ingredient.amount
+	for item_id_value: Variant in active_plan.required_item_amounts.keys():
+		var item_id := str(item_id_value)
+		var required := int(active_plan.required_item_amounts[item_id])
+		if get_accessible_crafting_item_amount(item_id) < required:
+			return false
 
-		if ingredient.uses_component_slot():
-			var candidates: Array[ItemData] = (
-				ItemDatabase.get_components_for_slot(
-					ingredient.component_slot
-				)
-			)
-
-			for component: ItemData in candidates:
-				if remaining <= 0:
-					break
-
-				for inventory: FrontierInventory in inventories:
-					if remaining <= 0:
-						break
-
-					var amount_to_remove: int = mini(
-						remaining,
-						inventory.get_item_amount(
-							component.id
-						)
-					)
-
-					if amount_to_remove <= 0:
-						continue
-
-					inventory.remove_item(
-						component.id,
-						amount_to_remove
-					)
-
-					if not consumed_components.has(
-						ingredient.component_slot
-					):
-						consumed_components[
-							ingredient.component_slot
-						] = component
-
-					_record_consumed_component(
-						component_records,
-						component,
-						ingredient.component_slot,
-						amount_to_remove
-					)
-
-					remaining -= amount_to_remove
-
-			continue
-
+	for item_id_value: Variant in active_plan.required_item_amounts.keys():
+		var item_id := str(item_id_value)
+		var remaining := int(active_plan.required_item_amounts[item_id])
 		for inventory: FrontierInventory in inventories:
 			if remaining <= 0:
 				break
-
-			var amount_to_remove: int = mini(
+			var amount_to_remove := mini(
 				remaining,
-				inventory.get_item_amount(
-					ingredient.item.id
-				)
+				inventory.get_item_amount(item_id)
 			)
-
 			if amount_to_remove <= 0:
 				continue
+			if inventory.remove_item(item_id, amount_to_remove):
+				remaining -= amount_to_remove
 
-			inventory.remove_item(
-				ingredient.item.id,
-				amount_to_remove
-			)
+		if remaining > 0:
+			return false
 
-			if ingredient.item.is_tool_component():
-				_record_consumed_component(
-					component_records,
-					ingredient.item,
-					ingredient.item.component_slot,
-					amount_to_remove
-				)
-
-			remaining -= amount_to_remove
+	for component_slot_value: Variant in active_plan.selected_components.keys():
+		consumed_components[str(component_slot_value)] = (
+			active_plan.selected_components[component_slot_value]
+		)
+	for record: EquipmentComponentRecord in active_plan.component_records:
+		if record != null:
+			var copied_record := record.duplicate(true) as EquipmentComponentRecord
+			if copied_record != null:
+				component_records.append(copied_record)
 
 	return true
 

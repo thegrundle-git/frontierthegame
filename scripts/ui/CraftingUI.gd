@@ -8,6 +8,10 @@ signal back_requested
 
 @onready var recipe_selector: OptionButton = %RecipeSelector
 @onready var recipe_label: RichTextLabel = %RecipeLabel
+@onready var requirements_toggle: Button = %RequirementsToggle
+@onready var requirements_label: RichTextLabel = %RequirementsLabel
+@onready var details_toggle: Button = %DetailsToggle
+@onready var details_label: RichTextLabel = %DetailsLabel
 @onready var craft_button: Button = %CraftButton
 @onready var back_button: Button = %BackButton
 
@@ -16,8 +20,12 @@ var selected_recipe_id: String = ""
 
 func _ready() -> void:
 	recipe_selector.item_selected.connect(_on_recipe_selected)
+	requirements_toggle.toggled.connect(_on_requirements_toggled)
+	details_toggle.toggled.connect(_on_details_toggled)
 	craft_button.pressed.connect(_on_craft_pressed)
 	back_button.pressed.connect(back_requested.emit)
+	requirements_toggle.button_pressed = true
+	details_toggle.button_pressed = false
 
 
 func get_default_focus_target() -> Control:
@@ -46,13 +54,24 @@ func refresh() -> void:
 	recipe_selector.visible = true
 	recipe_selector.disabled = false
 	craft_button.visible = true
-	craft_button.text = "Craft " + recipe.display_name
-	recipe_label.text = _build_recipe_text(recipe)
+	var plan: CraftingPlan = GameManager.build_crafting_plan(recipe)
+	var primary_result: IngredientData = _get_preview_result(recipe, plan)
+	var result_name := recipe.display_name
+	if primary_result != null and primary_result.item != null:
+		result_name = primary_result.item.display_name
+	craft_button.text = "Craft " + result_name
+	recipe_label.text = _build_outcome_text(recipe, plan)
+	requirements_label.text = _build_requirements_text(recipe, plan)
+	details_label.text = _build_details_text(recipe, plan)
 	craft_button.disabled = (
 		not survivor.can_act()
 		or ActionManager.is_busy
 		or WorldEventManager.has_pending_event()
-		or not GameManager.can_afford_recipe_from_accessible_inventories(recipe)
+		or not plan.can_craft
+	)
+	craft_button.tooltip_text = (
+		plan.unavailable_reason if not plan.can_craft
+		else "Consume the listed components and create " + result_name + "."
 	)
 
 
@@ -88,47 +107,174 @@ func _populate_recipe_selector(civilization: CivilizationData) -> void:
 	)
 
 
-func _build_recipe_text(recipe: RecipeData) -> String:
-	var recipe_text := (
-		_build_result_heading(recipe)
+func _build_outcome_text(recipe: RecipeData, plan: CraftingPlan) -> String:
+	var result: IngredientData = _get_preview_result(recipe, plan)
+	var heading := recipe.display_name
+	var quantity := 1
+	if result != null and result.item != null:
+		heading = ItemPresentation.colorize_name(result.item)
+		quantity = result.amount
+	var readiness := "[color=#8fbd72]Ready to craft[/color]"
+	if not plan.can_craft:
+		readiness = (
+			"[color=#d98c7a]Not ready: "
+			+ plan.unavailable_reason
+			+ "[/color]"
+		)
+	return (
+		"[font_size=22]"
+		+ heading
+		+ (" ×" + str(quantity) if quantity > 1 else "")
+		+ "[/font_size]\n"
+		+ readiness
 		+ "\n\n"
 		+ recipe.description
-		+ "\n\nRequires:\n"
 	)
 
+
+func _build_requirements_text(
+	recipe: RecipeData,
+	plan: CraftingPlan
+) -> String:
+	var lines: Array[String] = []
 	for ingredient: IngredientData in recipe.ingredients:
 		if ingredient == null or not ingredient.is_valid():
 			continue
-
 		var owned: int = (
 			GameManager.get_accessible_crafting_ingredient_amount(ingredient)
 		)
-		var ingredient_name := ""
+		var ingredient_name := "Unknown"
 		if ingredient.uses_component_slot():
-			ingredient_name = (
-				ingredient.component_slot.capitalize()
-				+ " (best available)"
-			)
+			ingredient_name = ingredient.component_slot.capitalize()
 		else:
 			ingredient_name = ItemPresentation.colorize_name(ingredient.item)
-
-		recipe_text += (
+		lines.append(
 			ingredient_name
 			+ ": "
 			+ str(owned)
 			+ " / "
 			+ str(ingredient.amount)
-			+ "\n"
 		)
 
-	return recipe_text
+	if not plan.component_records.is_empty():
+		lines.append("\nSelected components:")
+		for record: EquipmentComponentRecord in plan.component_records:
+			var item: ItemData = record.get_item_data()
+			if item == null:
+				continue
+			lines.append(
+				"• "
+				+ record.component_slot.capitalize()
+				+ ": "
+				+ ItemPresentation.colorize_name(item)
+				+ (" ×" + str(record.amount) if record.amount > 1 else "")
+			)
+	return "\n".join(lines)
 
 
-func _build_result_heading(recipe: RecipeData) -> String:
-	for result: IngredientData in recipe.results:
-		if result != null and result.is_valid() and result.item != null:
-			return ItemPresentation.colorize_name(result.item, recipe.display_name)
-	return recipe.display_name
+func _build_details_text(recipe: RecipeData, plan: CraftingPlan) -> String:
+	var result: IngredientData = _get_preview_result(recipe, plan)
+	if result == null or result.item == null:
+		return (
+			"The finished material variant will be shown when its defining "
+			+ "component is available."
+		)
+
+	var item: ItemData = result.item
+	var lines: Array[String] = [
+		"Material: " + ItemPresentation.get_material_family_label(item),
+	]
+	var preview: ItemInstance = plan.build_preview_instance()
+	if preview != null:
+		var efficiency := EquipmentStatCalculator.get_tool_efficiency(preview)
+		var handling := EquipmentStatCalculator.get_handling_rating(preview)
+		var stability := EquipmentStatCalculator.get_stability_rating(preview)
+		var quality := EquipmentStatCalculator.get_overall_quality(preview)
+		lines.append("Efficiency: " + str(efficiency))
+		lines.append("Handling: " + str(handling))
+		lines.append("Stability: " + str(stability))
+		lines.append("Overall quality: " + str(quality))
+
+		var chop_action: ActionData = ActionDatabase.get_action("chop_tree")
+		if chop_action != null and "axe" in item.tags:
+			var duration := EquipmentStatCalculator.get_action_duration_seconds(
+				preview,
+				chop_action.duration_seconds
+			)
+			lines.append("Chop Tree duration: %.2f seconds" % duration)
+		_append_equipped_comparison(lines, preview, chop_action.duration_seconds)
+
+	lines.append("\nConstruction history begins after crafting.")
+	return "\n".join(lines)
+
+
+func _get_preview_result(
+	recipe: RecipeData,
+	plan: CraftingPlan
+) -> IngredientData:
+	if (
+		not recipe.variant_component_slot.is_empty()
+		and not plan.selected_components.has(recipe.variant_component_slot)
+	):
+		return null
+	return plan.get_primary_result()
+
+
+func _append_equipped_comparison(
+	lines: Array[String],
+	preview: ItemInstance,
+	base_duration: float
+) -> void:
+	var survivor: Survivor = GameManager.current_survivor
+	if survivor == null:
+		return
+	var equipped: ItemInstance = survivor.get_equipped_tool_instance()
+	if equipped == null:
+		lines.append("\nCompared with equipped: No tool equipped")
+		return
+	var item: ItemData = equipped.get_item_data()
+	if item == null or "axe" not in item.tags:
+		lines.append("\nCompared with equipped: Different tool type")
+		return
+	lines.append("\nCompared with equipped " + item.display_name + ":")
+	lines.append(
+		"• Efficiency: "
+		+ _format_delta(
+			EquipmentStatCalculator.get_tool_efficiency(preview)
+			- EquipmentStatCalculator.get_tool_efficiency(equipped)
+		)
+	)
+	lines.append(
+		"• Handling: "
+		+ _format_delta(
+			EquipmentStatCalculator.get_handling_rating(preview)
+			- EquipmentStatCalculator.get_handling_rating(equipped)
+		)
+	)
+	lines.append(
+		"• Stability: "
+		+ _format_delta(
+			EquipmentStatCalculator.get_stability_rating(preview)
+			- EquipmentStatCalculator.get_stability_rating(equipped)
+		)
+	)
+	var preview_duration := EquipmentStatCalculator.get_action_duration_seconds(
+		preview,
+		base_duration
+	)
+	var equipped_duration := EquipmentStatCalculator.get_action_duration_seconds(
+		equipped,
+		base_duration
+	)
+	lines.append(
+		"• Chop duration: %+.2f seconds" % (
+			preview_duration - equipped_duration
+		)
+	)
+
+
+func _format_delta(value: int) -> String:
+	return "%+d" % value
 
 
 func _show_unavailable(message: String) -> void:
@@ -136,6 +282,8 @@ func _show_unavailable(message: String) -> void:
 	recipe_selector.visible = true
 	recipe_selector.disabled = false
 	recipe_label.text = message
+	requirements_label.text = ""
+	details_label.text = ""
 	craft_button.disabled = true
 	craft_button.visible = false
 
@@ -153,3 +301,21 @@ func _on_craft_pressed() -> void:
 		return
 
 	craft_requested.emit(selected_recipe_id)
+
+
+func _on_requirements_toggled(expanded: bool) -> void:
+	requirements_label.visible = expanded
+	requirements_toggle.text = (
+		"Requirements and components ▼"
+		if expanded
+		else "Requirements and components ▶"
+	)
+
+
+func _on_details_toggled(expanded: bool) -> void:
+	details_label.visible = expanded
+	details_toggle.text = (
+		"Statistics and comparison ▼"
+		if expanded
+		else "Statistics and comparison ▶"
+	)

@@ -27,13 +27,12 @@ func perform(
 		)
 		return false
 
-	if not GameManager.can_afford_recipe_from_accessible_inventories(
-		recipe
-	):
+	var plan: CraftingPlan = GameManager.build_crafting_plan(recipe)
+	if plan == null or not plan.can_craft:
 		_add_event(
-			"Not enough materials to craft "
-			+ recipe.display_name
-			+ "."
+			plan.unavailable_reason
+			if plan != null and not plan.unavailable_reason.is_empty()
+			else "Unable to craft " + recipe.display_name + "."
 		)
 		return false
 
@@ -43,15 +42,12 @@ func perform(
 	if not GameManager.consume_recipe_ingredients_from_accessible_inventories(
 		recipe,
 		consumed_components,
-		component_records
+		component_records,
+		plan
 	):
 		return false
 
-	var crafted_results: Array[IngredientData] = (
-		recipe.get_results_for_components(
-			consumed_components
-		)
-	)
+	var crafted_results: Array[IngredientData] = plan.results
 
 	var output_inventory: FrontierInventory = (
 		_get_crafting_output_inventory(

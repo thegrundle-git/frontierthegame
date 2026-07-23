@@ -39,7 +39,7 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 
 [node name="CraftingPanel" type="PanelContainer" parent="WorkspaceMargin/WorkspaceCenter"]
-custom_minimum_size = Vector2(520, 360)
+custom_minimum_size = Vector2(640, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -66,17 +66,63 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
-[node name="RecipeScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
-custom_minimum_size = Vector2(0, 180)
+[node name="OutcomeScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
-size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="RecipeLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/RecipeScroll"]
+[node name="RecipeLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/OutcomeScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "No recipes discovered."
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+
+[node name="DetailsScroll" type="ScrollContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout"]
+custom_minimum_size = Vector2(0, 190)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="DetailsLayout" type="VBoxContainer" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="RequirementsToggle" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Requirements and components ▼"
+alignment = 0
+
+[node name="RequirementsLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+
+[node name="DetailsToggle" type="Button" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+toggle_mode = true
+text = "Statistics and comparison ▶"
+alignment = 0
+
+[node name="DetailsLabel" type="RichTextLabel" parent="WorkspaceMargin/WorkspaceCenter/CraftingPanel/PanelMargin/CraftingLayout/DetailsScroll/DetailsLayout"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
 bbcode_enabled = true
 fit_content = true
 scroll_active = false

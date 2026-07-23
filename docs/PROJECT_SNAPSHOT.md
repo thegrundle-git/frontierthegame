@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.5-alpha1
+v0.6.6-alpha1
 
 ## Project Health
 
-🟢 Stable — Informed event choices passed manual testing
+🟢 Stable — Layered crafting preview passed manual testing
 
 ## Current Milestone
 
@@ -341,6 +341,14 @@ All 22 authored world-event choices now show the action's intent, likely reward 
 `EventChoiceCard` presents that guidance directly, repeats it through accessible tooltips, preserves authored ordering, and gives keyboard focus to the first choice. The event description remains bounded while choices scroll independently, keeping the decision usable at 1280x720.
 
 Manual testing passed for layout, scrolling, focus, tooltips, choice resolution, and existing outcomes. Save version remains 13 because the guidance is static resource metadata.
+
+## Layered Crafting Preview
+
+The Crafting workspace now previews the finished result before committing resources. It shows readiness, exact selected components, requirements, material identity, derived equipment statistics, action duration, and a relevant comparison with the equipped tool.
+
+`CraftingPlan` and `CraftingPlanningService` provide one deterministic selection path for both preview and execution. Material-dependent results therefore use the same chosen components that the completed craft consumes, while unavailable defining components leave the result honestly unresolved.
+
+Requirements and selected components remain immediately available, while detailed calculations and comparisons expand on demand inside the bounded workspace. Manual testing passed for material variants, improved components, shortages, comparisons, actual results, consumption, and layout. Save version remains 13 because plans are temporary.
 
 ## Next Goals
 
