@@ -211,6 +211,7 @@ Each `LocationData` resource contains:
 * available actions;
 * travel connections;
 * location-specific search loot;
+* location-specific weighted wildlife signs;
 * empty-search weight.
 
 Typed arrays must be preserved:
@@ -407,9 +408,21 @@ Audio streams are generated as short 16-bit mono `AudioStreamWAV` data at runtim
 
 Track Animals remains gated by the Animal Tracks discovery through `GameManager.get_available_actions()`. Forest, Meadow, and River now include the same `ActionData`, so a learned tracking ability remains available across every current wilderness location.
 
+### Weighted Wildlife Signs
+
+`WildlifeSignData` is immutable authored evidence. It owns a stable sign ID, display name, minimum identification level, Knowledge reward, and separate unidentified and identified descriptions. It does not represent an animal entity, exact species, freshness, direction, diet, or ecological state.
+
+`WeightedWildlifeSignEntryData` pairs one sign with a positive occurrence weight. Each `LocationData` owns its own sign-entry array and empty-tracking weight, allowing Forest, Meadow, and River to produce different evidence without location-specific branches in the action.
+
+`TrackAnimalsAction` performs one weighted selection across the current location's empty weight and valid sign entries. The current Exploration level is the identification authority. Insufficient skill produces authored partial evidence but records no confirmed fact; sufficient skill produces identified narration, grants the sign's Knowledge reward, and asks `CivilizationData` to record the stable sign ID once.
+
+`LocationDatabase.get_wildlife_sign()` resolves durable IDs through the authored location pools. `JournalUI` renders the civilization's insertion-ordered identified IDs in a dedicated, read-only Wildlife Signs tab. Unknown IDs are skipped rather than fabricated.
+
+Save version 14 serializes `CivilizationData.identified_wildlife_sign_ids`. Versions 1 through 13 default to an empty collection, and no earlier narration or Tracking action is treated as proof of a past identification.
+
 ### Journal Workspace
 
-`JournalUI.tscn` is the scene-owned presentation authority for durable and reference-oriented Journal views: History, Legacy Preview, Completed Lives, Locations, Discoveries, and Landmarks. It owns their rendering, tab visibility, completed-life selection, bounded scrolling, and Back intent.
+`JournalUI.tscn` is the scene-owned presentation authority for durable and reference-oriented Journal views: History, Legacy Preview, Completed Lives, Locations, Discoveries, Wildlife Signs, and Landmarks. It owns their rendering, tab visibility, completed-life selection, bounded scrolling, and Back intent.
 
 The Chronicle remains embedded in the exploration view so immediate narration stays visible during actions and travel. `GameUI.add_event()` remains the public narration gateway used by gameplay systems and appends directly to that persistent Chronicle. Opening or closing the Journal cannot discard Chronicle text.
 

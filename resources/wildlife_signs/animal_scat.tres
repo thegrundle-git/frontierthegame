@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WildlifeSignData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/WildlifeSignData.gd" id="1_sign"]
+
+[resource]
+script = ExtResource("1_sign")
+id = "animal_scat"
+display_name = "animal scat"
+identification_level = 4
+knowledge_reward = 2
+unidentified_description = "A dark cluster lies among disturbed leaves and grass. Its source is not obvious."
+identified_description = "Its shape and placement confirm that an animal passed through and left droppings here."

@@ -81,6 +81,8 @@ The player may be uncertain about an outcome, but should rarely be uncertain abo
 
 Future knowledge, skills, tools, traits, and companions may improve the clarity or specificity of choice guidance. They should help the player reason without reducing every decision to exact percentages or removing the possibility of surprise.
 
+Skill should change what a character can understand, not merely whether an interaction succeeds. Environmental evidence may remain visible to a novice while its confident interpretation requires experience. Partial descriptions preserve curiosity and acknowledge the world honestly; durable knowledge should record only conclusions the character can support. Occurrence and understanding are separate concerns, so location-specific weights decide what evidence exists while skill thresholds decide what it means to the observer.
+
 Events may connect consequences across time when the relationship is supported by durable evidence. A later situation can respond to a discovered landmark, a previously exposed trail, or a different successful action, but prerequisite chains must remain understandable rather than serving as arbitrary content locks. Event text can preserve uncertainty; it should not convert a plausible observation into confirmed ecology, weather behavior, danger, or history merely to make a choice sound dramatic.
 
 Evidence of earlier inhabitants should invite investigation without converting uncertainty into lore prematurely. Landmark records distinguish what the civilization can observe from what it merely suspects, allowing later discoveries to deepen or challenge earlier interpretations.

@@ -16,6 +16,7 @@ signal completed_life_requested(character_id: String)
 @onready var open_completed_life_button: Button = %OpenCompletedLifeButton
 @onready var locations_log: RichTextLabel = %LocationsLog
 @onready var discoveries_log: RichTextLabel = %DiscoveriesLog
+@onready var wildlife_signs_log: RichTextLabel = %WildlifeSignsLog
 @onready var fragments_log: RichTextLabel = %FragmentsLog
 @onready var fragments_tab: Control = %Fragments
 @onready var landmarks_log: RichTextLabel = %LandmarksLog
@@ -39,6 +40,7 @@ func refresh() -> void:
 	_update_completed_lives()
 	_update_locations()
 	_update_discoveries()
+	_update_wildlife_signs()
 	_update_fragments()
 	_update_landmarks()
 	_update_tab_visibility()
@@ -196,6 +198,33 @@ func _update_discoveries() -> void:
 			journal_text += "\n\n"
 		journal_text += "[b]" + discovery.display_name + "[/b]\n" + discovery.description
 	discoveries_log.text = journal_text
+
+
+func _update_wildlife_signs() -> void:
+	var civilization: CivilizationData = GameManager.current_civilization
+	if (
+		civilization == null
+		or civilization.identified_wildlife_sign_ids.is_empty()
+	):
+		wildlife_signs_log.text = "No wildlife signs identified."
+		return
+
+	var journal_text := ""
+	for sign_id: String in civilization.identified_wildlife_sign_ids:
+		var sign: WildlifeSignData = LocationDatabase.get_wildlife_sign(sign_id)
+		if sign == null:
+			continue
+		if not journal_text.is_empty():
+			journal_text += "\n\n"
+		journal_text += "[b]" + sign.display_name.capitalize() + "[/b]"
+		journal_text += (
+			"\nIdentification level: "
+			+ str(sign.identification_level)
+		)
+		if not sign.identified_description.is_empty():
+			journal_text += "\n" + sign.identified_description
+
+	wildlife_signs_log.text = journal_text
 
 
 func _update_landmarks() -> void:

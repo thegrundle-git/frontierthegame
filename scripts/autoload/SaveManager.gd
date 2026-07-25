@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 13
+const SAVE_VERSION := 14
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -173,6 +173,7 @@ func _build_save_data() -> Dictionary:
 			"knowledge": civilization.knowledge,
 			"visited_location_ids": civilization.visited_location_ids.duplicate(),
 			"observed_item_ids": civilization.observed_item_ids.duplicate(),
+			"identified_wildlife_sign_ids": civilization.identified_wildlife_sign_ids.duplicate(),
 			"discovered_ids": civilization.discovered_ids.duplicate(),
 			"unlocked_recipe_ids": civilization.unlocked_recipe_ids.duplicate(),
 			"wilderness_search_count": civilization.wilderness_search_count,
@@ -1146,6 +1147,15 @@ func _apply_civilization_data(
 		_string_array_from_variant(
 			civilization_data.get(
 				"observed_item_ids",
+				[]
+			)
+		)
+	)
+
+	civilization.identified_wildlife_sign_ids = (
+		_string_array_from_variant(
+			civilization_data.get(
+				"identified_wildlife_sign_ids",
 				[]
 			)
 		)

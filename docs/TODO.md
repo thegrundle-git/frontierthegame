@@ -13,7 +13,7 @@
 
 * [x] Move narrative phrases into NarrativeTemplateData resources.
 * [ ] Add Flint item and discovery.
-* [ ] Add first tracking-specific item or observation.
+* [x] Add first tracking-specific item or observation.
 * [x] Add a Meadow ambient event.
 * [x] Add a second landmark.
 * [x] Add Finnley’s first anonymous journal fragment.
@@ -26,7 +26,7 @@
 * [ ] Add known resources to location Journal entries.
 * [ ] Record first-visited day.
 * [ ] Add mushrooms.
-* [ ] Add wildlife signs.
+* [x] Add wildlife signs.
 * [ ] Add Deep Forest.
 * [ ] Add Rocky Outcrop.
 * [ ] Add Marsh.

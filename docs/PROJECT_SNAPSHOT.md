@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.9-alpha1
+v0.6.10-alpha1
 
 ## Project Health
 
-🟢 Stable — Drag-and-drop assembly passed manual testing
+🟢 Stable — Weighted wildlife signs passed manual testing
 
 ## Current Milestone
 
@@ -373,6 +373,14 @@ Assembly recipes now provide a dedicated right-side Assembly Workbench and a sep
 Draggable component items carry stable item IDs and component slots. Every assembly card revalidates compatibility and accessible quantity before accepting a drop, then routes the choice through the same preference signal and shared `CraftingPlan` used by the existing dropdown controls. Compatible and incompatible highlights, cancellation feedback, preview rebuilding, and focus restoration keep the interaction understandable without creating a second crafting authority.
 
 The dropdowns remain a complete keyboard-accessible alternative. Non-assembly recipes hide the workbench and component window. Manual testing passed for drag selection, exact component consumption, feedback, independent scrolling, keyboard fallback, viewport fit, non-assembly recipes, and the final solid window background. Save version remains 13 because all drag and window state is transient.
+
+## Weighted Wildlife Signs
+
+Track Animals now selects from location-specific weighted evidence rather than a hardcoded result table. Forest, Meadow, and River each combine their own empty-result chance with authored weights for Fallen Feathers, Hoofprints, Pawprints, Animal Scat, and Fur Snags.
+
+Exploration level controls identification difficulty from level 1 through 5. A character who lacks the required experience still receives truthful partial evidence, but only confident identification creates a durable civilization record. Identified signs grant their authored Knowledge reward and appear once in the dedicated Wildlife Signs Journal tab.
+
+`WildlifeSignData` owns stable identity, difficulty, reward, and descriptive evidence. `WeightedWildlifeSignEntryData` owns location occurrence weight. Manual testing passed for weighting, partial information, level thresholds, location variation, Journal recording, duplicate prevention, and save/load persistence. Save version 14 stores identified sign IDs; older saves load with no fabricated identifications.
 
 ## Next Goals
 

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="WildlifeSignData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/WildlifeSignData.gd" id="1_sign"]
+
+[resource]
+script = ExtResource("1_sign")
+id = "pawprints"
+display_name = "pawprints"
+identification_level = 3
+knowledge_reward = 2
+unidentified_description = "Small depressions repeat through the softer ground, though their shape is indistinct."
+identified_description = "Pads and toe marks form a paw pattern, distinct from the sharper division of a hoof."

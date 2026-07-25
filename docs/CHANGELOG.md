@@ -4,6 +4,42 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.10-alpha1 — Weighted Wildlife Signs
+
+### Added
+
+* Typed `WildlifeSignData` and `WeightedWildlifeSignEntryData` resources.
+* Five progressively identifiable signs: Fallen Feather, Hoofprints, Pawprints, Animal Scat, and Fur Snag.
+* Distinct weighted sign pools and empty-result weights for the Forest, Meadow, and River.
+* Durable civilization records for identified wildlife signs.
+* A dedicated Wildlife Signs Journal tab.
+
+### Changed
+
+* Track Animals now resolves authored location-specific evidence instead of a hardcoded three-result roll.
+* Exploration level now controls identification difficulty while lower levels still receive partial descriptive evidence.
+* Identified signs grant authored Knowledge rewards and refresh the Journal without duplicating durable records.
+* Track Animals continues using the existing Exploration XP and action-duration systems.
+
+### Validation
+
+* Godot registered both new global resource classes and all changed tracking, location, persistence, and Journal classes.
+* Isolated validation found no direct errors in the new wildlife-sign implementation.
+* Manual testing passed for weighted outcomes, partial identification, level thresholds, Journal recording, duplicate prevention, location variation, and save/load persistence.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version increased from 13 to 14.
+* Versions 1 through 13 remain loadable and begin with an empty identified-wildlife-sign collection.
+* Existing signs are not reconstructed retroactively from prior narration or Tracking actions.
+
+### Not Included
+
+* Exact species, freshness, direction, diet, collectible sign items, wildlife entities, ecological simulation, and a separate Tracking skill remain outside this milestone.
+
+---
+
 ## v0.6.9-alpha1 — Drag-and-Drop Assembly
 
 ### Added
