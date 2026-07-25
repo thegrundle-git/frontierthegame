@@ -10,6 +10,12 @@
 [ext_resource type="Resource" uid="uid://ctwviw0tgrfik" path="res://resources/items/berry.tres" id="6_sko63"]
 [ext_resource type="Resource" uid="uid://ctcp0jcmcamdv" path="res://resources/items/stick.tres" id="7_lcd2k"]
 [ext_resource type="Resource" uid="uid://cjeguvv2epm3y" path="res://resources/items/flower.tres" id="8_h4vq3"]
+[ext_resource type="Script" path="res://scripts/resources/WeightedWildlifeSignEntryData.gd" id="9_sign_entry"]
+[ext_resource type="Resource" path="res://resources/wildlife_signs/fallen_feather.tres" id="10_feather"]
+[ext_resource type="Resource" path="res://resources/wildlife_signs/hoofprints.tres" id="11_hoof"]
+[ext_resource type="Resource" path="res://resources/wildlife_signs/pawprints.tres" id="12_paw"]
+[ext_resource type="Resource" path="res://resources/wildlife_signs/animal_scat.tres" id="13_scat"]
+[ext_resource type="Resource" path="res://resources/wildlife_signs/fur_snag.tres" id="14_fur"]
 
 [sub_resource type="Resource" id="Resource_wuuc8"]
 script = ExtResource("5_mj1na")
@@ -45,6 +51,31 @@ game_minutes = 180
 xp_reward = 3
 metadata/_custom_type_script = "uid://clqlxjcsk56f3"
 
+[sub_resource type="Resource" id="Sign_feather"]
+script = ExtResource("9_sign_entry")
+sign = ExtResource("10_feather")
+weight = 30
+
+[sub_resource type="Resource" id="Sign_hoof"]
+script = ExtResource("9_sign_entry")
+sign = ExtResource("11_hoof")
+weight = 35
+
+[sub_resource type="Resource" id="Sign_paw"]
+script = ExtResource("9_sign_entry")
+sign = ExtResource("12_paw")
+weight = 10
+
+[sub_resource type="Resource" id="Sign_scat"]
+script = ExtResource("9_sign_entry")
+sign = ExtResource("13_scat")
+weight = 12
+
+[sub_resource type="Resource" id="Sign_fur"]
+script = ExtResource("9_sign_entry")
+sign = ExtResource("14_fur")
+weight = 5
+
 [resource]
 script = ExtResource("3_fefgo")
 id = "meadow"
@@ -55,4 +86,6 @@ available_actions = Array[ExtResource("1_1vv03")]([ExtResource("1_np2v2"), ExtRe
 travel_connections = Array[ExtResource("4_fefgo")]([SubResource("Resource_36u8b")])
 search_loot = Array[ExtResource("5_mj1na")]([SubResource("Resource_wuuc8"), SubResource("Resource_hpfw3"), SubResource("Resource_xlnlg"), SubResource("Resource_k18l8")])
 empty_search_weight = 8
+wildlife_signs = Array[ExtResource("9_sign_entry")]([SubResource("Sign_feather"), SubResource("Sign_hoof"), SubResource("Sign_paw"), SubResource("Sign_scat"), SubResource("Sign_fur")])
+empty_tracking_weight = 20
 metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

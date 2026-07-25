@@ -75,3 +75,22 @@ func get_location(
 
 func has_location(location_id: String) -> bool:
 	return locations.has(location_id)
+
+
+func get_wildlife_sign(sign_id: String) -> WildlifeSignData:
+	if sign_id.is_empty():
+		return null
+
+	for location_value: Variant in locations.values():
+		var location := location_value as LocationData
+		if location == null:
+			continue
+		for entry: WeightedWildlifeSignEntryData in location.wildlife_signs:
+			if (
+				entry != null
+				and entry.sign != null
+				and entry.sign.id == sign_id
+			):
+				return entry.sign
+
+	return null

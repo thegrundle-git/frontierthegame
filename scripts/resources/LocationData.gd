@@ -19,3 +19,9 @@ var first_visit_text: String = ""
 
 @export_range(0, 1000, 1)
 var empty_search_weight: int = 10
+
+@export_group("Tracking")
+@export var wildlife_signs: Array[WeightedWildlifeSignEntryData] = []
+
+@export_range(0, 1000, 1)
+var empty_tracking_weight: int = 20

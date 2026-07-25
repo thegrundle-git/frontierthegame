@@ -7,7 +7,7 @@
 script = ExtResource("2_ndmrh")
 id = "track_animals"
 display_name = "Track Animals"
-description = "Follow signs of wildlife through the surrounding wilderness in search of fresh tracks."
+description = "Search the surrounding wilderness for weighted signs of wildlife. Exploration skill determines how confidently difficult evidence can be identified."
 duration_seconds = 6.0
 game_minutes = 90
 skill_id = "exploration"

@@ -20,6 +20,7 @@ var knowledge: int = 0
 var inventory: FrontierInventory = FrontierInventory.new()
 
 var observed_item_ids: Array[String] = []
+var identified_wildlife_sign_ids: Array[String] = []
 var discovered_ids: Array[String] = []
 var unlocked_recipe_ids: Array[String] = []
 var history_entries: Array[CivilizationHistoryEntry] = []
@@ -211,6 +212,18 @@ func has_observed_item(
 	item_id: String
 ) -> bool:
 	return item_id in observed_item_ids
+
+
+func has_identified_wildlife_sign(sign_id: String) -> bool:
+	return sign_id in identified_wildlife_sign_ids
+
+
+func record_identified_wildlife_sign(sign_id: String) -> bool:
+	if sign_id.is_empty() or has_identified_wildlife_sign(sign_id):
+		return false
+
+	identified_wildlife_sign_ids.append(sign_id)
+	return true
 
 
 func has_observed_all(
