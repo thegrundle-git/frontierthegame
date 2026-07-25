@@ -122,6 +122,18 @@ Owns the current day and time.
 
 It provides formatted time text and advances time when actions complete.
 
+### Food and Hunger Foundation
+
+`TimeManager.add_minutes()` emits `minutes_advanced` for every accepted positive time advance. Direct restoration of saved day and time does not emit the signal, so loading cannot consume hunger retroactively.
+
+`GameManager` bridges that elapsed-time signal to the current survivor. `SurvivorData` owns the persistent hunger value, while `Survivor` is the authority that applies elapsed-time hunger loss and validates food consumption. Hunger is clamped from 0 to 100 and currently causes no health damage or death at zero.
+
+Food is authored through the existing `ItemData` resource model. An edible item requires the `food` tag and a positive `nutrition_value`. `Survivor.consume_food()` accepts only an exact item carried in the personal Expedition Pack, removes one unit, restores the actual clamped amount, and writes the result to the Chronicle. Camp Storage and other inventory movement do not bypass this authority.
+
+`GameUI` reads the survivor's current hunger and builds a food selector from valid carried items. It disables eating when the survivor is full, deceased, busy, resolving an event, or lacks valid food. Refreshing the interface is read-only.
+
+Save version 15 serializes survivor hunger. Versions 1 through 14 remain compatible and initialize hunger at 100. Save restoration writes the clamped value directly rather than replaying elapsed time.
+
 #### SaveManager
 
 Serializes and restores persistent game state using JSON.

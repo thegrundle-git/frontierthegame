@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_r8hcy")
 
-[node name="EnvironmentBackground" type="TextureRect" parent="."]
+[node name="EnvironmentBackground" type="TextureRect" parent="." unique_id=1695577415]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -32,7 +32,7 @@ mouse_filter = 2
 expand_mode = 1
 stretch_mode = 6
 
-[node name="EnvironmentVeil" type="ColorRect" parent="."]
+[node name="EnvironmentVeil" type="ColorRect" parent="." unique_id=67703983]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -147,6 +147,11 @@ text = "SURVIVOR"
 [node name="SkillsPanel" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=1215505222 instance=ExtResource("11_skills")]
 unique_name_in_owner = true
 
+[node name="HungerLabel" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=2072773808]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Hunger: 100 / 100"
+
 [node name="ToolLabel" type="Label" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/SurvivorPanel/SurvivorLayout" unique_id=1304822072]
 unique_name_in_owner = true
 layout_mode = 2
@@ -192,6 +197,24 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 bbcode_enabled = true
+
+[node name="FoodControls" type="HBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout" unique_id=1228668751]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="FoodSelector" type="OptionButton" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/FoodControls" unique_id=1709435036]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Choose edible food carried in the Expedition Pack."
+
+[node name="EatFoodButton" type="Button" parent="ScreenMargin/MainLayout/MiddleRow/LeftColumn/InventoryPanel/InventoryLayout/FoodControls" unique_id=847879211]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(90, 42)
+layout_mode = 2
+tooltip_text = "Consume one selected food item to restore hunger."
+text = "Eat"
 
 [node name="RightColumn" type="VBoxContainer" parent="ScreenMargin/MainLayout/MiddleRow" unique_id=2073829759]
 layout_mode = 2
@@ -338,7 +361,7 @@ mouse_filter = 0
 custom_minimum_size = Vector2(640, 520)
 layout_mode = 2
 
-[node name="EventMargin" type="MarginContainer" parent="EventOverlay/EventPanel"]
+[node name="EventMargin" type="MarginContainer" parent="EventOverlay/EventPanel" unique_id=1234234462]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 14
@@ -367,7 +390,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 0
 autowrap_mode = 3
 
-[node name="EventOptionsScroll" type="ScrollContainer" parent="EventOverlay/EventPanel/EventMargin/EventLayout"]
+[node name="EventOptionsScroll" type="ScrollContainer" parent="EventOverlay/EventPanel/EventMargin/EventLayout" unique_id=1489819653]
 custom_minimum_size = Vector2(0, 320)
 layout_mode = 2
 size_flags_vertical = 3

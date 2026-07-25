@@ -4,6 +4,41 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.11-alpha1 — Food and Hunger Foundation
+
+### Added
+
+* Authored nutrition values for edible item resources.
+* A visible Hunger readout in the survivor panel.
+* Expedition Pack food selection and an explicit Eat action.
+* A centralized elapsed-minutes signal for time-driven survivor needs.
+
+### Changed
+
+* Successful actions, travel, and other simulated-time advances now reduce hunger at one point per 120 in-game minutes.
+* Wild Berries now restore 8 hunger.
+* Food consumption is validated by the survivor, removes exactly one carried item, and reports the actual hunger restored in the Chronicle.
+* Eating is unavailable while the survivor is full, deceased, busy, resolving an event, or carrying no valid food.
+
+### Validation
+
+* Godot registered the changed resources, autoloads, survivor, scene, and UI classes without direct errors from the food-and-hunger implementation.
+* Isolated validation continued to report only the repository's known pre-existing strict type-inference errors.
+* Manual testing passed for hunger loss, eating, inventory consumption, UI states, Chronicle feedback, and save/load persistence.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version increased from 14 to 15.
+* Versions 1 through 14 remain loadable and begin with full hunger.
+* Loading a save does not retroactively consume hunger.
+
+### Not Included
+
+* Starvation death, health damage, cooking, spoilage, buffs, poison, eating duration, NPC hunger, automatic eating, and mushroom effects remain outside this milestone.
+
+---
+
 ## v0.6.10-alpha1 — Weighted Wildlife Signs
 
 ### Added

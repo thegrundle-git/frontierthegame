@@ -11,4 +11,5 @@ category = "Food"
 material_family = "food"
 weight = 0.05
 tags = Array[String](["food", "gathering", "plant"])
+nutrition_value = 8.0
 metadata/_custom_type_script = "uid://b7c5v3pbowv1w"

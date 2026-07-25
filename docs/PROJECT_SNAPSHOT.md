@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.10-alpha1
+v0.6.11-alpha1
 
 ## Project Health
 
-🟢 Stable — Weighted wildlife signs passed manual testing
+🟢 Stable — Food and hunger foundation passed manual testing
 
 ## Current Milestone
 
@@ -373,6 +373,16 @@ Assembly recipes now provide a dedicated right-side Assembly Workbench and a sep
 Draggable component items carry stable item IDs and component slots. Every assembly card revalidates compatibility and accessible quantity before accepting a drop, then routes the choice through the same preference signal and shared `CraftingPlan` used by the existing dropdown controls. Compatible and incompatible highlights, cancellation feedback, preview rebuilding, and focus restoration keep the interaction understandable without creating a second crafting authority.
 
 The dropdowns remain a complete keyboard-accessible alternative. Non-assembly recipes hide the workbench and component window. Manual testing passed for drag selection, exact component consumption, feedback, independent scrolling, keyboard fallback, viewport fit, non-assembly recipes, and the final solid window background. Save version remains 13 because all drag and window state is transient.
+
+## Food and Hunger Foundation
+
+The survivor now loses one hunger point for every 120 in-game minutes that pass through the shared time authority. Actions, travel, and event-driven time therefore create the same survival pressure, while UI refreshes and save loading do not.
+
+Wild Berries are the first authored food and restore 8 hunger. The Expedition Pack lists only carried items that are tagged as food and have positive nutrition; eating removes exactly one unit and reports the actual amount restored in the Chronicle.
+
+The survivor panel displays current hunger, and eating is disabled when the survivor is full, deceased, busy, resolving an event, or carrying no valid food. Camp Storage cannot be consumed from remotely.
+
+Save version 15 persists hunger. Versions 1 through 14 load with full hunger and do not receive retroactive hunger loss. Reaching zero hunger does not yet cause damage or death.
 
 ## Weighted Wildlife Signs
 

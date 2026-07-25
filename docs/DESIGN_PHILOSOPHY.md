@@ -159,4 +159,10 @@ Every installed component should matter in a way the player can understand. The 
 
 Real-time responsiveness and simulated labor time are deliberately separate. Better handling can make an action finish sooner for the player without silently accelerating days, hunger, seasons, events, or settlement economics. Simulated-time changes require their own later design decision.
 
+Survival needs should advance through the same simulated-time authority as the actions that create them. UI refreshes and save loading must never consume needs, because presentation and restoration are not lived experience.
+
+Food identity and nutrition are authored properties of an item. Consumption authority validates the exact carried item, applies its real effect, and narrates the result; interfaces only present those facts and request the action.
+
+Early survival foundations may introduce pressure without prematurely introducing irreversible consequences. Zero hunger is currently a visible boundary rather than an automatic death sentence until starvation, health, and recovery have been designed together.
+
 Broader material recovery, damaged-component instances, handle wear, naming, and engraving remain future systems. Those features should transform or interpret the existing instance and its recorded components rather than replacing them with parallel item representations.
