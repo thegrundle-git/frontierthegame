@@ -32,7 +32,10 @@ const PANEL_BORDER_COLOR := Color(0.42, 0.47, 0.38, 0.58)
 @onready var event_log: RichTextLabel = %EventLog
 @onready var inventory_left_label: RichTextLabel = %InventoryLeftLabel
 @onready var inventory_right_label: RichTextLabel = %InventoryRightLabel
+@onready var food_selector: OptionButton = %FoodSelector
+@onready var eat_food_button: Button = %EatFoodButton
 @onready var skills_panel: SkillsPanel = %SkillsPanel
+@onready var hunger_label: Label = %HungerLabel
 @onready var tool_label: Label = %ToolLabel
 @onready var open_equipment_button: Button = %OpenEquipmentButton
 @onready var equipment_ui: EquipmentUI = %EquipmentUI
@@ -139,6 +142,7 @@ func _ready() -> void:
 	_update_environment_background()
 
 	open_equipment_button.pressed.connect(_on_open_equipment_pressed)
+	eat_food_button.pressed.connect(_on_eat_food_pressed)
 	enter_camp_button.pressed.connect(_on_enter_camp_pressed)
 	open_journal_button.pressed.connect(_on_open_journal_pressed)
 	journal_ui.back_requested.connect(_on_journal_back_requested)
@@ -329,6 +333,7 @@ func refresh_all() -> void:
 		update_inventory(
 			survivor.inventory
 		)
+	_update_food_controls()
 
 
 func add_event(event_text: String) -> void:
@@ -676,6 +681,95 @@ func update_survivor() -> void:
 	)
 
 	skills_panel.refresh(survivor)
+	if survivor == null or survivor.data == null:
+		hunger_label.text = "Hunger: Unavailable"
+		return
+
+	hunger_label.text = (
+		"Hunger: "
+		+ _format_hunger(survivor.data.hunger)
+		+ " / "
+		+ str(int(Survivor.MAX_HUNGER))
+	)
+
+
+func _update_food_controls() -> void:
+	var previous_item_id := ""
+	if food_selector.selected >= 0:
+		previous_item_id = str(
+			food_selector.get_item_metadata(food_selector.selected)
+		)
+
+	food_selector.clear()
+	var survivor: Survivor = GameManager.current_survivor
+	if survivor != null and survivor.inventory != null:
+		var food_ids: Array[String] = []
+		for item_id_variant: Variant in survivor.inventory.items.keys():
+			var item_id := str(item_id_variant)
+			var item: ItemData = ItemDatabase.get_item(item_id)
+			if (
+				item != null
+				and "food" in item.tags
+				and item.nutrition_value > 0.0
+				and survivor.inventory.has_item(item_id)
+			):
+				food_ids.append(item_id)
+
+		food_ids.sort_custom(
+			func(first_id: String, second_id: String) -> bool:
+				var first: ItemData = ItemDatabase.get_item(first_id)
+				var second: ItemData = ItemDatabase.get_item(second_id)
+				if first == null or second == null:
+					return first_id < second_id
+				return first.display_name < second.display_name
+		)
+
+		for item_id: String in food_ids:
+			var item: ItemData = ItemDatabase.get_item(item_id)
+			var index: int = food_selector.item_count
+			food_selector.add_item(
+				item.display_name
+				+ " ×"
+				+ str(survivor.inventory.get_item_amount(item_id))
+				+ " (+"
+				+ _format_hunger(item.nutrition_value)
+				+ ")"
+			)
+			food_selector.set_item_metadata(index, item_id)
+			if item_id == previous_item_id:
+				food_selector.select(index)
+
+	var can_eat: bool = (
+		survivor != null
+		and survivor.can_act()
+		and survivor.data.hunger < Survivor.MAX_HUNGER
+		and food_selector.item_count > 0
+		and not ActionManager.is_busy
+		and not WorldEventManager.has_pending_event()
+	)
+	food_selector.disabled = not can_eat
+	eat_food_button.disabled = not can_eat
+	if food_selector.item_count == 0:
+		food_selector.add_item("No edible food carried")
+		food_selector.set_item_metadata(0, "")
+
+
+func _on_eat_food_pressed() -> void:
+	if food_selector.selected < 0:
+		return
+	var item_id := str(
+		food_selector.get_item_metadata(food_selector.selected)
+	)
+	var survivor: Survivor = GameManager.current_survivor
+	if survivor == null or not survivor.consume_food(item_id):
+		return
+	refresh_all()
+
+
+func _format_hunger(value: float) -> String:
+	if is_equal_approx(value, roundf(value)):
+		return str(int(roundf(value)))
+	return str(snappedf(value, 0.1))
 
 
 func update_tool_display() -> void:

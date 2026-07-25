@@ -32,7 +32,12 @@ var game_session_prepared := false
 var survivor_is_at_home := false
 
 func _ready() -> void:
-	pass
+	if not TimeManager.minutes_advanced.is_connected(
+		_on_minutes_advanced
+	):
+		TimeManager.minutes_advanced.connect(
+			_on_minutes_advanced
+		)
 	
 
 
@@ -98,6 +103,12 @@ func start_new_game() -> void:
 		return
 
 	current_survivor = _instantiate_survivor(survivor_data)
+
+
+func _on_minutes_advanced(amount: int) -> void:
+	if current_survivor == null:
+		return
+	current_survivor.apply_elapsed_minutes(amount)
 
 func start_world_action(
 	action_id: String

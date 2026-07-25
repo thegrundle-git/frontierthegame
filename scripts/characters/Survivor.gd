@@ -7,6 +7,8 @@ signal died(survivor: Survivor, cause: String)
 
 const BASE_CARRY_WEIGHT := 20.0
 const CARRY_WEIGHT_PER_STRENGTH_LEVEL := 2.0
+const MAX_HUNGER := 100.0
+const MINUTES_PER_HUNGER_POINT := 120.0
 
 const SKILL_ORDER: Array[String] = [
 	"strength",
@@ -310,6 +312,63 @@ func unequip_tool() -> bool:
 
 func can_act() -> bool:
 	return data != null and data.is_alive
+
+
+func apply_elapsed_minutes(minutes: int) -> bool:
+	if not can_act() or minutes <= 0:
+		return false
+
+	var previous_hunger: float = data.hunger
+	data.hunger = clampf(
+		data.hunger - float(minutes) / MINUTES_PER_HUNGER_POINT,
+		0.0,
+		MAX_HUNGER
+	)
+	return not is_equal_approx(previous_hunger, data.hunger)
+
+
+func consume_food(item_id: String) -> bool:
+	if not can_act() or inventory == null or item_id.is_empty():
+		return false
+	if data.hunger >= MAX_HUNGER:
+		return false
+
+	var item: ItemData = ItemDatabase.get_item(item_id)
+	if (
+		item == null
+		or "food" not in item.tags
+		or item.nutrition_value <= 0.0
+		or not inventory.has_item(item_id)
+	):
+		return false
+
+	if not inventory.remove_item(item_id, 1):
+		return false
+
+	var hunger_restored: float = minf(
+		item.nutrition_value,
+		MAX_HUNGER - data.hunger
+	)
+	data.hunger = clampf(
+		data.hunger + item.nutrition_value,
+		0.0,
+		MAX_HUNGER
+	)
+	_add_event(
+		data.display_name
+		+ " ate "
+		+ item.display_name
+		+ " and restored "
+		+ _format_hunger(hunger_restored)
+		+ " hunger."
+	)
+	return true
+
+
+func _format_hunger(value: float) -> String:
+	if is_equal_approx(value, roundf(value)):
+		return str(int(roundf(value)))
+	return str(snappedf(value, 0.1))
 
 
 func die(cause: String) -> bool:

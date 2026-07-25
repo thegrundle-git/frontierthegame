@@ -20,6 +20,10 @@ var material_family: String = "unspecified"
 
 @export var tags: Array[String] = []
 
+@export_group("Food")
+@export_range(0.0, 100.0, 0.1)
+var nutrition_value: float = 0.0
+
 @export_group("Modular Crafting")
 @export var component_slot: String = ""
 @export var material_id: String = ""

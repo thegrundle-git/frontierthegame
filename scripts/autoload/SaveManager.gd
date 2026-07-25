@@ -2,7 +2,7 @@ extends Node
 
 
 const SAVE_PATH := "user://frontier_save.json"
-const SAVE_VERSION := 14
+const SAVE_VERSION := 15
 const SUCCESSOR_ID_PREFIX := "survivor.successor."
 
 
@@ -142,6 +142,7 @@ func _build_save_data() -> Dictionary:
 			"character_id": survivor.data.character_id,
 			"display_name": survivor.data.display_name,
 			"is_alive": survivor.data.is_alive,
+			"hunger": survivor.data.hunger,
 			"life_record": _serialize_life_record(
 				survivor.data.life_record
 			),
@@ -569,6 +570,17 @@ func _apply_survivor_data(
 			"is_alive",
 			true
 		)
+	)
+
+	survivor.data.hunger = clampf(
+		float(
+			survivor_data.get(
+				"hunger",
+				100.0
+			)
+		),
+		0.0,
+		Survivor.MAX_HUNGER
 	)
 
 	_apply_life_record_data(

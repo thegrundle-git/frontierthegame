@@ -2,6 +2,7 @@ extends Node
 
 
 signal time_changed
+signal minutes_advanced(amount: int)
 
 
 var day: int = 1
@@ -23,6 +24,7 @@ func add_minutes(amount: int) -> void:
 		hour -= 24
 		day += 1
 
+	minutes_advanced.emit(amount)
 	time_changed.emit()
 
 
