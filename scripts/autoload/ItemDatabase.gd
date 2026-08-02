@@ -29,6 +29,9 @@ func load_items() -> void:
 		"res://resources/items/river_reed.tres",
 		"res://resources/items/hardwood_handle.tres",
 		"res://resources/items/reed_binding.tres",
+		"res://resources/items/brown_cap_mushroom.tres",
+		"res://resources/items/meadow_puffball.tres",
+		"res://resources/items/river_shelf_fungus.tres",
 	]
 
 	for item_path: String in item_paths:

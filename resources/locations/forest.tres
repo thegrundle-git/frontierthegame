@@ -17,6 +17,7 @@
 [ext_resource type="Resource" path="res://resources/wildlife_signs/pawprints.tres" id="12_paw"]
 [ext_resource type="Resource" path="res://resources/wildlife_signs/animal_scat.tres" id="13_scat"]
 [ext_resource type="Resource" path="res://resources/wildlife_signs/fur_snag.tres" id="14_fur"]
+[ext_resource type="Resource" path="res://resources/items/brown_cap_mushroom.tres" id="15_mushroom"]
 
 [sub_resource type="Resource" id="Resource_r8hcy"]
 script = ExtResource("5_ov7sf")
@@ -42,6 +43,12 @@ metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
 script = ExtResource("5_ov7sf")
 item = ExtResource("8_hardwood")
 weight = 12
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Loot_brown_cap"]
+script = ExtResource("5_ov7sf")
+item = ExtResource("15_mushroom")
+weight = 10
 metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
 
 [sub_resource type="Resource" id="Resource_mqbdk"]
@@ -91,7 +98,7 @@ description = "A region dominated by dense tree cover. Rich in renewable resourc
 first_visit_text = "The wilderness closes around Finnley beneath a roof of tangled branches. The forest offers shelter, timber, and food, but nothing freely. Every useful thing will have to be found, understood, and earned."
 available_actions = Array[ExtResource("1_ov7sf")]([ExtResource("2_36u8b"), ExtResource("3_7q3hv"), ExtResource("4_mnpna")])
 travel_connections = Array[ExtResource("5_e2bfc")]([SubResource("Resource_mqbdk"), SubResource("Resource_36u8b"), null])
-search_loot = Array[ExtResource("5_ov7sf")]([SubResource("Resource_r8hcy"), SubResource("Resource_3pxe2"), SubResource("Resource_jwej7"), SubResource("Loot_hardwood")])
+search_loot = Array[ExtResource("5_ov7sf")]([SubResource("Resource_r8hcy"), SubResource("Resource_3pxe2"), SubResource("Resource_jwej7"), SubResource("Loot_hardwood"), SubResource("Loot_brown_cap")])
 wildlife_signs = Array[ExtResource("9_sign_entry")]([SubResource("Sign_feather"), SubResource("Sign_hoof"), SubResource("Sign_paw"), SubResource("Sign_scat"), SubResource("Sign_fur")])
 empty_tracking_weight = 25
 metadata/_custom_type_script = "uid://dxiqo5ie3ebvb"

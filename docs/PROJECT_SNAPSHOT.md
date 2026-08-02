@@ -2,11 +2,11 @@
 
 ## Current Version
 
-v0.6.11-alpha1
+v0.6.12-alpha1
 
 ## Project Health
 
-🟢 Stable — Food and hunger foundation passed manual testing
+🟢 Stable — Mushroom foraging foundation passed manual testing
 
 ## Current Milestone
 
@@ -383,6 +383,16 @@ Wild Berries are the first authored food and restore 8 hunger. The Expedition Pa
 The survivor panel displays current hunger, and eating is disabled when the survivor is full, deceased, busy, resolving an event, or carrying no valid food. Camp Storage cannot be consumed from remotely.
 
 Save version 15 persists hunger. Versions 1 through 14 load with full hunger and do not receive retroactive hunger loss. Reaching zero hunger does not yet cause damage or death.
+
+## Mushroom Foraging Foundation
+
+Forest, Meadow, and River now contain distinct edible mushrooms in their weighted Search pools. Brown Cap Mushrooms restore 6 hunger, Meadow Puffballs restore 9, and River Shelf Fungus restores 5 through the existing carried-food authority.
+
+Observing all three varieties with at least 12 Knowledge unlocks Fungal Foraging in the Journal. The discovery records ecological knowledge without introducing a separate mushroom-identification system.
+
+A Pattern in the Gills is a rare, once-only Forest search event. The player may taste the unfamiliar mushroom for a strange but modest insight, study it safely, or leave it undisturbed. The experience is optional, cannot be farmed, and does not gate ordinary progression.
+
+Save version remains 15 because mushroom inventory, discoveries, and once-only event completion already use established persistence systems. Manual testing passed for gathering, eating, discovery, event resolution, and save/load behavior.
 
 ## Weighted Wildlife Signs
 

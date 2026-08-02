@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="WorldEventData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/EventOptionData.gd" id="1_option"]
+[ext_resource type="Script" path="res://scripts/resources/WorldEventData.gd" id="2_event"]
+
+[sub_resource type="Resource" id="TasteOption"]
+script = ExtResource("1_option")
+id = "taste"
+display_text = "Taste the unfamiliar cap"
+intent_text = "Risk a small taste and remain still long enough to observe its effects."
+reward_hint = "An unusual insight and Exploration experience."
+cost_or_risk_text = "Requires 60 minutes away from ordinary work."
+uncertainty_text = "The mushroom is unfamiliar, and the meaning of the experience may remain unclear."
+result_text = "For a while, the spaces between branches seem as deliberate as the branches themselves. Bird calls separate into repeating phrases, and the forest floor appears to breathe beneath {actor_name}. By the time the feeling passes, no revelation can be stated plainly—but one stubborn problem seems slightly easier to approach."
+skill_id = "exploration"
+xp_reward = 2
+knowledge_reward = 3
+game_minutes = 60
+
+[sub_resource type="Resource" id="StudyOption"]
+script = ExtResource("1_option")
+id = "study"
+display_text = "Study it without eating"
+intent_text = "Record its shape, gills, and surroundings without testing it directly."
+reward_hint = "A small amount of Knowledge."
+cost_or_risk_text = "Requires 20 minutes of careful observation."
+uncertainty_text = "Observation alone may not reveal what makes this mushroom unusual."
+result_text = "{actor_name} studies the cap, the fine gills beneath it, and the damp ring of leaf litter around its stem. Nothing supernatural announces itself, but the careful comparison adds another useful detail to what the civilization knows."
+knowledge_reward = 1
+game_minutes = 20
+
+[sub_resource type="Resource" id="LeaveOption"]
+script = ExtResource("1_option")
+id = "leave"
+display_text = "Leave it undisturbed"
+intent_text = "Do not gamble on an unfamiliar fungus."
+reward_hint = "No material reward or unusual effect."
+cost_or_risk_text = "No additional time."
+uncertainty_text = "Whatever made the mushroom unusual will remain unexplained."
+result_text = "{actor_name} leaves the unfamiliar mushroom beneath the trees. Some questions are safer when they remain questions."
+
+[resource]
+script = ExtResource("2_event")
+id = "forest_pattern_in_the_gills"
+display_name = "A Pattern in the Gills"
+description = "Half-hidden beneath wet leaves is a mushroom unlike the ordinary brown caps nearby. Its pale gills form tight, repeating lines that seem difficult to stop following with the eye."
+trigger_chance_percent = 4.0
+trigger_action_ids = Array[String](["search_area"])
+location_ids = Array[String](["forest"])
+once_only = true
+options = Array[ExtResource("1_option")]([SubResource("TasteOption"), SubResource("StudyOption"), SubResource("LeaveOption")])
