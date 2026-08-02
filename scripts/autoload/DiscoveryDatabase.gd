@@ -17,6 +17,7 @@ func load_discoveries() -> void:
 		"res://resources/discoveries/fresh_water.tres",
 		"res://resources/discoveries/animal_tracks.tres",
 		"res://resources/discoveries/refined_hafting.tres",
+		"res://resources/discoveries/fungal_foraging.tres",
 	]
 
 	for discovery_path in discovery_paths:

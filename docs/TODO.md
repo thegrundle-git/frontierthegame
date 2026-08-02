@@ -25,7 +25,7 @@
 * [ ] Add discovery categories.
 * [ ] Add known resources to location Journal entries.
 * [ ] Record first-visited day.
-* [ ] Add mushrooms.
+* [x] Add mushrooms.
 * [x] Add wildlife signs.
 * [ ] Add Deep Forest.
 * [ ] Add Rocky Outcrop.

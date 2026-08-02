@@ -19,7 +19,8 @@ func load_events() -> void:
 		"res://resources/events/forest_clean_break.tres",
 		"res://resources/events/river_reeds_still_water.tres",
 		"res://resources/events/river_debris_below_marker.tres",
-		"res://resources/events/meadow_trail_through_grass.tres"
+		"res://resources/events/meadow_trail_through_grass.tres",
+		"res://resources/events/forest_pattern_in_the_gills.tres"
 	]
 
 	for event_path in event_paths:

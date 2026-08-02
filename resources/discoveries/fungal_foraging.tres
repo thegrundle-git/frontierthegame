@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DiscoveryData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/DiscoveryData.gd" id="1_discovery"]
+
+[resource]
+script = ExtResource("1_discovery")
+id = "fungal_foraging"
+display_name = "Fungal Foraging"
+description = "Mushrooms occupy different corners of the living landscape: beneath forest litter, among damp meadow grass, and across waterlogged wood. Learning where each kind grows turns overlooked fungi into a modest but dependable supplement to gathered food."
+knowledge_required = 12
+required_item_ids = Array[String](["brown_cap_mushroom", "meadow_puffball", "river_shelf_fungus"])

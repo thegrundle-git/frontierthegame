@@ -134,6 +134,18 @@ Food is authored through the existing `ItemData` resource model. An edible item 
 
 Save version 15 serializes survivor hunger. Versions 1 through 14 remain compatible and initialize hunger at 100. Save restoration writes the clamped value directly rather than replaying elapsed time.
 
+### Mushroom Foraging Foundation
+
+Brown Cap Mushroom, Meadow Puffball, and River Shelf Fungus are ordinary `ItemData` resources with stable IDs, the `food` and `mushroom` tags, and authored nutrition values. They require no mushroom-specific runtime manager.
+
+Each location owns its mushroom availability through the existing weighted `SearchLootEntryData` collection. Search continues to add the chosen item, record its observation, check discoveries, and narrate the result through the established authorities.
+
+Fungal Foraging is a standard `DiscoveryData` resource requiring all three observed mushroom IDs and 12 Knowledge. It appears through the existing Discoveries Journal view and persists through `CivilizationData.discovered_ids`.
+
+A Pattern in the Gills is a standard once-only `WorldEventData` resource triggered by Forest searches. Its options use existing time, XP, Knowledge, choice-guidance, narration, and completed-event persistence. The rare experience does not add a status-effect framework or special save data.
+
+Save version remains 15. Mushroom stacks serialize through inventory item IDs, observations and discovery use existing civilization collections, and event completion uses `WorldEventManager.completed_event_ids`.
+
 #### SaveManager
 
 Serializes and restores persistent game state using JSON.

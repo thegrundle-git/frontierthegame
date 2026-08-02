@@ -79,6 +79,10 @@ Ambient events should give places identity through grounded situations and meani
 
 The player may be uncertain about an outcome, but should rarely be uncertain about what they are choosing to attempt. Ordinary choices should surface intent, likely reward category, known costs or risks, and the nature of any remaining uncertainty before commitment. Mystery is valuable when it is deliberate—especially around strange, wondrous, or poorly understood situations—not when the interface merely withholds the meaning of a routine choice.
 
+Rare moments of wonder should remain optional, bounded, and resistant to optimization. An unusual experience may offer a small insight or a memorable story, but it should not become mandatory progression or a repeatable reward machine. The player should be able to decline it without losing access to the ordinary knowledge path.
+
+Ecological content should make locations meaningfully different while reusing shared rules. A mushroom found beneath forest litter, in damp meadow grass, or on river-soaked wood can use the same Search, observation, food, and discovery authorities while retaining a distinct habitat and identity.
+
 Future knowledge, skills, tools, traits, and companions may improve the clarity or specificity of choice guidance. They should help the player reason without reducing every decision to exact percentages or removing the possibility of surprise.
 
 Skill should change what a character can understand, not merely whether an interaction succeeds. Environmental evidence may remain visible to a novice while its confident interpretation requires experience. Partial descriptions preserve curiosity and acknowledge the world honestly; durable knowledge should record only conclusions the character can support. Occurrence and understanding are separate concerns, so location-specific weights decide what evidence exists while skill thresholds decide what it means to the observer.

@@ -4,6 +4,39 @@ This document records every released version of Frontier.
 
 ---
 
+## v0.6.12-alpha1 — Mushroom Foraging Foundation
+
+### Added
+
+* Three biome-specific edible mushrooms: Brown Cap Mushroom, Meadow Puffball, and River Shelf Fungus.
+* The Fungal Foraging discovery, earned by observing all three mushroom varieties with sufficient Knowledge.
+* A rare, once-only Forest event, A Pattern in the Gills, with taste, study, and leave choices.
+
+### Changed
+
+* Forest, Meadow, and River search pools now include distinct mushroom resources with authored weights.
+* Mushrooms use the existing food authority and restore 6, 9, and 5 hunger respectively.
+* The unusual mushroom experience offers optional, modest insight without becoming required or repeatable progression.
+
+### Validation
+
+* Godot registered the new items, discovery, event, and changed location and database resources without direct errors.
+* Isolated validation continued to report only the repository's known pre-existing strict type-inference errors.
+* Manual testing passed for biome-specific gathering, eating, observation, Fungal Foraging discovery, event choices, and save/load persistence.
+* `git diff --check` passed.
+
+### Save Compatibility
+
+* Save version remains 15.
+* Mushroom inventory uses existing stable item IDs, Fungal Foraging uses the existing discovery collection, and the rare event uses existing completed-event persistence.
+* Existing saves do not fabricate prior mushroom observations, discoveries, or event completion.
+
+### Not Included
+
+* Poisoning, status effects, cooking, cultivation, spoilage, hidden species identification, repeatable psychedelic rewards, and required mushroom progression remain outside this milestone.
+
+---
+
 ## v0.6.11-alpha1 — Food and Hunger Foundation
 
 ### Added

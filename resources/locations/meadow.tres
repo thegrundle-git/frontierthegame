@@ -16,6 +16,7 @@
 [ext_resource type="Resource" path="res://resources/wildlife_signs/pawprints.tres" id="12_paw"]
 [ext_resource type="Resource" path="res://resources/wildlife_signs/animal_scat.tres" id="13_scat"]
 [ext_resource type="Resource" path="res://resources/wildlife_signs/fur_snag.tres" id="14_fur"]
+[ext_resource type="Resource" path="res://resources/items/meadow_puffball.tres" id="15_mushroom"]
 
 [sub_resource type="Resource" id="Resource_wuuc8"]
 script = ExtResource("5_mj1na")
@@ -41,6 +42,12 @@ metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
 script = ExtResource("5_mj1na")
 item = ExtResource("8_h4vq3")
 weight = 12
+metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
+
+[sub_resource type="Resource" id="Loot_meadow_puffball"]
+script = ExtResource("5_mj1na")
+item = ExtResource("15_mushroom")
+weight = 10
 metadata/_custom_type_script = "uid://c3lxm4ibtebmo"
 
 [sub_resource type="Resource" id="Resource_36u8b"]
@@ -84,7 +91,7 @@ description = "Tall grass sways gently in the breeze, concealing herbs, flowers,
 first_visit_text = "The forest thins behind Finnley as the world suddenly opens. Tall grass rolls beneath the wind, carrying the sound of insects and distant birds. The wilderness is larger than it first appeared."
 available_actions = Array[ExtResource("1_1vv03")]([ExtResource("1_np2v2"), ExtResource("3_mj1na")])
 travel_connections = Array[ExtResource("4_fefgo")]([SubResource("Resource_36u8b")])
-search_loot = Array[ExtResource("5_mj1na")]([SubResource("Resource_wuuc8"), SubResource("Resource_hpfw3"), SubResource("Resource_xlnlg"), SubResource("Resource_k18l8")])
+search_loot = Array[ExtResource("5_mj1na")]([SubResource("Resource_wuuc8"), SubResource("Resource_hpfw3"), SubResource("Resource_xlnlg"), SubResource("Resource_k18l8"), SubResource("Loot_meadow_puffball")])
 empty_search_weight = 8
 wildlife_signs = Array[ExtResource("9_sign_entry")]([SubResource("Sign_feather"), SubResource("Sign_hoof"), SubResource("Sign_paw"), SubResource("Sign_scat"), SubResource("Sign_fur")])
 empty_tracking_weight = 20

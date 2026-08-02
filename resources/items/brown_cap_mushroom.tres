@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ItemData.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+id = "brown_cap_mushroom"
+display_name = "Brown Cap Mushroom"
+description = "A small woodland mushroom with a plain brown cap and pale gills. It is modest food, but finding it among wet leaves makes the forest feel a little less empty."
+category = "Food"
+material_family = "food"
+weight = 0.05
+tags = Array[String](["food", "gathering", "plant", "mushroom"])
+nutrition_value = 6.0
